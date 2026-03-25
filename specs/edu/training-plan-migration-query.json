@@ -1,0 +1,348 @@
+{
+  "module": "edu/trainer",
+  "pageId": "training-plan-migration-query",
+  "title": "教育培训-培训计划-迁移数据查询",
+  "path": "/edu/trainer/training-plan-migration-query",
+  "roles": [
+    "培训员",
+    "企业培训管理员"
+  ],
+  "source": "edu-ep/培训计划(老系统迁移数据).html",
+  "blocks": [
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        {
+          "label": "培训班名称",
+          "type": "text",
+          "placeholder": "请输入关键字"
+        },
+        {
+          "label": "年度",
+          "type": "select",
+          "options": [
+            "全部",
+            "2026",
+            "2025",
+            "2024"
+          ]
+        },
+        {
+          "label": "企业名称",
+          "type": "select",
+          "options": [
+            "全部",
+            "安徽石油"
+          ]
+        },
+        {
+          "label": "计划分类",
+          "type": "select",
+          "options": [
+            "全部",
+            "年度计划",
+            "临时计划"
+          ]
+        },
+        {
+          "label": "培训级别",
+          "type": "select",
+          "options": [
+            "全部",
+            "基层单位级",
+            "企业级"
+          ]
+        },
+        {
+          "label": "培训类别",
+          "type": "select",
+          "options": [
+            "全部",
+            "在岗",
+            "脱产"
+          ]
+        },
+        {
+          "label": "主办单位",
+          "type": "text",
+          "placeholder": "请输入主办单位"
+        },
+        {
+          "label": "实施状态",
+          "type": "select",
+          "options": [
+            "全部",
+            "已实施",
+            "未实施"
+          ]
+        },
+        {
+          "label": "登记时间",
+          "type": "daterange",
+          "start": "2026-02-01",
+          "end": "2026-02-25"
+        }
+      ],
+      "actions": [
+        {
+          "label": "查询",
+          "primary": true
+        },
+        {
+          "label": "导出"
+        }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "教育培训-培训计划-迁移数据列表",
+      "columns": [
+        "序号",
+        "年度",
+        "企业名称",
+        "培训班名称",
+        "计划举办期数",
+        "实际举办期数",
+        "是否外部培训",
+        "计划分类",
+        "专业类别",
+        "培训级别",
+        "培训类别",
+        "计划开班月份",
+        "主办单位",
+        "计划培训学时",
+        "计划培训人数",
+        "计划培训机构",
+        "是否取证",
+        "实施状态",
+        "登记部门",
+        "登记人",
+        "登记时间"
+      ],
+      "rows": [
+        [
+          "1",
+          "2026",
+          "安徽石油",
+          {
+            "text": "加油作业、充电作业、卸油作业、洗车机设备培训",
+            "modal": "drill-detail"
+          },
+          "1",
+          "0",
+          "否",
+          "年度计划",
+          "",
+          "基层单位级",
+          "在岗",
+          "2026-02",
+          "紫华西路油气站",
+          "2.0",
+          "9",
+          "",
+          "否",
+          "未实施",
+          "紫华西路油气站",
+          "何群",
+          "2026-02-25"
+        ],
+        [
+          "2",
+          "2026",
+          "安徽石油",
+          {
+            "text": "2026年2月厅南加油站综合培训",
+            "modal": "drill-detail"
+          },
+          "1",
+          "1",
+          "否",
+          "年度计划",
+          "",
+          "基层单位级",
+          "在岗",
+          "2026-02",
+          "厅南加油站",
+          "2.0",
+          "2",
+          "",
+          "否",
+          "已实施",
+          "厅南加油站",
+          "陈羽",
+          "2026-02-25"
+        ]
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "drill-detail",
+      "template": "certificate-detail-form",
+      "title": "教育培训-培训计划-迁移数据详情",
+      "sectionTitle": "培训计划录入",
+      "headerActions": [
+        {
+          "label": "返回",
+          "close": true
+        }
+      ],
+      "formFields": [
+        {
+          "label": "年度",
+          "type": "select",
+          "value": "2026",
+          "options": [
+            "2026",
+            "2025",
+            "2024"
+          ]
+        },
+        {
+          "label": "企业名称",
+          "type": "select",
+          "value": "安徽石油",
+          "options": [
+            "安徽石油"
+          ]
+        },
+        {
+          "label": "培训班名称",
+          "type": "text",
+          "value": "2026年2月厅南加油站综合培训"
+        },
+        {
+          "label": "计划举办期数",
+          "type": "text",
+          "value": "1"
+        },
+        {
+          "label": "实际举办期数",
+          "type": "text",
+          "value": "1"
+        },
+        {
+          "label": "是否外部培训",
+          "type": "radio",
+          "value": "否",
+          "options": [
+            "是",
+            "否"
+          ]
+        },
+        {
+          "label": "计划分类",
+          "type": "select",
+          "value": "年度计划",
+          "options": [
+            "年度计划",
+            "临时计划"
+          ]
+        },
+        {
+          "label": "专业类别",
+          "type": "select",
+          "value": "请选择...",
+          "options": [
+            "请选择...",
+            "安全管理",
+            "设备管理"
+          ]
+        },
+        {
+          "label": "培训级别",
+          "type": "select",
+          "value": "基层单位级",
+          "options": [
+            "基层单位级",
+            "企业级"
+          ]
+        },
+        {
+          "label": "培训类别",
+          "type": "select",
+          "value": "在岗",
+          "options": [
+            "在岗",
+            "脱产"
+          ]
+        },
+        {
+          "label": "计划开班月份",
+          "type": "date",
+          "value": "2026-02-01"
+        },
+        {
+          "label": "主办单位",
+          "type": "text",
+          "value": "紫华西路油气站"
+        },
+        {
+          "label": "计划培训学时",
+          "type": "text",
+          "value": "2.0"
+        },
+        {
+          "label": "计划培训人数",
+          "type": "text",
+          "value": "2"
+        },
+        {
+          "label": "计划培训机构",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "是否取证",
+          "type": "radio",
+          "value": "否",
+          "options": [
+            "是",
+            "否"
+          ]
+        },
+        {
+          "label": "实施状态",
+          "type": "select",
+          "value": "已实施",
+          "options": [
+            "已实施",
+            "未实施"
+          ]
+        },
+        {
+          "label": "登记部门",
+          "type": "text",
+          "value": "厅南加油站"
+        },
+        {
+          "label": "登记人",
+          "type": "text",
+          "value": "陈羽"
+        },
+        {
+          "label": "登记时间",
+          "type": "date",
+          "value": "2026-02-25"
+        },
+        {
+          "label": "备注",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "附件",
+          "type": "textarea",
+          "large": true,
+          "value": ""
+        }
+      ],
+      "actions": [
+        {
+          "label": "关闭"
+        }
+      ]
+    }
+  ]
+}

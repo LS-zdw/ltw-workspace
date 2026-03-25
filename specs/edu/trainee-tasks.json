@@ -1,0 +1,25 @@
+{
+  "module": "edu/trainee",
+  "pageId": "tasks",
+  "title": "教育培训-我的培训任务",
+  "path": "/edu/trainee/tasks",
+  "roles": ["被培训员"],
+  "blocks": [
+    {
+      "type": "InfoCard",
+      "title": "任务总览",
+      "desc": "展示待学课程、待考科目和证书到期提醒",
+      "fields": ["待学课程", "待考场次", "当前通过率", "证书到期提醒"]
+    },
+    {
+      "type": "Section",
+      "title": "在线学习与考试",
+      "desc": "支持学习进度、章节测验、正式考试占位演示"
+    },
+    {
+      "type": "Section",
+      "title": "证书中心",
+      "desc": "展示个人持证情况、到期预警和复训建议"
+    }
+  ]
+}

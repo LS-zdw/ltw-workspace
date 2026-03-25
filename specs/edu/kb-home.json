@@ -1,0 +1,196 @@
+{
+  "module": "edu/trainer",
+  "pageId": "kb-home",
+  "title": "安全培训知识库-首页",
+  "path": "/edu/kb",
+  "roles": [
+    "培训员",
+    "企业培训管理员",
+    "被培训员"
+  ],
+  "blocks": [
+    {
+      "type": "Metrics",
+      "title": "知识库概览",
+      "metrics": [
+        { "label": "总条目", "value": "268" },
+        { "label": "本月新增", "value": "24" },
+        { "label": "热门（近7天）", "value": "18" },
+        { "label": "发布中", "value": "213" }
+      ]
+    },
+    {
+      "type": "FilterBar",
+      "title": "快速检索",
+      "fields": [
+        { "key": "category", "label": "分类", "type": "select", "options": ["全部", "作业安全", "风险隐患", "自然灾害", "应急管理"] },
+        { "key": "keyword", "label": "关键词", "type": "select", "options": ["模糊搜索查询", "受限空间", "动火作业", "高处作业", "吊装作业", "临时用电"] },
+        { "key": "date", "label": "登记日期", "type": "dateRange", "start": "2026-02-01", "end": "2026-02-11" }
+      ],
+      "actions": [
+        { "label": "查询", "primary": true },
+        { "label": "重置" },
+        { "label": "导出" }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "推荐阅读（按风险与岗位匹配）",
+      "columns": [
+        { "key": "_sel", "label": "" },
+        { "key": "_no", "label": "序号" },
+        { "key": "title", "label": "条目标题" },
+        { "key": "category", "label": "分类" },
+        { "key": "tags", "label": "标签" },
+        { "key": "role", "label": "适用岗位" },
+        { "key": "risk", "label": "风险等级" },
+        { "key": "attach", "label": "附件" },
+        { "key": "updatedAt", "label": "更新时间" }
+      ],
+      "rows": [
+        {
+          "_sel": { "type": "checkbox" },
+          "_no": "1",
+          "title": { "text": "受限空间作业安全要点（含典型事故案例）", "to": "/edu/kb/article-detail?id=KB-2026-001" },
+          "category": "作业安全",
+          "tags": "受限空间/作业票/监护",
+          "role": "检维修/承包商/班组长",
+          "risk": "高",
+          "attach": { "text": "下载", "modal": "kb-attach", "to": "/edu/kb/article-detail?id=KB-2026-001" },
+          "updatedAt": "2026-02-03"
+        },
+        {
+          "_sel": { "type": "checkbox" },
+          "_no": "2",
+          "title": { "text": "动火作业分级与监护清单（现场核对版）", "to": "/edu/kb/article-detail?id=KB-2026-002" },
+          "category": "作业安全",
+          "tags": "动火/作业票/监护",
+          "role": "生产操作/检维修",
+          "risk": "高",
+          "attach": { "text": "下载", "modal": "kb-attach", "to": "/edu/kb/article-detail?id=KB-2026-002" },
+          "updatedAt": "2026-01-28"
+        },
+        {
+          "_sel": { "type": "checkbox" },
+          "_no": "3",
+          "title": { "text": "隐患排查治理：从清单到闭环的常见问题", "to": "/edu/kb/article-detail?id=KB-2026-003" },
+          "category": "风险隐患",
+          "tags": "隐患/闭环/复查",
+          "role": "安全员/班组长/管理人员",
+          "risk": "中",
+          "attach": { "text": "下载", "modal": "kb-attach", "to": "/edu/kb/article-detail?id=KB-2026-003" },
+          "updatedAt": "2026-01-21"
+        },
+        {
+          "_sel": { "type": "checkbox" },
+          "_no": "4",
+          "title": { "text": "自然灾害：台风暴雨期间装置防护与停开工要点", "to": "/edu/kb/article-detail?id=KB-2026-004" },
+          "category": "自然灾害",
+          "tags": "台风/暴雨/停开工",
+          "role": "生产操作/应急管理",
+          "risk": "中",
+          "attach": { "text": "下载", "modal": "kb-attach", "to": "/edu/kb/article-detail?id=KB-2026-004" },
+          "updatedAt": "2025-12-18"
+        },
+        {
+          "_sel": { "type": "checkbox" },
+          "_no": "5",
+          "title": { "text": "高处作业防坠落：三道防线与现场核对", "to": "/edu/kb/article-detail?id=KB-2026-005" },
+          "category": "作业安全",
+          "tags": "高处作业/防坠落/脚手架",
+          "role": "检维修/承包商/监护人",
+          "risk": "高",
+          "attach": { "text": "下载", "modal": "kb-attach", "to": "/edu/kb/article-detail?id=KB-2026-005" },
+          "updatedAt": "2026-02-07"
+        },
+        {
+          "_sel": { "type": "checkbox" },
+          "_no": "6",
+          "title": { "text": "吊装作业十条红线与指挥手势要点", "to": "/edu/kb/article-detail?id=KB-2026-006" },
+          "category": "作业安全",
+          "tags": "吊装/指挥/红线",
+          "role": "起重工/指挥/作业负责人",
+          "risk": "高",
+          "attach": { "text": "下载", "modal": "kb-attach", "to": "/edu/kb/article-detail?id=KB-2026-006" },
+          "updatedAt": "2026-01-30"
+        },
+        {
+          "_sel": { "type": "checkbox" },
+          "_no": "7",
+          "title": { "text": "临时用电：三级配电两级保护检查清单", "to": "/edu/kb/article-detail?id=KB-2026-007" },
+          "category": "作业安全",
+          "tags": "临时用电/配电箱/漏保",
+          "role": "电工/检维修/承包商",
+          "risk": "高",
+          "attach": { "text": "下载", "modal": "kb-attach", "to": "/edu/kb/article-detail?id=KB-2026-007" },
+          "updatedAt": "2026-01-16"
+        },
+        {
+          "_sel": { "type": "checkbox" },
+          "_no": "8",
+          "title": { "text": "承包商入场安全教育：常见缺项与整改闭环", "to": "/edu/kb/article-detail?id=KB-2026-008" },
+          "category": "风险隐患",
+          "tags": "承包商/入场教育/闭环",
+          "role": "安全员/承包商管理/班组长",
+          "risk": "中",
+          "attach": { "text": "下载", "modal": "kb-attach", "to": "/edu/kb/article-detail?id=KB-2026-008" },
+          "updatedAt": "2026-02-02"
+        },
+        {
+          "_sel": { "type": "checkbox" },
+          "_no": "9",
+          "title": { "text": "应急演练复盘：从记录到改进的模板与示例", "to": "/edu/kb/article-detail?id=KB-2026-009" },
+          "category": "应急管理",
+          "tags": "应急演练/复盘/改进",
+          "role": "应急管理/管理人员/班组长",
+          "risk": "低",
+          "attach": { "text": "下载", "modal": "kb-attach", "to": "/edu/kb/article-detail?id=KB-2026-009" },
+          "updatedAt": "2025-12-25"
+        },
+        {
+          "_sel": { "type": "checkbox" },
+          "_no": "10",
+          "title": { "text": "冬季防冻防凝：装置巡检要点与交接班提示", "to": "/edu/kb/article-detail?id=KB-2026-010" },
+          "category": "自然灾害",
+          "tags": "防冻/防凝/巡检",
+          "role": "生产操作/班组长",
+          "risk": "中",
+          "attach": { "text": "下载", "modal": "kb-attach", "to": "/edu/kb/article-detail?id=KB-2026-010" },
+          "updatedAt": "2025-12-06"
+        }
+      ]
+    },
+    {
+      "type": "Section",
+      "title": "快速入口（链路联动）",
+      "desc": "以下入口仅做链路联动，便于演示知识库与培训、考试、课件体系的贯通。"
+    },
+    {
+      "type": "Tags",
+      "title": "常用入口",
+      "items": [
+        { "text": "教育培训统计分析", "to": "/edu/trainer/hq-training-statistics" },
+        { "text": "培训计划管理", "to": "/edu/trainer/training-plan-management" },
+        { "text": "培训记录台账", "to": "/edu/trainer/training-record-management" },
+        { "text": "题库/试卷（入口）", "to": "/edu/trainer/training-prototype-overview" },
+        { "text": "培训课件（入口）", "to": "/edu/trainer/training-prototype-overview" },
+        { "text": "知识库文章管理（管理端）", "to": "/edu/trainer/kb/manage" }
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "kb-attach",
+      "title": "附件下载（演示）",
+      "desc": "原型里通常为下载/预览，这里用弹层模拟。",
+      "fields": [
+        ["附件名", "（示例）现场核对清单.pdf"],
+        ["说明", "离线演示不接文件服务，可在详情页查看附件列表。"]
+      ],
+      "actions": [
+        { "label": "去详情页", "to": "__DRILL__" },
+        { "label": "关闭" }
+      ]
+    }
+  ]
+}

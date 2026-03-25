@@ -1,0 +1,362 @@
+{
+  "module": "edu/trainer",
+  "pageId": "training-record-migration-query",
+  "title": "教育培训-培训记录-迁移数据查询",
+  "path": "/edu/trainer/training-record-migration-query",
+  "roles": [
+    "培训员",
+    "企业培训管理员"
+  ],
+  "source": "edu-ep/培训记录(老系统迁移数据).html",
+  "blocks": [
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        {
+          "label": "培训班名称",
+          "type": "text",
+          "placeholder": "请输入关键字"
+        },
+        {
+          "label": "年度",
+          "type": "select",
+          "options": [
+            "全部",
+            "2026",
+            "2025",
+            "2024"
+          ]
+        },
+        {
+          "label": "企业名称",
+          "type": "select",
+          "options": [
+            "全部",
+            "安徽石油"
+          ]
+        },
+        {
+          "label": "主办单位",
+          "type": "text",
+          "placeholder": "请输入主办单位"
+        },
+        {
+          "label": "是否取证",
+          "type": "select",
+          "options": [
+            "全部",
+            "是",
+            "否"
+          ]
+        },
+        {
+          "label": "计划分类",
+          "type": "select",
+          "options": [
+            "全部",
+            "年度计划",
+            "临时计划"
+          ]
+        },
+        {
+          "label": "培训级别",
+          "type": "select",
+          "options": [
+            "全部",
+            "基层单位级",
+            "企业级"
+          ]
+        },
+        {
+          "label": "培训类别",
+          "type": "select",
+          "options": [
+            "全部",
+            "在岗",
+            "脱产"
+          ]
+        },
+        {
+          "label": "登记时间",
+          "type": "daterange",
+          "start": "2026-02-01",
+          "end": "2026-02-25"
+        }
+      ],
+      "actions": [
+        {
+          "label": "查询",
+          "primary": true
+        },
+        {
+          "label": "高级查询"
+        },
+        {
+          "label": "清空"
+        },
+        {
+          "label": "新增"
+        },
+        {
+          "label": "本单位"
+        },
+        {
+          "label": "导出全部"
+        }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "教育培训-培训记录-迁移数据列表",
+      "columns": [
+        "序号",
+        "年度",
+        "企业名称",
+        "培训班名称",
+        "计划举办期数",
+        "实际举办期数",
+        "实际培训学时",
+        "计划培训人数",
+        "实际培训人数",
+        "合格人数",
+        "不合格人数",
+        "主办单位",
+        "是否取证",
+        "计划分类",
+        "专业类别",
+        "培训级别",
+        "资金总投入(万)",
+        "培训类别",
+        "培训班负责人",
+        "登记部门",
+        "登记人",
+        "登记时间"
+      ],
+      "rows": [
+        [
+          "1",
+          "2026",
+          "安徽石油",
+          {
+            "text": "加油作业、充电作业、卸油作业、洗车机设备操作规程培训",
+            "modal": "drill-detail"
+          },
+          "1",
+          "1",
+          "2.0",
+          "9",
+          "9",
+          "9",
+          "0",
+          "紫华西路油气站",
+          "否",
+          "年度计划",
+          "",
+          "基层单位级",
+          "0.0",
+          "在岗",
+          "何群",
+          "紫华西路油气站",
+          "何群",
+          "2026-02-25"
+        ],
+        [
+          "2",
+          "2026",
+          "安徽石油",
+          {
+            "text": "2026年02月庐南加油站综合培训",
+            "modal": "drill-detail"
+          },
+          "1",
+          "1",
+          "2.0",
+          "2",
+          "2",
+          "2",
+          "0",
+          "庐南加油站",
+          "否",
+          "年度计划",
+          "",
+          "基层单位级",
+          "0.0",
+          "在岗",
+          "陈勇",
+          "庐南加油站",
+          "陈勇",
+          "2026-02-25"
+        ]
+      ]
+    },
+    {
+      "type": "Info",
+      "title": "页面说明",
+      "fields": [
+        "用于老系统培训记录迁移数据查询，仅支持查询与查看详情，不影响原培训记录页面。"
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "drill-detail",
+      "template": "certificate-detail-form",
+      "title": "教育培训-培训记录-迁移数据详情",
+      "sectionTitle": "培训记录录入",
+      "headerActions": [
+        {
+          "label": "返回",
+          "close": true
+        }
+      ],
+      "formFields": [
+        {
+          "label": "年度",
+          "type": "select",
+          "value": "2026",
+          "options": [
+            "2026",
+            "2025",
+            "2024"
+          ]
+        },
+        {
+          "label": "企业名称",
+          "type": "select",
+          "value": "安徽石油",
+          "options": [
+            "安徽石油"
+          ]
+        },
+        {
+          "label": "培训班名称",
+          "type": "text",
+          "value": "加油作业、充电作业、卸油作业、洗车机设备操作规程培训"
+        },
+        {
+          "label": "计划举办期数",
+          "type": "text",
+          "value": "1"
+        },
+        {
+          "label": "实际举办期数",
+          "type": "text",
+          "value": "1"
+        },
+        {
+          "label": "实际培训学时",
+          "type": "text",
+          "value": "2.0"
+        },
+        {
+          "label": "计划培训人数",
+          "type": "text",
+          "value": "9"
+        },
+        {
+          "label": "实际培训人数",
+          "type": "text",
+          "value": "9"
+        },
+        {
+          "label": "合格人数",
+          "type": "text",
+          "value": "9"
+        },
+        {
+          "label": "不合格人数",
+          "type": "text",
+          "value": "0"
+        },
+        {
+          "label": "主办单位",
+          "type": "text",
+          "value": "紫华西路油气站"
+        },
+        {
+          "label": "是否取证",
+          "type": "radio",
+          "value": "否",
+          "options": [
+            "是",
+            "否"
+          ]
+        },
+        {
+          "label": "计划分类",
+          "type": "select",
+          "value": "年度计划",
+          "options": [
+            "年度计划",
+            "临时计划"
+          ]
+        },
+        {
+          "label": "专业类别",
+          "type": "select",
+          "value": "请选择...",
+          "options": [
+            "请选择...",
+            "安全管理",
+            "设备管理"
+          ]
+        },
+        {
+          "label": "培训级别",
+          "type": "select",
+          "value": "基层单位级",
+          "options": [
+            "基层单位级",
+            "企业级"
+          ]
+        },
+        {
+          "label": "资金总投入(万)",
+          "type": "text",
+          "value": "0.0"
+        },
+        {
+          "label": "培训类别",
+          "type": "select",
+          "value": "在岗",
+          "options": [
+            "在岗",
+            "脱产"
+          ]
+        },
+        {
+          "label": "培训班负责人",
+          "type": "text",
+          "value": "何群"
+        },
+        {
+          "label": "登记部门",
+          "type": "text",
+          "value": "紫华西路油气站"
+        },
+        {
+          "label": "登记人",
+          "type": "text",
+          "value": "何群"
+        },
+        {
+          "label": "登记时间",
+          "type": "date",
+          "value": "2026-02-25"
+        },
+        {
+          "label": "附件",
+          "type": "textarea",
+          "large": true,
+          "value": ""
+        }
+      ],
+      "actions": [
+        {
+          "label": "关闭"
+        }
+      ]
+    }
+  ]
+}

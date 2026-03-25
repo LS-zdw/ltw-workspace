@@ -1,0 +1,248 @@
+{
+  "module": "edu/trainer",
+  "pageId": "training-plan-management",
+  "title": "教育培训-培训计划管理-总部端",
+  "path": "/edu/trainer/training-plan-management",
+  "roles": [
+    "培训员",
+    "企业培训管理员"
+  ],
+  "source": "edu-ep/培训计划管理.html",
+  "blocks": [
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        {
+          "label": "年度",
+          "type": "select",
+          "options": ["年份选择", "2029", "2026", "2020", "2019", "2015", "2010"]
+        },
+        {
+          "label": "计划代码",
+          "type": "text",
+          "placeholder": "请输入计划代码"
+        },
+        {
+          "label": "培训计划名称",
+          "type": "text",
+          "placeholder": "请输入培训计划名"
+        },
+        {
+          "label": "计划参与机构",
+          "type": "select",
+          "options": ["请选择计划参与机构", "中科（广东）炼化", "湖南石油", "东北油气, 齐鲁石化"]
+        },
+        {
+          "label": "主办单位",
+          "type": "select",
+          "options": ["请选择主办单位", "中科（广东）炼化", "胜利油田", "西南油气", "江汉油田"]
+        },
+        {
+          "label": "承办单位",
+          "type": "select",
+          "options": ["请选择承办单位", "湖南石油", "江苏油田", "河南油田", "江汉油田"]
+        },
+        {
+          "label": "计划进度",
+          "type": "select",
+          "options": ["请选择计划进度", "未开始", "进行中", "已完成"]
+        }
+      ],
+      "actions": [
+        { "label": "新增", "primary": true, "open": "add-plan" },
+        { "label": "删除" },
+        { "label": "导入" },
+        { "label": "导出" },
+        { "label": "模板下载" },
+        { "label": "查询", "primary": true },
+        { "label": "重置" },
+        { "label": "收起" }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "培训计划管理列表",
+      "columns": [
+        "序号",
+        "年度",
+        "计划代码",
+        "培训计划名称",
+        "培训对象",
+        "计划参与机构",
+        "培训人数",
+        "培训天数",
+        "计划时间",
+        "主办单位",
+        "承办单位",
+        "办班地点",
+        "登记部门",
+        "期数",
+        "计划进度",
+        "操作"
+      ],
+      "rows": [
+        [
+          "2",
+          "2019",
+          { "text": "20260212162324146", "modal": "drill-detail" },
+          { "text": "炼化企业安全管理人员年度培训计划", "modal": "drill-detail" },
+          "安全管理人员",
+          "中科（广东）炼化",
+          "0",
+          "0",
+          "",
+          "中科（广东）炼化",
+          "湖南石油",
+          "湛江培训中心",
+          "安环部",
+          "0",
+          "未开始",
+          { "text": "编辑 / 变更", "modal": "drill-detail" }
+        ],
+        [
+          "3",
+          "2020",
+          { "text": "20260210141851596", "modal": "drill-detail" },
+          { "text": "基层班组长安全能力提升培训计划", "modal": "drill-detail" },
+          "基层班组长",
+          "中科（广东）炼化",
+          "0",
+          "65",
+          "",
+          "胜利油田",
+          "",
+          "东营实训基地",
+          "运行一部",
+          "0",
+          "进行中",
+          { "text": "编辑 / 变更", "modal": "drill-detail" }
+        ],
+        [
+          "4",
+          "2010",
+          { "text": "20260206165935562", "modal": "drill-detail" },
+          { "text": "特种作业取证与复审培训计划", "modal": "drill-detail" },
+          "特种作业人员",
+          "中科（广东）炼化",
+          "99999",
+          "888",
+          "2026-05, 2026-03...",
+          "西南油气",
+          "江苏油田",
+          "成都培训中心",
+          "运行二部",
+          "999",
+          "进行中",
+          { "text": "编辑 / 变更", "modal": "drill-detail" }
+        ],
+        [
+          "5",
+          "2026",
+          { "text": "20260205161400493", "modal": "drill-detail" },
+          { "text": "新员工入职安全教育培训计划", "modal": "drill-detail" },
+          "新入职员工",
+          "湖南石油",
+          "12",
+          "12",
+          "2026-06, 2026-07",
+          "江汉油田",
+          "河南油田",
+          "武汉培训教室A301",
+          "安环部",
+          "0",
+          "未开始",
+          { "text": "编辑 / 变更", "modal": "drill-detail" }
+        ],
+        [
+          "6",
+          "2029",
+          { "text": "20260204105348572", "modal": "drill-detail" },
+          { "text": "承包商作业安全专项培训计划", "modal": "drill-detail" },
+          "承包商管理人员",
+          "中科（广东）炼化",
+          "566",
+          "899",
+          "2026-01, 2026-02...",
+          "西南油气",
+          "江苏油田",
+          "南京培训大楼3层",
+          "运行三部",
+          "877",
+          "进行中",
+          { "text": "编辑 / 变更", "modal": "drill-detail" }
+        ]
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "add-plan",
+      "template": "training-plan-create-form",
+      "title": "培训计划信息新增",
+      "sectionTitle": "新增培训计划",
+      "formFields": [
+        { "label": "* 年度", "type": "select", "value": "年份选择", "options": ["年份选择", "2026", "2025", "2024"] },
+        { "label": "计划代码", "type": "text", "value": "20260226174623924" },
+        { "label": "* 培训计划名称", "type": "text", "value": "", "placeholder": "请输入培训计划名称" },
+        { "label": "* 培训对象", "type": "text", "value": "", "placeholder": "输入培训对象" },
+        { "label": "计划培训人数", "type": "text", "value": "", "placeholder": "填写人数/期（最多6位整数）" },
+        { "label": "培训方式", "type": "select", "value": "请选择培训方式", "options": ["请选择培训方式", "集中面授", "外出研修", "线上培训"] },
+        { "label": "* 培训天数", "type": "text", "value": "", "placeholder": "整数最多3位，小数最多1位" },
+        { "label": "计划期数", "type": "text", "value": "", "placeholder": "填写1-3位整数" },
+        { "label": "办班地点", "type": "text", "value": "", "placeholder": "请输入办班地点" },
+        { "label": "* 主办单位", "type": "select", "value": "选择主办单位", "options": ["选择主办单位", "中科（广东）炼化", "西南油气", "江汉油田"] },
+        { "label": "承办单位", "type": "select", "value": "选择承办单位", "options": ["选择承办单位", "湖南石油", "江苏油田", "河南油田"] },
+        { "label": "计划费用", "type": "text", "value": "", "placeholder": "整数最多7位，小数最多2位(元)" },
+        { "label": "登记部门", "type": "text", "value": "工程管理一班" },
+        { "label": "登记人", "type": "text", "value": "肖鹏" },
+        { "label": "上传附件", "type": "picker", "value": "", "buttonLabel": "点击上传" },
+        { "label": "* 培训内容", "type": "textarea", "large": true, "value": "", "placeholder": "培训内容简述" }
+      ],
+      "footerActions": [
+        { "label": "关闭", "close": true },
+        { "label": "保存", "primary": true },
+        { "label": "提交", "primary": true }
+      ]
+    },
+    {
+      "id": "drill-detail",
+      "template": "training-plan-detail-form",
+      "title": "培训计划详情",
+      "sectionTitle": "培训计划详情",
+      "formFields": [
+        { "label": "年度", "type": "text", "value": "2010年" },
+        { "label": "计划代码", "type": "text", "value": "20260206165935562" },
+        { "label": "培训计划名称", "type": "text", "value": "特种作业取证与复审培训计划" },
+        { "label": "培训对象", "type": "text", "value": "特种作业人员" },
+        { "label": "培训天数", "type": "text", "value": "888" },
+        { "label": "计划期数", "type": "text", "value": "999" },
+        { "label": "主办单位", "type": "text", "value": "西南油气" },
+        { "label": "承办单位", "type": "text", "value": "江苏油田" },
+        { "label": "办班地点", "type": "text", "value": "成都培训中心" },
+        { "label": "上传附件", "type": "text", "value": "2024-05-01销售调度日报.xlsx" },
+        { "label": "培训内容", "type": "textarea", "large": true, "value": "围绕特种作业安全规范、典型风险辨识、应急处置流程和实操要点开展集中培训与案例复盘。" }
+      ],
+      "planMonths": {
+        "title": "计划时间",
+        "year": "2026年",
+        "selected": [3, 4, 5],
+        "partnerLabel": "计划参与机构",
+        "partners": ["中科（广东）炼化"]
+      },
+      "executionTable": {
+        "title": "计划执行情况",
+        "columns": ["序号", "培训班名称", "参与企业数量", "期次", "开班月份", "培训内容", "培训形式", "计划培训人数", "实际培训人数", "考试合格人员数量", "合格率"],
+        "rows": [
+          ["1", { "text": "特种作业培训班001", "modal": "drill-detail" }, { "text": "1", "className": "cell-ok" }, "0", "2", "安全操作规范与风险识别", "集中面授", "99999", "0", "0", "0%"],
+          ["2", { "text": "特种作业培训班002", "modal": "drill-detail" }, { "text": "1", "className": "cell-ok" }, "766", "2", "复审要点与事故案例分析", "外出研修", "99999", "0", "0", "0%"]
+        ]
+      },
+      "actions": [
+        {
+          "label": "关闭"
+        }
+      ]
+    }
+  ]
+}

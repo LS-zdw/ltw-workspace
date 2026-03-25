@@ -1,0 +1,183 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import Card from "/src/components/ui/Card.jsx";
+
+export default function Page() {
+  const navigate = useNavigate();
+  const projectName = new URLSearchParams(window.location.search).get("project");
+  const [activeModal, setActiveModal] = React.useState(null);
+  const [drillTarget, setDrillTarget] = React.useState("");
+  const [drillProject, setDrillProject] = React.useState(projectName || "");
+  const [modalStates, setModalStates] = React.useState({});
+  const resolveDynamic = (value) => String(value || "").replace(/\{\{project\}\}/g, drillProject || projectName || "");
+  const modalFormState = modalStates[activeModal] || {};
+  const setModalField = (key, value) => {
+    setModalFields({ [key]: value });
+  };
+  const setModalFields = (patch) => {
+    setModalStates((prev) => ({
+      ...prev,
+      [activeModal]: { ...(prev[activeModal] || {}), ...(patch || {}) }
+    }));
+  };
+  const isVisible = (showWhen) => {
+    if (!showWhen) return true;
+    return Object.entries(showWhen).every(([k, v]) => (modalFormState[k] || "") === String(v));
+  };
+  const openModal = (id, target = "") => {
+    setDrillTarget(target);
+    try {
+      const q = target.includes("?") ? target.split("?")[1] : "";
+      const p = new URLSearchParams(q).get("project");
+      if (p) setDrillProject(p);
+    } catch {
+      // ignore parse errors
+    }
+    const initialByModal = {};
+    if (initialByModal[id]) {
+      setModalStates((prev) => ({ ...prev, [id]: initialByModal[id] }));
+    }
+    setActiveModal(id);
+  };
+  const closeModal = () => setActiveModal(null);
+  const goto = (target) => {
+    closeModal();
+    if (navigate) navigate(target || drillTarget || "/");
+  };
+
+  return (
+    <div className="stack">
+      
+      <div className="filterbar">
+        <div className="filterbar-row">
+          <div className="filterbar-left"><div className="filterbar-item">
+        <div className="filterbar-label">证书管理</div>
+        <div className="filterbar-input"><input className="filterbar-control" placeholder="请输入证书管理" defaultValue="" /></div>
+      </div><div className="filterbar-item">
+        <div className="filterbar-label">人员类别</div>
+        <div className="filterbar-input"><select className="filterbar-control" defaultValue="全部">
+          <option value="全部">全部</option><option value="选项1">选项1</option><option value="选项2">选项2</option>
+        </select></div>
+      </div><div className="filterbar-item">
+        <div className="filterbar-label">姓名</div>
+        <div className="filterbar-input"><input className="filterbar-control" placeholder="请输入姓名" defaultValue="" /></div>
+      </div><div className="filterbar-item">
+        <div className="filterbar-label">登记人</div>
+        <div className="filterbar-input"><input className="filterbar-control" placeholder="请输入登记人" defaultValue="" /></div>
+      </div><div className="filterbar-item">
+        <div className="filterbar-label">登记时间</div>
+        <div className="filterbar-input"><div className="filterbar-range">
+          <input type="date" className="filterbar-control" defaultValue="2026-02-01" />
+          <span className="filterbar-range-sep">-</span>
+          <input type="date" className="filterbar-control" defaultValue="2026-02-11" />
+        </div></div>
+      </div></div>
+          <div className="filterbar-actions"><button type="button" className="btn btn-primary">查询</button><button type="button" className="btn">重置</button><button type="button" className="btn">导出</button></div>
+        </div>
+      </div>
+
+      <Card title="教育培训-主要负责人岗位信息维护列表" desc="">
+        <div className="table-wrap">
+          <table className="proto-table">
+            <thead>
+              <tr>
+                <th className="table-checkbox"><input type="checkbox" readOnly /></th><th>序号</th><th>姓名</th><th>部门</th><th>新员工与转岗</th><th>关键岗位</th><th>选择时间段</th><th>登记日期</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>1</td><td><button type="button" className="table-link-btn" onClick={() => openModal("drill-detail", "")}>培训记录管理</button></td><td>主要负责人</td><td>批量维护</td><td>UIDA2026001</td><td>性别</td><td>王一</td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>2</td><td><button type="button" className="table-link-btn" onClick={() => openModal("drill-detail", "")}>安全管理人员</button></td><td>劳务派遣人员</td><td>特种设备作业人员</td><td>实习生</td><td>主要负责人岗位信息维护</td><td>培训记录管理</td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>3</td><td><button type="button" className="table-link-btn" onClick={() => openModal("drill-detail", "")}>培训记录管理</button></td><td>主要负责人</td><td>批量维护</td><td>UIDA2026001</td><td>性别</td><td>王一</td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>4</td><td><button type="button" className="table-link-btn" onClick={() => openModal("drill-detail", "")}>安全管理人员</button></td><td>劳务派遣人员</td><td>特种设备作业人员</td><td>实习生</td><td>主要负责人岗位信息维护</td><td>培训记录管理</td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>5</td><td><button type="button" className="table-link-btn" onClick={() => openModal("drill-detail", "")}>培训记录管理</button></td><td>主要负责人</td><td>批量维护</td><td>UIDA2026001</td><td>性别</td><td>王一</td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>6</td><td><button type="button" className="table-link-btn" onClick={() => openModal("drill-detail", "")}>安全管理人员</button></td><td>劳务派遣人员</td><td>特种设备作业人员</td><td>实习生</td><td>主要负责人岗位信息维护</td><td>培训记录管理</td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>7</td><td><button type="button" className="table-link-btn" onClick={() => openModal("drill-detail", "")}>培训记录管理</button></td><td>主要负责人</td><td>批量维护</td><td>UIDA2026001</td><td>性别</td><td>王一</td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>8</td><td><button type="button" className="table-link-btn" onClick={() => openModal("drill-detail", "")}>安全管理人员</button></td><td>劳务派遣人员</td><td>特种设备作业人员</td><td>实习生</td><td>主要负责人岗位信息维护</td><td>培训记录管理</td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>9</td><td><button type="button" className="table-link-btn" onClick={() => openModal("drill-detail", "")}>培训记录管理</button></td><td>主要负责人</td><td>批量维护</td><td>UIDA2026001</td><td>性别</td><td>王一</td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>10</td><td><button type="button" className="table-link-btn" onClick={() => openModal("drill-detail", "")}>安全管理人员</button></td><td>劳务派遣人员</td><td>特种设备作业人员</td><td>实习生</td><td>主要负责人岗位信息维护</td><td>培训记录管理</td>
+          </tr>
+            </tbody>
+          </table>
+        </div>
+      </Card>
+
+      <Card title="页面说明" desc="">
+        <div className="grid grid-2">
+          
+      <div className="pill">
+        <div className="k">页面操作：新增 / 导出 / 删除 / 查询 / 重置 / 保存 / 取消</div>
+        <div className="v">（示例值）</div>
+      </div>
+        </div>
+      </Card>
+      
+      {activeModal === "drill-detail" ? (
+        <div className="modal-mask" onClick={closeModal}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-hd">
+              <div>
+                <div className="modal-title">教育培训-主要负责人岗位信息维护详情</div>
+                <div className="modal-desc">来源：edu-ep/主要负责人岗位信息维护.html</div>
+              </div>
+              <button type="button" className="modal-close" onClick={closeModal}>x</button>
+            </div>
+            <div className="modal-bd">
+              
+      <div className="pill">
+        <div className="k">姓名</div>
+        <div className="v">（示例值）</div>
+      </div>
+      <div className="pill">
+        <div className="k">部门</div>
+        <div className="v">（示例值）</div>
+      </div>
+      <div className="pill">
+        <div className="k">新员工与转岗</div>
+        <div className="v">（示例值）</div>
+      </div>
+      <div className="pill">
+        <div className="k">关键岗位</div>
+        <div className="v">（示例值）</div>
+      </div>
+      <div className="pill">
+        <div className="k">选择时间段</div>
+        <div className="v">（示例值）</div>
+      </div>
+      <div className="pill">
+        <div className="k">登记日期</div>
+        <div className="v">（示例值）</div>
+      </div>
+              
+            </div>
+            <div className="modal-ft">
+              <button type="button" className="btn" onClick={closeModal}>
+              关闭
+            </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+  
+    </div>
+  );
+}

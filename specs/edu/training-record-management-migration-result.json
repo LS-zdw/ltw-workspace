@@ -1,0 +1,146 @@
+{
+  "module": "edu/trainer",
+  "pageId": "training-record-management-migration-result",
+  "title": "教育培训-培训记录历史数据迁移-执行结果台账",
+  "path": "/edu/trainer/training-record-management-migration-result",
+  "roles": ["培训员", "企业培训管理员"],
+  "source": "edu-ep/培训记录(老系统迁移数据).html",
+  "blocks": [
+    {
+      "type": "Metrics",
+      "title": "执行结果概览",
+      "metrics": [
+        { "label": "本次迁移单号", "value": "TR-BATCH-20260301-01" },
+        { "label": "提交迁移数", "value": "3862" },
+        { "label": "导入成功", "value": "3739" },
+        { "label": "需业务处理", "value": "123" },
+        { "label": "已导入待补充", "value": "81" }
+      ]
+    },
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        { "label": "年度", "type": "select", "options": ["全部", "2026", "2025", "2024"] },
+        { "label": "培训班名称", "type": "text", "placeholder": "请输入培训班名称" },
+        { "label": "培训计划名称", "type": "text", "placeholder": "请输入培训计划名称" },
+        { "label": "执行结果", "type": "select", "options": ["全部", "导入成功", "需业务处理"] },
+        { "label": "缺失项类型", "type": "select", "options": ["全部", "培训对象", "主办单位", "培训方式", "培训地点", "培训内容"] },
+        { "label": "迁移单号", "type": "text", "placeholder": "请输入迁移单号" }
+      ],
+      "actions": [
+        { "label": "查询", "primary": true },
+        { "label": "重置" },
+        { "label": "返回准备台账", "to": "/edu/trainer/training-record-management-migration-query" },
+        { "label": "导出待处理清单" }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "迁移执行明细",
+      "columns": [
+        "序号",
+        "执行结果",
+        "待处理原因",
+        "迁移单号",
+        "年度",
+        "培训班名称",
+        "培训计划名称",
+        "培训对象",
+        "主办单位",
+        "培训方式",
+        "培训地点",
+        "培训内容",
+        "补充建议",
+        "业务处理状态",
+        "登记人",
+        "登记时间"
+      ],
+      "rows": [
+        [
+          "1",
+          { "text": "导入成功", "className": "cell-ok" },
+          "-",
+          "TR-BATCH-20260301-01",
+          "2026",
+          { "text": "班组长安全提升一期", "modal": "drill-detail" },
+          "2026年班组长安全履职能力提升计划",
+          "一线班组长与安全员",
+          "中科（广东）炼化",
+          "集中面授",
+          "湛江培训中心A栋301",
+          "班组安全职责、风险辨识、隐患整改闭环",
+          "-",
+          "已完成",
+          "李晓",
+          "2026-03-01"
+        ],
+        [
+          "2",
+          { "text": "需业务处理", "className": "cell-danger" },
+          { "text": "必填缺失: 培训对象", "className": "cell-danger" },
+          "TR-BATCH-20260301-01",
+          "2026",
+          { "text": "承包商入场培训（二期）", "modal": "drill-detail" },
+          "承包商高风险作业安全专项计划",
+          "",
+          "西南油气",
+          "",
+          "南京培训中心2号楼",
+          "动火、受限空间作业票证与应急处置流程",
+          "补培训对象，建议同步补培训方式",
+          { "text": "待业务确认", "className": "cell-warn" },
+          "周楠",
+          "2026-03-01"
+        ]
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "drill-detail",
+      "template": "certificate-detail-form",
+      "title": "培训记录迁移执行业务详情",
+      "sectionTitle": "处理摘要",
+      "headerActions": [
+        {
+          "label": "复制排查信息",
+          "copy": "迁移单号=TR-BATCH-20260301-01; 老系统记录号=OLD-RECORD-000387; 年度=2026; 培训班名称=承包商入场培训（二期）; 计划名称=承包商高风险作业安全专项计划; 执行结果=需业务处理; 缺失项=培训对象,培训方式"
+        },
+        { "label": "关闭", "close": true }
+      ],
+      "formFields": [
+        { "label": "年度", "type": "text", "value": "2026" },
+        { "label": "培训班名称", "type": "text", "value": "承包商入场培训（二期）" },
+        { "label": "培训计划名称", "type": "text", "value": "承包商高风险作业安全专项计划" },
+        { "label": "培训开始时间", "type": "text", "value": "2026-02-10" },
+        { "label": "培训结束时间", "type": "text", "value": "2026-02-11" },
+        { "label": "培训对象", "type": "text", "value": "" },
+        { "label": "主办单位", "type": "text", "value": "西南油气" },
+        { "label": "承办单位", "type": "text", "value": "江苏油田" },
+        { "label": "培训方式", "type": "text", "value": "" },
+        { "label": "培训地点", "type": "text", "value": "南京培训中心2号楼" },
+        { "label": "培训内容", "type": "textarea", "value": "动火、受限空间作业票证与应急处置流程" },
+        { "label": "执行结果", "type": "text", "value": "需业务处理" },
+        { "label": "待处理原因", "type": "textarea", "value": "培训对象缺失；培训方式未维护。请补全后重跑该条迁移。" },
+        { "label": "业务处理状态", "type": "text", "value": "待业务确认" }
+      ],
+      "historyTable": {
+        "title": "落库核对（执行后）",
+        "showAdd": false,
+        "columns": ["字段名称", "老系统", "新系统", "校验结论"],
+        "rows": [
+          ["培训班名称", "承包商入场培训（二期）", "承包商入场培训（二期）", { "text": "一致", "className": "cell-ok" }],
+          ["培训计划名称", "承包商高风险作业安全专项计划", "承包商高风险作业安全专项计划", { "text": "一致", "className": "cell-ok" }],
+          ["培训开始时间", "2026-02-10", "2026-02-10", { "text": "一致", "className": "cell-ok" }],
+          ["培训结束时间", "2026-02-11", "2026-02-11", { "text": "一致", "className": "cell-ok" }],
+          ["培训对象", "", "", { "text": "缺失", "className": "cell-danger" }],
+          ["主办单位", "西南油气", "西南油气", { "text": "一致", "className": "cell-ok" }],
+          ["培训方式", "", "", { "text": "缺失可补", "className": "cell-warn" }],
+          ["培训地点", "南京培训中心2号楼", "南京培训中心2号楼", { "text": "一致", "className": "cell-ok" }]
+        ]
+      },
+      "actions": [{ "label": "关闭" }]
+    }
+  ]
+}

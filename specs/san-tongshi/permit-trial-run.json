@@ -1,0 +1,315 @@
+{
+  "module": "san-tongshi",
+  "pageId": "permit-trial-run",
+  "title": "试运行阶段行政许可信息管理",
+  "path": "/san-tongshi/permit/trial-run",
+  "roles": [
+    "企业经办人",
+    "总部监督人"
+  ],
+  "source": "tech_project/试运行阶段行政许可信息管理.html",
+  "modals": [
+    {
+      "id": "project-detail",
+      "title": "试运行阶段项目详情",
+      "desc": "对应原型中的“项目详情”动态面板",
+      "template": "project-detail-form",
+      "basicInfo": [
+        [
+          "所属企业",
+          "海南炼化"
+        ],
+        [
+          "项目名称",
+          "{{project}}"
+        ],
+        [
+          "项目编码",
+          "H20018"
+        ],
+        [
+          "项目建设单位",
+          "海南巴陵化工新材料有限公司"
+        ]
+      ],
+      "buildInfo": [
+        [
+          "所属板块",
+          "炼化板块"
+        ],
+        [
+          "项目级别",
+          "一类项目（集团公司级）"
+        ],
+        [
+          "项目状态",
+          "进行中"
+        ],
+        [
+          "项目创建日期",
+          "2024年2月1日"
+        ]
+      ],
+      "stages": [
+        "可研阶段",
+        "基础设计阶段",
+        "试运行阶段",
+        "竣工验收阶段"
+      ],
+      "activeStage": "试运行阶段",
+      "toggles": [
+        {
+          "key": "gov",
+          "label": "是否有政府试运行审批",
+          "options": [
+            "是政府",
+            "否政府试运行"
+          ],
+          "default": "是政府"
+        },
+        {
+          "key": "delay",
+          "label": "是否试生产延期",
+          "options": [
+            "是",
+            "否"
+          ],
+          "default": "是"
+        }
+      ],
+      "formSections": [
+        {
+          "title": "试运行基本信息",
+          "fields": [
+            [
+              "试生产开始时间",
+              "选择时间"
+            ],
+            [
+              "试生产结束时间",
+              "选择时间"
+            ],
+            [
+              "试生产备案文件",
+              "点击上传"
+            ]
+          ]
+        },
+        {
+          "title": "政府审核信息",
+          "fields": [
+            [
+              "政府审核信息",
+              "点击上传"
+            ],
+            [
+              "批复时间",
+              "选择时间"
+            ],
+            [
+              "批复文号",
+              "请输入内容"
+            ]
+          ],
+          "showWhen": {
+            "gov": "是政府"
+          },
+          "actions": [
+            {
+              "label": "保存"
+            },
+            {
+              "label": "提交",
+              "open": "confirm-submit"
+            }
+          ]
+        },
+        {
+          "title": "否政府试运行",
+          "fields": [
+            [
+              "原因",
+              "点击上传"
+            ]
+          ],
+          "showWhen": {
+            "gov": "否政府试运行"
+          },
+          "actions": [
+            {
+              "label": "保存"
+            },
+            {
+              "label": "提交",
+              "open": "confirm-submit"
+            }
+          ]
+        },
+        {
+          "title": "试生产延期信息",
+          "fields": [
+            [
+              "延期原因",
+              "请输入内容"
+            ],
+            [
+              "延期截止",
+              "选择时间"
+            ],
+            [
+              "证明",
+              "点击上传"
+            ]
+          ],
+          "showWhen": {
+            "delay": "是"
+          },
+          "actions": [
+            {
+              "label": "保存"
+            },
+            {
+              "label": "提交",
+              "open": "confirm-submit"
+            }
+          ]
+        },
+        {
+          "title": "不延期说明",
+          "fields": [
+            [
+              "是否延期",
+              "否"
+            ],
+            [
+              "原因",
+              "请输入内容"
+            ]
+          ],
+          "showWhen": {
+            "delay": "否"
+          },
+          "actions": [
+            {
+              "label": "保存"
+            },
+            {
+              "label": "提交",
+              "open": "confirm-submit"
+            }
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "label": "关闭"
+        },
+        {
+          "label": "提交并确认",
+          "open": "confirm-submit"
+        },
+        {
+          "label": "进入任务详情",
+          "to": "__DRILL__"
+        }
+      ]
+    },
+    {
+      "id": "confirm-submit",
+      "title": "确认提交",
+      "note": "确认后将提交试运行阶段行政许可信息。",
+      "actions": [
+        {
+          "label": "取消"
+        },
+        {
+          "label": "确认提交",
+          "to": "__DRILL__"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        "项目级别",
+        "项目类型",
+        "项目名称",
+        "所属板块",
+        "项目状态",
+        "是否重点工程建设项目"
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "试运行阶段台账",
+      "columns": [
+        "序号",
+        "所属企业",
+        "项目名称",
+        "项目级别",
+        "安全三同时阶段",
+        "安全评价单位",
+        "设计单位",
+        "安全设计批复日期",
+        "项目状态",
+        "登记人",
+        "登记时间",
+        "操作"
+      ],
+      "rows": [
+        [
+          "1",
+          "海南炼化",
+          {
+            "text": "17万吨SBC项目",
+            "modal": "project-detail",
+            "to": "/san-tongshi/task-detail?project=17万吨SBC项目"
+          },
+          "一类项目（集团公司级）",
+          "试运行阶段",
+          "国家石化项目风险评估中心",
+          "中国广州工程有限公司",
+          "2026-02-01",
+          "已批复",
+          "张明",
+          "2026-02-01",
+          {
+            "text": "办理",
+            "modal": "project-detail",
+            "to": "/san-tongshi/task-detail?project=17万吨SBC项目"
+          }
+        ],
+        [
+          "2",
+          "九江石化",
+          {
+            "text": "204泊位苯水路出厂项目",
+            "modal": "project-detail",
+            "to": "/san-tongshi/task-detail?project=204泊位苯水路出厂项目"
+          },
+          "二类项目（事业部级）",
+          "试运行阶段",
+          "河南鑫利安全科技股份有限公司",
+          "中石化洛阳工程有限公司",
+          "2026-01-28",
+          "未批复",
+          "张晓明",
+          "2026-01-30",
+          {
+            "text": "查看",
+            "modal": "project-detail",
+            "to": "/san-tongshi/task-detail?project=204泊位苯水路出厂项目"
+          }
+        ]
+      ]
+    },
+    {
+      "type": "Section",
+      "title": "说明",
+      "desc": "试生产延期信息字段由本系统手动输入；需上传文件字段单个文件大小不超过500M，支持常见办公及压缩格式。"
+    }
+  ]
+}

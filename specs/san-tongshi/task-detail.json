@@ -1,0 +1,36 @@
+{
+  "module": "san-tongshi",
+  "pageId": "task-detail",
+  "title": "安全三同时-任务详情",
+  "path": "/san-tongshi/task-detail",
+  "roles": ["总部视角", "企业视角"],
+  "source": "tech_project/项目三同时信息维护（开发）.html",
+  "blocks": [
+    {
+      "type": "InfoCard",
+      "title": "项目信息卡片",
+      "desc": "用于总部在线会签与专项论证",
+      "fields": ["项目名称", "项目编号", "建设单位", "当前阶段", "责任人", "状态"]
+    },
+    {
+      "type": "Section",
+      "title": "流程进度",
+      "desc": "项目创建→创建识别→审批与会签→启动/变更"
+    },
+    {
+      "type": "Section",
+      "title": "资料包（四阶段）",
+      "desc": "缺项提示、企业可补齐"
+    },
+    {
+      "type": "Section",
+      "title": "审批与会签",
+      "desc": "总部审批+部门会签（演示版）"
+    },
+    {
+      "type": "Section",
+      "title": "启动条件校验",
+      "desc": "审批+会签+资料齐全后可启动"
+    }
+  ]
+}

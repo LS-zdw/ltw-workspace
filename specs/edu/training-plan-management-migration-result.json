@@ -1,0 +1,141 @@
+{
+  "module": "edu/trainer",
+  "pageId": "training-plan-management-migration-result",
+  "title": "教育培训-培训计划历史数据迁移-执行结果台账",
+  "path": "/edu/trainer/training-plan-management-migration-result",
+  "roles": ["培训员", "企业培训管理员"],
+  "source": "edu-ep/培训计划(老系统迁移数据).html",
+  "blocks": [
+    {
+      "type": "Metrics",
+      "title": "执行结果概览",
+      "metrics": [
+        { "label": "本次迁移单号", "value": "TP-BATCH-20260301-01" },
+        { "label": "提交迁移数", "value": "1328" },
+        { "label": "导入成功", "value": "1291" },
+        { "label": "需业务处理", "value": "37" },
+        { "label": "已导入待补充", "value": "26" }
+      ]
+    },
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        { "label": "年度", "type": "select", "options": ["全部", "2026", "2025", "2024"] },
+        { "label": "计划代码", "type": "text", "placeholder": "请输入计划代码" },
+        { "label": "培训计划名称", "type": "text", "placeholder": "请输入培训计划名称" },
+        { "label": "执行结果", "type": "select", "options": ["全部", "导入成功", "需业务处理"] },
+        { "label": "缺失项类型", "type": "select", "options": ["全部", "主办单位", "培训内容", "承办单位", "附件"] },
+        { "label": "迁移单号", "type": "text", "placeholder": "请输入迁移单号" }
+      ],
+      "actions": [
+        { "label": "查询", "primary": true },
+        { "label": "重置" },
+        { "label": "返回准备台账", "to": "/edu/trainer/training-plan-management-migration-query" },
+        { "label": "导出待处理清单" }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "迁移执行明细",
+      "columns": [
+        "序号",
+        "执行结果",
+        "待处理原因",
+        "迁移单号",
+        "年度",
+        "计划代码",
+        "培训计划名称",
+        "培训对象",
+        "主办单位",
+        "培训内容",
+        "补充建议",
+        "办班地点",
+        "业务处理状态",
+        "登记人",
+        "登记时间"
+      ],
+      "rows": [
+        [
+          "1",
+          { "text": "导入成功", "className": "cell-ok" },
+          "-",
+          "TP-BATCH-20260301-01",
+          "2026",
+          "20260212162324146",
+          { "text": "炼化企业安全管理人员年度培训计划", "modal": "drill-detail" },
+          "安全管理人员",
+          "中科（广东）炼化",
+          "年度安全管理课程与实操演练",
+          "-",
+          "湛江培训中心",
+          "已完成",
+          "李晓",
+          "2026-03-01"
+        ],
+        [
+          "2",
+          { "text": "需业务处理", "className": "cell-danger" },
+          { "text": "必填缺失: 主办单位", "className": "cell-danger" },
+          "TP-BATCH-20260301-01",
+          "2026",
+          "20260206165935562",
+          { "text": "特种作业取证与复审培训计划", "modal": "drill-detail" },
+          "特种作业人员",
+          "",
+          "特种作业复审与案例分析",
+          "补主办单位，建议同步补承办单位与附件",
+          "成都培训中心",
+          { "text": "待业务确认", "className": "cell-warn" },
+          "周楠",
+          "2026-03-01"
+        ]
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "drill-detail",
+      "template": "certificate-detail-form",
+      "title": "培训计划迁移执行业务详情",
+      "sectionTitle": "处理摘要",
+      "headerActions": [
+        {
+          "label": "复制排查信息",
+          "copy": "迁移单号=TP-BATCH-20260301-01; 老系统记录号=OLD-PLAN-000221; 年度=2026; 计划代码=20260206165935562; 计划名称=特种作业取证与复审培训计划; 执行结果=需业务处理; 缺失项=主办单位,承办单位,附件"
+        },
+        { "label": "关闭", "close": true }
+      ],
+      "formFields": [
+        { "label": "年度", "type": "text", "value": "2026" },
+        { "label": "计划代码", "type": "text", "value": "20260206165935562" },
+        { "label": "培训计划名称", "type": "text", "value": "特种作业取证与复审培训计划" },
+        { "label": "培训对象", "type": "text", "value": "特种作业人员" },
+        { "label": "培训天数", "type": "text", "value": "888" },
+        { "label": "主办单位", "type": "text", "value": "" },
+        { "label": "培训内容", "type": "textarea", "value": "特种作业复审与案例分析" },
+        { "label": "承办单位", "type": "text", "value": "" },
+        { "label": "附件", "type": "text", "value": "" },
+        { "label": "执行结果", "type": "text", "value": "需业务处理" },
+        { "label": "待处理原因", "type": "textarea", "value": "主办单位缺失；承办单位与附件未维护。请补全后重跑该条迁移。" },
+        { "label": "业务处理状态", "type": "text", "value": "待业务确认" }
+      ],
+      "historyTable": {
+        "title": "落库核对（执行后）",
+        "showAdd": false,
+        "columns": ["字段名称", "老系统", "新系统", "校验结论"],
+        "rows": [
+          ["年度", "2026", "2026", { "text": "一致", "className": "cell-ok" }],
+          ["培训计划名称", "特种作业取证与复审培训计划", "特种作业取证与复审培训计划", { "text": "一致", "className": "cell-ok" }],
+          ["培训对象", "特种作业人员", "特种作业人员", { "text": "一致", "className": "cell-ok" }],
+          ["培训天数", "888", "888", { "text": "一致", "className": "cell-ok" }],
+          ["主办单位", "", "", { "text": "缺失", "className": "cell-danger" }],
+          ["培训内容", "特种作业复审与案例分析", "特种作业复审与案例分析", { "text": "一致", "className": "cell-ok" }],
+          ["承办单位", "", "", { "text": "缺失可补", "className": "cell-warn" }],
+          ["附件", "", "", { "text": "缺失可补", "className": "cell-warn" }]
+        ]
+      },
+      "actions": [{ "label": "关闭" }]
+    }
+  ]
+}

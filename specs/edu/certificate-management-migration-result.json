@@ -1,0 +1,122 @@
+{
+  "module": "edu/trainer",
+  "pageId": "certificate-management-migration-result",
+  "title": "教育培训-证书历史数据迁移-执行结果台账",
+  "path": "/edu/trainer/certificate-management-migration-result",
+  "roles": ["培训员", "企业培训管理员"],
+  "source": "edu-ep/证书管理(老系统迁移数据).html",
+  "blocks": [
+    {
+      "type": "Metrics",
+      "title": "执行结果概览",
+      "metrics": [
+        { "label": "本次迁移单号", "value": "BATCH-20260301-01" },
+        { "label": "提交迁移数", "value": "40735" },
+        { "label": "导入成功", "value": "40689" },
+        { "label": "需业务处理", "value": "46" }
+      ]
+    },
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        { "label": "人员姓名", "type": "text", "placeholder": "请输入人员姓名" },
+        { "label": "所属单位", "type": "text", "placeholder": "请输入所属单位" },
+        {
+          "label": "执行结果",
+          "type": "select",
+          "options": ["全部", "导入成功", "需业务处理"]
+        },
+        { "label": "迁移单号", "type": "text", "placeholder": "请输入迁移单号" }
+      ],
+      "actions": [
+        { "label": "查询", "primary": true },
+        { "label": "重置" },
+        { "label": "返回准备台账", "to": "/edu/trainer/certificate-management-migration-query" },
+        { "label": "导出待处理清单" }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "迁移执行明细",
+      "columns": [
+        "序号",
+        "执行结果",
+        "待处理原因",
+        "迁移单号",
+        "人员姓名",
+        "所属单位",
+        "证书名称",
+        "证书编号",
+        "证书有效期",
+        "业务处理状态",
+        "登记人",
+        "登记时间"
+      ],
+      "rows": [
+        [
+          "1",
+          { "text": "导入成功", "className": "cell-ok" },
+          "-",
+          "BATCH-20260301-01",
+          "牛敬明",
+          "安徽石油-安庆石油",
+          { "text": "安全生产知识和管理能力考核合格证", "modal": "drill-detail" },
+          "342301197305001234",
+          "2026-06-06",
+          "已完成",
+          "赵丽",
+          "2024-06-11"
+        ],
+        [
+          "2",
+          { "text": "需业务处理", "className": "cell-danger" },
+          { "text": "人员编码未匹配", "className": "cell-danger" },
+          "BATCH-20260301-01",
+          "陶红龙",
+          "安徽石油-向山加油站",
+          { "text": "安全生产管理资格证书", "modal": "drill-detail" },
+          "340503198001019876",
+          { "text": "2023-07-10", "className": "cell-overdue" },
+          { "text": "待业务确认", "className": "cell-warn" },
+          "孟芳芳",
+          "2024-04-03"
+        ]
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "drill-detail",
+      "template": "certificate-detail-form",
+      "title": "迁移执行业务详情",
+      "sectionTitle": "定位信息",
+      "headerActions": [
+        {
+          "label": "复制排查信息",
+          "copy": "迁移单号=BATCH-20260301-01; 人员=陶红龙; 证书编号=340503198001019876; 执行结果=需业务处理; 原因=人员编码未匹配"
+        },
+        { "label": "关闭", "close": true }
+      ],
+      "formFields": [
+        { "label": "老系统记录号", "type": "text", "value": "OLD-CERT-000124" },
+        { "label": "新系统记录号", "type": "text", "value": "-" },
+        { "label": "迁移单号", "type": "text", "value": "BATCH-20260301-01" },
+        { "label": "执行结果", "type": "text", "value": "需业务处理" },
+        { "label": "待处理原因", "type": "textarea", "value": "人员编码未匹配：请业务确认人员主数据后，重新执行该条迁移。" }
+      ],
+      "historyTable": {
+        "title": "落库核对（执行后）",
+        "showAdd": false,
+        "columns": ["字段名称", "老系统", "新系统", "校验结论"],
+        "rows": [
+          ["人员姓名", "陶红龙", "陶红龙", { "text": "一致", "className": "cell-ok" }],
+          ["人员编码", "01081190", "", { "text": "缺失", "className": "cell-danger" }],
+          ["证书名称", "安全生产管理资格证书", "安全生产管理资格证书", { "text": "一致", "className": "cell-ok" }],
+          ["证书编号", "340503198001019876", "340503198001019876", { "text": "一致", "className": "cell-ok" }]
+        ]
+      },
+      "actions": [{ "label": "关闭" }]
+    }
+  ]
+}

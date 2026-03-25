@@ -1,0 +1,187 @@
+{
+  "module": "edu/trainer",
+  "pageId": "training-one-person-one-file",
+  "title": "教育培训-一人一档",
+  "path": "/edu/trainer/training-one-person-one-file",
+  "roles": ["培训员", "企业培训管理员"],
+  "source": "edu-ep/教育培训一人一档.html",
+  "blocks": [
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        { "label": "组织机构", "type": "select", "options": ["请选择组织机构", "中科（广东）炼化", "西南油气", "江汉油田", "胜利油田"] },
+        { "label": "员工姓名", "type": "text", "placeholder": "请输入员工姓名" },
+        { "label": "统一身份账号", "type": "text", "placeholder": "请输入统一身份账号" },
+        { "label": "人员类型", "type": "select", "options": ["全部", "新员工", "在岗员工", "转岗员工"] }
+      ],
+      "actions": [
+        { "label": "查询", "primary": true },
+        { "label": "重置" },
+        { "label": "导出档案" }
+      ]
+    },
+    {
+      "type": "Metrics",
+      "title": "档案统计",
+      "metrics": [
+        { "label": "人员总数", "value": "1268" },
+        { "label": "本年累计学时", "value": "18624" },
+        { "label": "有效证书数", "value": "2396" },
+        { "label": "待复审证书", "value": "82" },
+        { "label": "培训完成率", "value": "96.4%" }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "人员档案台账",
+      "columns": [
+        "序号",
+        "组织机构",
+        "用户姓名",
+        "统一账号",
+        "手机号码",
+        "岗位",
+        "人员类型",
+        "性别",
+        "民族",
+        "累计培训学时",
+        "参训项目数",
+        "操作"
+      ],
+      "rows": [
+        [
+          "1",
+          "中科（广东）炼化-安环部",
+          { "text": "张明", "modal": "person-archive-detail" },
+          "ZHANGMING_320821",
+          "13812345678",
+          "安全管理岗",
+          "新员工",
+          "男",
+          "汉族",
+          "86",
+          "12",
+          { "text": "学习详情", "modal": "person-archive-detail" }
+        ],
+        [
+          "2",
+          "西南油气-运行三部",
+          { "text": "刘敏", "modal": "person-archive-detail" },
+          "LIUMIN_420602",
+          "13987651234",
+          "运行值班岗",
+          "在岗员工",
+          "女",
+          "汉族",
+          "74",
+          "9",
+          { "text": "学习详情", "modal": "person-archive-detail" }
+        ]
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "person-archive-detail",
+      "template": "certificate-detail-form",
+      "title": "一人一档详情",
+      "sectionTitle": "人员基本信息",
+      "headerActions": [
+        { "label": "返回页面", "close": true }
+      ],
+      "formFields": [
+        { "label": "组织机构", "type": "text", "value": "中科（广东）炼化-安环部" },
+        { "label": "用户姓名", "type": "text", "value": "张明" },
+        { "label": "统一账号", "type": "text", "value": "ZHANGMING_320821" },
+        { "label": "手机号码", "type": "text", "value": "13812345678" },
+        { "label": "岗位", "type": "text", "value": "安全管理岗" },
+        { "label": "人员类型", "type": "text", "value": "新员工" },
+        { "label": "累计培训学时", "type": "text", "value": "86" },
+        { "label": "参训项目数", "type": "text", "value": "12" },
+        { "label": "合格率", "type": "text", "value": "96.7%" },
+        { "label": "有效证书数", "type": "text", "value": "2" },
+        { "label": "待复审证书", "type": "text", "value": "0" },
+        { "label": "最新培训情况", "type": "textarea", "value": "最近完成《班组长安全提升一期》，考试89分，已合格并完成发证。" }
+      ],
+      "historyTable": {
+        "title": "学习详情总览",
+        "showAdd": false,
+        "columns": ["分类", "最新记录", "统计", "状态", "操作"],
+        "rows": [
+          ["培训记录", "班组长安全提升一期", "12条", { "text": "正常", "className": "cell-ok" }, { "text": "查看", "modal": "person-training-detail" }],
+          ["考试记录", "班组长安全履职能力考核（一期）", "10条", { "text": "正常", "className": "cell-ok" }, { "text": "查看", "modal": "person-exam-detail" }],
+          ["证书档案", "安全生产知识和管理能力考核合格证", "2本", { "text": "全部有效", "className": "cell-ok" }, { "text": "查看", "modal": "person-certificate-detail" }]
+        ]
+      },
+      "actions": [{ "label": "返回页面" }]
+    },
+    {
+      "id": "person-training-detail",
+      "template": "certificate-detail-form",
+      "title": "一人一档-培训记录明细",
+      "sectionTitle": "培训记录",
+      "headerActions": [{ "label": "返回页面", "close": true }],
+      "formFields": [
+        { "label": "员工姓名", "type": "text", "value": "张明" },
+        { "label": "组织机构", "type": "text", "value": "中科（广东）炼化-安环部" },
+        { "label": "累计学时", "type": "text", "value": "86" },
+        { "label": "参训项目数", "type": "text", "value": "12" }
+      ],
+      "historyTable": {
+        "title": "培训记录列表",
+        "showAdd": false,
+        "columns": ["培训班名称", "培训计划名称", "开始时间", "结束时间", "学时", "是否发证", "成绩", "是否合格"],
+        "rows": [
+          ["班组长安全提升一期", "2026年班组长安全履职能力提升计划", "2026-02-24", "2026-03-07", "24", "是", "89", { "text": "是", "className": "cell-ok" }],
+          ["新员工三级教育（2月）", "新员工三级安全教育计划", "2026-02-06", "2026-02-06", "6", "否", "92", { "text": "是", "className": "cell-ok" }]
+        ]
+      },
+      "actions": [{ "label": "返回页面" }]
+    },
+    {
+      "id": "person-exam-detail",
+      "template": "certificate-detail-form",
+      "title": "一人一档-考试记录明细",
+      "sectionTitle": "考试记录",
+      "headerActions": [{ "label": "返回页面", "close": true }],
+      "formFields": [
+        { "label": "员工姓名", "type": "text", "value": "张明" },
+        { "label": "本年考试次数", "type": "text", "value": "10" },
+        { "label": "考试合格率", "type": "text", "value": "100%" }
+      ],
+      "historyTable": {
+        "title": "考试记录列表",
+        "showAdd": false,
+        "columns": ["考试名称", "举办单位", "考试时间", "成绩", "是否合格", "关联培训班"],
+        "rows": [
+          ["班组长安全履职能力考核（一期）", "中科（广东）炼化", "2026-03-07", "89", { "text": "是", "className": "cell-ok" }, "班组长安全提升一期"],
+          ["新员工三级教育结业测评（2月）", "中科（广东）炼化", "2026-02-06", "92", { "text": "是", "className": "cell-ok" }, "新员工三级教育（2月）"]
+        ]
+      },
+      "actions": [{ "label": "返回页面" }]
+    },
+    {
+      "id": "person-certificate-detail",
+      "template": "certificate-detail-form",
+      "title": "一人一档-证书档案明细",
+      "sectionTitle": "证书档案",
+      "headerActions": [{ "label": "返回页面", "close": true }],
+      "formFields": [
+        { "label": "员工姓名", "type": "text", "value": "张明" },
+        { "label": "有效证书数", "type": "text", "value": "2" },
+        { "label": "待复审证书", "type": "text", "value": "0" }
+      ],
+      "historyTable": {
+        "title": "证书列表",
+        "showAdd": false,
+        "columns": ["证书编号", "证书名称", "证书种类", "证书小类", "发证日期", "有效期至", "证书状态"],
+        "rows": [
+          ["AQ202603070018", "安全生产知识和管理能力考核合格证", "安全管理", "企业主要负责人", "2026-03-07", "2029-03-06", { "text": "有效", "className": "cell-ok" }],
+          ["AQ202602060112", "新员工三级教育结业证明", "内部培训", "新员工入职", "2026-02-06", "2027-02-05", { "text": "有效", "className": "cell-ok" }]
+        ]
+      },
+      "actions": [{ "label": "返回页面" }]
+    }
+  ]
+}

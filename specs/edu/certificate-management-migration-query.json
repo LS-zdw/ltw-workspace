@@ -1,0 +1,169 @@
+{
+  "module": "edu/trainer",
+  "pageId": "certificate-management-migration-query",
+  "title": "教育培训-证书历史数据迁移-业务准备台账",
+  "path": "/edu/trainer/certificate-management-migration-query",
+  "roles": ["培训员", "企业培训管理员"],
+  "source": "edu-ep/证书管理(老系统迁移数据).html",
+  "blocks": [
+    {
+      "type": "Metrics",
+      "title": "准备情况概览",
+      "metrics": [
+        { "label": "老系统证书总数", "value": "40735" },
+        { "label": "可直接迁移", "value": "40211" },
+        { "label": "需业务确认", "value": "524" },
+        { "label": "新系统已导入", "value": "0" }
+      ]
+    },
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        { "label": "人员姓名", "type": "text", "placeholder": "请输入人员姓名" },
+        { "label": "所属单位", "type": "text", "placeholder": "请输入所属单位" },
+        {
+          "label": "准备状态",
+          "type": "select",
+          "options": ["全部", "可直接迁移", "需业务确认"]
+        },
+        {
+          "label": "证书类型",
+          "type": "select",
+          "options": ["全部", "主要负责人安全合格证", "安全管理人员资格证", "特种作业资格证"]
+        },
+        {
+          "label": "证书状态",
+          "type": "select",
+          "options": ["全部", "有效", "临期", "过期"]
+        },
+        { "label": "证书有效期", "type": "date-range", "start": "2026-02-01", "end": "2026-02-28" }
+      ],
+      "actions": [
+        { "label": "查询", "primary": true },
+        { "label": "重置" },
+        { "label": "导出问题清单" },
+        { "label": "迁移", "to": "/edu/trainer/certificate-management-migration-result" }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "待处理证书清单",
+      "columns": [
+        "序号",
+        "准备状态",
+        "业务处理建议",
+        "人员姓名",
+        "所属单位",
+        "证书名称",
+        "证书编号",
+        "证书类型",
+        "证书有效期",
+        "复审信息",
+        "换证信息",
+        "数据完整性",
+        "登记人",
+        "登记时间"
+      ],
+      "rows": [
+        [
+          "1",
+          { "text": "可直接迁移", "className": "cell-ok" },
+          "按计划迁移",
+          "牛敬明",
+          "安徽石油-安庆石油",
+          { "text": "安全生产知识和管理能力考核合格证", "modal": "drill-detail" },
+          "342301197305001234",
+          "主要负责人安全合格证",
+          "2026-06-06",
+          "是 / 3年 / 2026-06-06",
+          "是 / 3年 / 2026-06-06",
+          { "text": "完整", "className": "cell-ok" },
+          "赵丽",
+          "2024-06-11"
+        ],
+        [
+          "2",
+          { "text": "需业务确认", "className": "cell-warn" },
+          { "text": "请先确认人员编码", "className": "cell-warn" },
+          "陶红龙",
+          "安徽石油-向山加油站",
+          { "text": "安全生产管理资格证书", "modal": "drill-detail" },
+          "340503198001019876",
+          "安全管理人员资格证",
+          { "text": "2023-07-10", "className": "cell-overdue" },
+          "是 / 3年 / 2023-07-10",
+          "是 / 3年 / 2023-07-10",
+          { "text": "缺人员编码映射", "className": "cell-warn" },
+          "孟芳芳",
+          "2024-04-03"
+        ],
+        [
+          "3",
+          { "text": "可直接迁移", "className": "cell-ok" },
+          "按计划迁移",
+          "高杨",
+          "中科炼化-工程管理一班",
+          { "text": "高级证书测试测试测试", "modal": "drill-detail" },
+          "4534324534242",
+          "特种作业资格证",
+          { "text": "2026-02-28", "className": "cell-warn" },
+          "否 / - / -",
+          "是 / 7年 / 2033-02-26",
+          { "text": "完整", "className": "cell-ok" },
+          "肖鹏",
+          "2026-02-12"
+        ]
+      ]
+    },
+    {
+      "type": "Info",
+      "title": "业务说明",
+      "fields": [
+        "本页面用于业务负责人迁移前核对：确认人员、证书、复审换证信息完整后再提交迁移。"
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "drill-detail",
+      "template": "certificate-detail-form",
+      "title": "证书迁移处理详情",
+      "sectionTitle": "处理摘要",
+      "headerActions": [
+        {
+          "label": "复制工单信息",
+          "copy": "老系统记录号=OLD-CERT-000124; 准备批次=PREP-20260301-01; 人员=陶红龙; 证书编号=340503198001019876; 准备状态=需业务确认; 建议=请先确认人员编码"
+        },
+        { "label": "关闭", "close": true }
+      ],
+      "formFields": [
+        { "label": "人员姓名", "type": "text", "value": "陶红龙" },
+        { "label": "证书编号", "type": "text", "value": "340503198001019876" },
+        { "label": "当前状态", "type": "text", "value": "需业务确认" },
+        { "label": "业务处理建议", "type": "textarea", "value": "请先确认人员编码归属并补全映射关系，确认后再执行迁移。" }
+      ],
+      "historyTable": {
+        "title": "重点核对项",
+        "showAdd": false,
+        "columns": ["核对项", "老系统值", "系统拟导入值", "处理结论"],
+        "rows": [
+          ["人员编码", "01081190", "", { "text": "需补全", "className": "cell-danger" }],
+          ["证书类型", "安全管理人员资格证（安全管理人员）", "安全管理人员资格证", { "text": "建议确认", "className": "cell-warn" }],
+          ["人员姓名", "陶红龙", "陶红龙", { "text": "无风险", "className": "cell-ok" }],
+          ["所属单位", "安徽石油-向山加油站", "安徽石油-向山加油站", { "text": "无风险", "className": "cell-ok" }],
+          ["证书名称", "安全生产管理资格证书", "安全生产管理资格证书", { "text": "无风险", "className": "cell-ok" }],
+          ["证书编号", "340503198001019876", "340503198001019876", { "text": "无风险", "className": "cell-ok" }],
+          ["证书小类", "", "", { "text": "空值允许", "className": "cell-ok" }],
+          ["发证机关级别", "国家/地方政府发证", "国家/地方政府发证", { "text": "无风险", "className": "cell-ok" }],
+          ["发证机关", "马鞍山市应急管理局", "马鞍山市应急管理局", { "text": "无风险", "className": "cell-ok" }],
+          ["证书生效日期", "2020-07-10", "2020-07-10", { "text": "无风险", "className": "cell-ok" }],
+          ["证书有效期", "2023-07-10", "2023-07-10", { "text": "无风险", "className": "cell-ok" }],
+          ["复审信息", "是 / 3年 / 2023-07-10", "是 / 3年 / 2023-07-10", { "text": "无风险", "className": "cell-ok" }],
+          ["换证信息", "是 / 3年 / 2023-07-10", "是 / 3年 / 2023-07-10", { "text": "无风险", "className": "cell-ok" }]
+        ]
+      },
+      "actions": [{ "label": "关闭" }]
+    }
+  ]
+}

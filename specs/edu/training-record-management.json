@@ -1,0 +1,307 @@
+{
+  "module": "edu/trainer",
+  "pageId": "training-record-management",
+  "title": "教育培训-培训记录管理",
+  "path": "/edu/trainer/training-record-management",
+  "roles": ["培训员", "企业培训管理员"],
+  "source": "edu-ep/培训记录管理.html",
+  "blocks": [
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        { "label": "培训计划名称", "type": "text", "placeholder": "请输入培训计划名" },
+        { "label": "培训班名称", "type": "text", "placeholder": "请输入培训班名称" },
+        { "label": "主办部门", "type": "select", "options": ["主办单位", "中科（广东）炼化", "西南油气", "江汉油田", "胜利油田"] },
+        { "label": "计划参与机构", "type": "select", "options": ["计划参与机构", "中科（广东）炼化", "湖南石油", "胜利油田", "江苏油田"] },
+        { "label": "培训开始日期", "type": "date-range", "start": "2026-02-01", "end": "2026-03-07" },
+        { "label": "培训对象", "type": "text", "placeholder": "请输入培训对象" },
+        { "label": "是否发证", "type": "select", "options": ["请选择是否发证", "是", "否"] }
+      ],
+      "actionsTop": [
+        { "label": "新增", "primary": true, "open": "add-record" },
+        { "label": "导入" },
+        { "label": "导出" },
+        { "label": "模板下载" }
+      ],
+      "actionsBottom": [
+        { "label": "查询", "primary": true },
+        { "label": "重置" },
+        { "label": "收起" }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "培训记录台账",
+      "columns": [
+        "序号",
+        "培训计划名称",
+        "培训班名称",
+        "培训开始时间",
+        "培训结束时间",
+        "培训内容",
+        "培训学时",
+        "培训人员数量",
+        "合格人数",
+        "合格率",
+        "是否发证",
+        "操作"
+      ],
+      "rows": [
+        [
+          "1",
+          { "text": "2026年班组长安全履职能力提升计划", "modal": "plan-detail" },
+          { "text": "班组长安全提升一期", "modal": "record-detail" },
+          "2026-02-24",
+          "2026-03-07",
+          "安全生产责任制、风险辨识与现场隐患排查",
+          "24",
+          "48",
+          "46",
+          "95.8%",
+          "是",
+          { "text": "编辑 / 删除", "modal": "add-record" }
+        ],
+        [
+          "2",
+          { "text": "承包商高风险作业安全专项计划", "modal": "plan-detail" },
+          { "text": "承包商入场培训（二期）", "modal": "record-detail" },
+          "2026-02-10",
+          "2026-02-11",
+          "动火、受限空间作业票证与应急处置流程",
+          "8",
+          "36",
+          "34",
+          "94.4%",
+          "是",
+          { "text": "编辑 / 删除", "modal": "add-record" }
+        ],
+        [
+          "3",
+          { "text": "新员工三级安全教育计划", "modal": "plan-detail" },
+          { "text": "新员工三级教育（2月）", "modal": "record-detail" },
+          "2026-02-06",
+          "2026-02-06",
+          "公司制度、岗位风险告知与应急逃生",
+          "6",
+          "27",
+          "27",
+          "100%",
+          "否",
+          { "text": "编辑 / 删除", "modal": "add-record" }
+        ],
+        [
+          "4",
+          { "text": "检维修作业许可管理培训计划", "modal": "plan-detail" },
+          { "text": "检维修许可与隔离专项班", "modal": "record-detail" },
+          "2026-02-01",
+          "2026-02-28",
+          "检维修JSA分析、上锁挂牌与监护要求",
+          "12",
+          "30",
+          "28",
+          "93.3%",
+          "否",
+          { "text": "编辑 / 删除", "modal": "add-record" }
+        ],
+        [
+          "5",
+          { "text": "消防应急实战演练计划", "modal": "plan-detail" },
+          { "text": "消防器材实操与疏散演练", "modal": "record-detail" },
+          "2026-01-25",
+          "2026-02-04",
+          "初期火灾处置、人员疏散与联动响应",
+          "10",
+          "52",
+          "49",
+          "94.2%",
+          "否",
+          { "text": "编辑 / 删除", "modal": "add-record" }
+        ],
+        [
+          "6",
+          { "text": "2026年班组长安全履职能力提升计划", "modal": "plan-detail" },
+          { "text": "班组长安全提升二期", "modal": "record-detail" },
+          "2026-03-10",
+          "2026-03-21",
+          "行为安全观察、违章治理与案例复盘",
+          "24",
+          "45",
+          "43",
+          "95.6%",
+          "是",
+          { "text": "编辑 / 删除", "modal": "add-record" }
+        ],
+        [
+          "7",
+          { "text": "特殊作业监护人能力提升计划", "modal": "plan-detail" },
+          { "text": "监护人能力专项培训", "modal": "record-detail" },
+          "2026-03-03",
+          "2026-03-04",
+          "监护职责、异常处置与现场沟通",
+          "8",
+          "40",
+          "38",
+          "95.0%",
+          "是",
+          { "text": "编辑 / 删除", "modal": "add-record" }
+        ],
+        [
+          "8",
+          { "text": "环保合规与清洁生产培训计划", "modal": "plan-detail" },
+          { "text": "环保法规专题班", "modal": "record-detail" },
+          "2026-03-01",
+          "2026-03-02",
+          "危废管理、排放合规与台账管理",
+          "6",
+          "26",
+          "25",
+          "96.2%",
+          "否",
+          { "text": "编辑 / 删除", "modal": "add-record" }
+        ]
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "add-record",
+      "template": "training-record-create-form",
+      "title": "培训记录信息新增",
+      "sectionTitle": "培训记录基本信息",
+      "formFields": [
+        { "label": "* 培训班名称", "type": "text", "value": "班组长安全提升一期", "placeholder": "请填写培训班名称" },
+        { "label": "* 培训计划", "type": "select", "value": "2026年班组长安全履职能力提升计划", "options": ["请选择培训计划", "2026年班组长安全履职能力提升计划", "承包商高风险作业安全专项计划", "新员工三级安全教育计划"] },
+        { "label": "培训计划名称", "type": "text", "value": "选择培训计划后自动填充" },
+        { "label": "* 培训开始日期", "type": "date", "value": "2026-02-24" },
+        { "label": "* 培训结束日期", "type": "date", "value": "2026-03-07" },
+        { "label": "* 培训对象", "type": "text", "value": "一线班组长与安全员" },
+        { "label": "* 是否发证", "type": "select", "value": "是", "options": ["是", "否"] },
+        { "label": "当前期数", "type": "text", "value": "1" },
+        { "label": "计划期数", "type": "text", "value": "2" },
+        { "label": "* 主办单位", "type": "select", "value": "中科（广东）炼化", "options": ["组织机构选取（计划自动带出,支持修改）", "中科（广东）炼化", "西南油气", "江汉油田"] },
+        { "label": "* 承办单位", "type": "select", "value": "湖南石油", "options": ["组织机构选取（计划自动带出且支持修改）", "湖南石油", "江苏油田", "河南油田"] },
+        { "label": "* 培训老师", "type": "select", "value": "李强", "options": ["请选择培训老师", "李强", "王敏", "赵海"] },
+        { "label": "课时", "type": "text", "value": "24" },
+        { "label": "* 培训方式", "type": "select", "value": "集中面授", "options": ["从计划带出，支持修改", "集中面授", "外出研修", "线上培训"] },
+        { "label": "* 培训地点", "type": "text", "value": "湛江培训中心A栋301" },
+        { "label": "培训附件", "type": "picker", "value": "", "buttonLabel": "点击上传" },
+        { "label": "费用", "type": "text", "value": "12500" },
+        { "label": "* 培训内容", "type": "textarea", "large": true, "value": "围绕班组安全职责、现场风险辨识、隐患整改闭环开展专题培训与实操演练。" },
+        { "label": "* 参与机构", "type": "text", "value": "中科（广东）炼化" }
+      ],
+      "orgBlock": {
+        "title": "机构所属板块",
+        "items": [
+          { "label": "企业部门", "checked": true },
+          { "label": "中科（广东）炼化", "checked": true },
+          { "label": "西南油气", "checked": false },
+          { "label": "江汉油田", "checked": false },
+          { "label": "湖南石油", "checked": false }
+        ]
+      },
+      "rosterTable": {
+        "title": "培训人员名单",
+        "actions": [
+          { "label": "新增", "primary": true },
+          { "label": "编辑" },
+          { "label": "删除" },
+          { "label": "导入" },
+          { "label": "导出" },
+          { "label": "模板下载" }
+        ],
+        "columns": ["序号", "姓名", "统一身份账号", "企业名称", "证书编号", "考试成绩", "是否参训", "是否合格"],
+        "rows": [
+          ["1", "张明", "320821198806153217", "中科（广东）炼化", "AQ20260224001", "89", "是", "是"],
+          ["2", "刘敏", "420602199112087426", "中科（广东）炼化", "AQ20260224002", "82", "是", "是"],
+          ["3", "陈超", "340823199503211632", "中科（广东）炼化", "", "0", "否", "否"]
+        ]
+      },
+      "footerActions": [
+        { "label": "关闭", "close": true },
+        { "label": "保存", "primary": true },
+        { "label": "提交", "primary": true }
+      ]
+    },
+    {
+      "id": "plan-detail",
+      "template": "training-plan-detail-form",
+      "title": "培训计划详情",
+      "sectionTitle": "培训计划详情",
+      "formFields": [
+        { "label": "年度", "type": "text", "value": "2026年" },
+        { "label": "计划代码", "type": "text", "value": "20260224140000287" },
+        { "label": "培训计划名称", "type": "text", "value": "2026年班组长安全履职能力提升计划" },
+        { "label": "培训对象", "type": "text", "value": "一线班组长及安全员" },
+        { "label": "培训天数", "type": "text", "value": "7" },
+        { "label": "计划期数", "type": "text", "value": "2" },
+        { "label": "主办单位", "type": "text", "value": "中科（广东）炼化" },
+        { "label": "承办单位", "type": "text", "value": "湖南石油" },
+        { "label": "办班地点", "type": "text", "value": "湛江培训中心" },
+        { "label": "上传附件", "type": "text", "value": "未上传文件" },
+        { "label": "培训内容", "type": "textarea", "large": true, "value": "围绕班组安全管理、隐患排查、作业票执行和应急联动开展分阶段培训与复盘。" }
+      ],
+      "planMonths": {
+        "title": "计划时间",
+        "year": "2026年",
+        "selected": [1, 2, 3, 4, 5, 6, 7],
+        "partnerLabel": "计划参与机构",
+        "partners": ["中科（广东）炼化"]
+      },
+      "executionTable": {
+        "title": "计划执行情况",
+        "columns": ["序号", "培训班名称", "参与企业数量", "期次", "开班月份", "培训内容", "培训形式", "计划培训人数", "实际培训人数", "考试合格人员数量", "合格率"],
+        "rows": [
+          ["1", { "text": "班组长安全提升一期", "modal": "plan-detail" }, "1", "1", "2", "安全生产责任制与现场风险辨识", "集中面授", "50", "48", "46", "95.8%"]
+        ]
+      },
+      "actions": [{ "label": "关闭" }]
+    },
+    {
+      "id": "record-detail",
+      "template": "training-record-create-form",
+      "title": "培训记录详情",
+      "sectionTitle": "培训记录基本信息",
+      "readOnly": true,
+      "formFields": [
+        { "label": "* 培训班名称", "type": "text", "value": "班组长安全提升一期" },
+        { "label": "* 培训计划", "type": "select", "value": "2026年班组长安全履职能力提升计划", "options": ["2026年班组长安全履职能力提升计划"] },
+        { "label": "培训计划名称", "type": "text", "value": "2026年班组长安全履职能力提升计划" },
+        { "label": "* 培训开始日期", "type": "date", "value": "2026-02-24" },
+        { "label": "* 培训结束日期", "type": "date", "value": "2026-03-07" },
+        { "label": "* 培训对象", "type": "text", "value": "一线班组长与安全员" },
+        { "label": "* 是否发证", "type": "select", "value": "是", "options": ["是", "否"] },
+        { "label": "当前期数", "type": "text", "value": "1" },
+        { "label": "计划期数", "type": "text", "value": "2" },
+        { "label": "* 主办单位", "type": "select", "value": "中科（广东）炼化", "options": ["中科（广东）炼化"] },
+        { "label": "* 承办单位", "type": "select", "value": "湖南石油", "options": ["湖南石油"] },
+        { "label": "* 培训老师", "type": "select", "value": "李强", "options": ["李强"] },
+        { "label": "课时", "type": "text", "value": "24" },
+        { "label": "* 培训方式", "type": "select", "value": "集中面授", "options": ["集中面授"] },
+        { "label": "* 培训地点", "type": "text", "value": "湛江培训中心A栋301" },
+        { "label": "培训附件", "type": "text", "value": "未上传文件" },
+        { "label": "费用", "type": "text", "value": "12500" },
+        { "label": "* 培训内容", "type": "textarea", "large": true, "value": "围绕班组安全职责、现场风险辨识、隐患整改闭环开展专题培训与实操演练。" },
+        { "label": "* 参与机构", "type": "text", "value": "中科（广东）炼化" }
+      ],
+      "orgBlock": {
+        "title": "机构所属板块",
+        "items": [
+          { "label": "企业部门", "checked": true },
+          { "label": "中科（广东）炼化", "checked": true },
+          { "label": "西南油气", "checked": false },
+          { "label": "江汉油田", "checked": false },
+          { "label": "湖南石油", "checked": false }
+        ]
+      },
+      "rosterTable": {
+        "title": "培训人员名单",
+        "columns": ["序号", "姓名", "统一身份账号", "企业名称", "证书编号", "考试成绩", "是否参训", "是否合格"],
+        "rows": []
+      },
+      "footerActions": [
+        { "label": "关闭", "close": true }
+      ]
+    }
+  ]
+}

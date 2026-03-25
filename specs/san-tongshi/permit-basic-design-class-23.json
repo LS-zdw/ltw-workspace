@@ -1,0 +1,314 @@
+{
+  "module": "san-tongshi",
+  "pageId": "permit-basic-design-class-23",
+  "title": "二类、三类项目基础设计阶段行政许可信息管理",
+  "path": "/san-tongshi/permit/basic-design/class-23",
+  "roles": [
+    "企业经办人",
+    "总部监督人"
+  ],
+  "source": "tech_project/二类、三类项目基础设计阶段行政许可信息管理.html",
+  "modals": [
+    {
+      "id": "project-detail",
+      "title": "二类、三类项目基础设计阶段项目详情",
+      "desc": "对应原型项目详情弹窗",
+      "template": "project-detail-form",
+      "basicInfo": [
+        [
+          "所属企业",
+          "海南炼化"
+        ],
+        [
+          "项目名称",
+          "{{project}}"
+        ],
+        [
+          "项目编号",
+          "H20018"
+        ],
+        [
+          "项目建设单位",
+          "海南巴陵化工新材料有限公司"
+        ]
+      ],
+      "buildInfo": [
+        [
+          "所属板块",
+          "炼化板块"
+        ],
+        [
+          "项目级别",
+          "二类、三类项目（企业级）"
+        ],
+        [
+          "项目状态",
+          "已创建"
+        ],
+        [
+          "项目创建日期",
+          "2024年2月1日"
+        ]
+      ],
+      "stages": [
+        "可研阶段",
+        "基础设计阶段",
+        "试运行阶段",
+        "竣工验收阶段"
+      ],
+      "activeStage": "基础设计阶段",
+      "toggles": [
+        {
+          "key": "service",
+          "label": "是否《建设项目安全设施“三同时”监督管理办法》第七条规定的建设项目",
+          "syncWith": "gov",
+          "options": [
+            "是",
+            "否"
+          ],
+          "default": "是"
+        },
+        {
+          "key": "gov",
+          "label": "是否政府审批",
+          "options": [
+            "是",
+            "否"
+          ],
+          "default": "是"
+        }
+      ],
+      "formSections": [
+        {
+          "title": "基础设计基本信息",
+          "fields": [
+            [
+              "基础设计上报时间",
+              "选择时间"
+            ],
+            [
+              "基础设计上报文号",
+              "请输入内容"
+            ],
+            [
+              "基础设计批复时间",
+              "选择时间"
+            ],
+            [
+              "基础设计批复文号",
+              "请输入内容"
+            ]
+          ]
+        },
+        {
+          "title": "安全设施设计审查信息",
+          "fields": [
+            [
+              "设计单位",
+              "选择评价单位"
+            ],
+            [
+              "安全设施设计专篇",
+              "点击上传"
+            ],
+            [
+              "审查专家组签名表",
+              "点击上传"
+            ],
+            [
+              "专家组评审意见表",
+              "点击上传"
+            ],
+            [
+              "评审会参加人员签到表",
+              "点击上传"
+            ],
+            [
+              "安全设施设计修改说明",
+              "点击上传"
+            ]
+          ],
+          "showWhen": {
+            "service": "是"
+          },
+          "actions": [
+            { "label": "保存" },
+            { "label": "提交", "open": "confirm-submit" }
+          ]
+        },
+        {
+          "title": "非第七条项目字段",
+          "fields": [
+            [
+              "设计单位",
+              "选择评价单位"
+            ],
+            [
+              "安全设施设计",
+              "点击上传"
+            ],
+            [
+              "专家意见",
+              "点击上传"
+            ]
+          ],
+          "showWhen": {
+            "service": "否"
+          },
+          "actions": [
+            { "label": "保存" },
+            { "label": "提交", "open": "confirm-submit" }
+          ]
+        },
+        {
+          "title": "政府审核信息",
+          "fields": [
+            [
+              "批复时间",
+              "选择时间"
+            ],
+            [
+              "批复（备案）文件",
+              "点击上传"
+            ],
+            [
+              "其他附件",
+              "点击上传"
+            ]
+          ],
+          "showWhen": {
+            "gov": "是"
+          },
+          "actions": [
+            { "label": "保存" },
+            { "label": "提交", "open": "confirm-submit" }
+          ]
+        },
+        {
+          "title": "非政府审核字段",
+          "fields": [
+            [
+              "专家意见",
+              "点击上传"
+            ],
+            [
+              "原因",
+              "点击上传"
+            ]
+          ],
+          "showWhen": {
+            "gov": "否"
+          },
+          "actions": [
+            { "label": "保存" },
+            { "label": "提交", "open": "confirm-submit" }
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "label": "关闭"
+        },
+        {
+          "label": "提交并确认",
+          "open": "confirm-submit"
+        },
+        {
+          "label": "进入任务详情",
+          "to": "__DRILL__"
+        }
+      ]
+    },
+    {
+      "id": "confirm-submit",
+      "title": "确认提交",
+      "note": "确认后将提交基础设计阶段资料。",
+      "actions": [
+        {
+          "label": "取消"
+        },
+        {
+          "label": "确认提交",
+          "to": "__DRILL__"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        "项目级别",
+        "项目类型",
+        "项目名称",
+        "所属板块",
+        "项目状态",
+        "是否重点工程建设项目"
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "基础设计阶段台账",
+      "columns": [
+        "序号",
+        "所属企业",
+        "项目名称",
+        "项目级别",
+        "项目阶段",
+        "预评价单位",
+        "预评价批复日期",
+        "设计单位",
+        "项目状态",
+        "操作"
+      ],
+      "rows": [
+        [
+          "2",
+          "镇海炼化",
+          {
+            "text": "常减压改造工程",
+            "modal": "project-detail",
+            "to": "/san-tongshi/task-detail?project=常减压改造工程"
+          },
+          "二类项目",
+          "基础设计阶段",
+          "华东安评公司",
+          "2026-01-22",
+          "宁波工程",
+          "已归档",
+          {
+            "text": "查看",
+            "modal": "project-detail",
+            "to": "/san-tongshi/task-detail?project=常减压改造工程"
+          }
+        ],
+        [
+          "3",
+          "荆门分公司",
+          {
+            "text": "化工罐区优化项目",
+            "modal": "project-detail",
+            "to": "/san-tongshi/task-detail?project=化工罐区优化项目"
+          },
+          "三类项目",
+          "基础设计阶段",
+          "华中安评公司",
+          "2026-01-24",
+          "中石化五建",
+          "待补录",
+          {
+            "text": "维护",
+            "modal": "project-detail",
+            "to": "/san-tongshi/task-detail?project=化工罐区优化项目"
+          }
+        ]
+      ]
+    },
+    {
+      "type": "Section",
+      "title": "说明",
+      "desc": "基础设计上报与批复字段可由外部系统集成，其余字段可人工维护"
+    }
+  ]
+}

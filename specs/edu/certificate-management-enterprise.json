@@ -1,0 +1,831 @@
+{
+  "module": "edu/trainer",
+  "pageId": "certificate-management-enterprise",
+  "title": "教育培训-证书管理-企业端",
+  "path": "/edu/trainer/certificate-management-enterprise",
+  "roles": [
+    "培训员",
+    "企业培训管理员"
+  ],
+  "source": "edu-ep/证书管理-企业端.html",
+  "blocks": [
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        {
+          "label": "人员姓名",
+          "type": "text",
+          "placeholder": "请输入人员姓名"
+        },
+        {
+          "label": "企业名称",
+          "type": "text",
+          "placeholder": "请输入企业名称"
+        },
+        {
+          "label": "所属部门",
+          "type": "select",
+          "options": [
+            "请选择所属部门",
+            "公用工程部",
+            "工程管理一班",
+            "储运部",
+            "炼油三部"
+          ]
+        },
+        {
+          "label": "发证机关级别",
+          "type": "select",
+          "options": [
+            "请选择发证机关级别",
+            "集团公司发证",
+            "国家/地方政府发证",
+            "企业内部发证"
+          ]
+        },
+        {
+          "label": "证书种类",
+          "type": "select",
+          "options": [
+            "请选择发证机关",
+            "HSE关键岗位资格",
+            "主要负责人安全合格证",
+            "特种作业资格证",
+            "作业票监护人资格"
+          ]
+        },
+        {
+          "label": "证书小类",
+          "type": "select",
+          "options": [
+            "请选择证书种类",
+            "高压电工作业",
+            "防爆电气作业",
+            "压力焊作业"
+          ]
+        },
+        {
+          "label": "证书生效日期",
+          "type": "text",
+          "placeholder": "选择时间"
+        },
+        {
+          "label": "证书有效期",
+          "type": "text",
+          "placeholder": "选择时间"
+        }
+      ],
+      "actions": [
+        {
+          "label": "新增",
+          "open": "cert-add"
+        },
+        {
+          "label": "导入"
+        },
+        {
+          "label": "导出"
+        },
+        {
+          "label": "模板下载"
+        },
+        {
+          "label": "批量复审/换证/注册"
+        },
+        {
+          "label": "查询",
+          "primary": true
+        },
+        {
+          "label": "重置"
+        },
+        {
+          "label": "收起"
+        }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "教育培训-证书管理-企业端列表",
+      "columns": [
+        "序号",
+        "姓名",
+        "统一身份",
+        "人员类型",
+        "岗位",
+        "企业名称",
+        "单位名称",
+        "证书名称",
+        "发证机关级别",
+        "证书编号",
+        "证书种类",
+        "证书小类",
+        "证书生效日期",
+        "证书有效期",
+        "是否异常",
+        "关联培训项目",
+        "复审周期",
+        "应复审日期",
+        "换证周期",
+        "应换证日期",
+        "注册周期",
+        "应注册日期",
+        "备注",
+        "登记部门",
+        "登记人",
+        "登记时间",
+        "证书附件",
+        "操作"
+      ],
+      "rows": [
+        [
+          "1",
+          "高杨",
+          "gaoy8566",
+          "石化外",
+          "设计工程师",
+          "中科炼化",
+          "工程管理一班",
+          {
+            "text": "高级证书测试测试测试",
+            "modal": "cert-detail"
+          },
+          "集团公司发证",
+          "",
+          "HSE关键岗位资格",
+          "",
+          "2026-02-26",
+          {
+            "text": "2026-02-28",
+            "className": "cell-warn"
+          },
+          "否",
+          "",
+          "1年",
+          "2027-02-26",
+          "7年",
+          "2033-02-26",
+          "-",
+          "",
+          "测试测试测试测试...",
+          "公用工程部",
+          "肖鹏",
+          "2026-02-26 09:10:50",
+          "-",
+          "编辑 / 删除"
+        ],
+        [
+          "2",
+          "梁海江",
+          "lianghj82609",
+          "石化内",
+          "技术经理",
+          "中科炼化",
+          "工程管理一班",
+          {
+            "text": "证书管理测试证书管理",
+            "modal": "cert-detail"
+          },
+          "集团公司发证",
+          "4534324534242",
+          "主要负责人安全合格证",
+          "",
+          "2026-02-01",
+          {
+            "text": "2026-02-28",
+            "className": "cell-warn"
+          },
+          "否",
+          "",
+          "1年",
+          {
+            "text": "2026-02-01",
+            "className": "cell-danger"
+          },
+          "50年",
+          "2076-02-01",
+          "100年",
+          "2126-02-01",
+          "测试测试",
+          "公用工程部",
+          "肖鹏",
+          "2026-02-12 14:00:54",
+          "-",
+          "编辑 / 删除"
+        ],
+        [
+          "3",
+          "尤红玉",
+          "youhy20",
+          "石化内",
+          "前端工程师",
+          "中科炼化",
+          "储运部",
+          {
+            "text": "测试测试",
+            "modal": "cert-detail"
+          },
+          "国家/地方政府发证",
+          "444444444",
+          "特种作业资格证",
+          "氯碱电解工艺",
+          "2026-02-03",
+          {
+            "text": "2026-02-03",
+            "className": "cell-danger"
+          },
+          {
+            "text": "是",
+            "className": "cell-danger"
+          },
+          "",
+          "1年",
+          {
+            "text": "2026-02-01",
+            "className": "cell-danger"
+          },
+          "1年",
+          {
+            "text": "2026-02-02",
+            "className": "cell-danger"
+          },
+          "1年",
+          {
+            "text": "2026-02-03",
+            "className": "cell-danger"
+          },
+          "测试测试测试",
+          "公用工程部",
+          "肖鹏",
+          "2026-02-06 17:09:55",
+          "查看",
+          "编辑 / 删除"
+        ],
+        [
+          "4",
+          "高杨",
+          "gaoy8566",
+          "石化外",
+          "设计工程师",
+          "中科炼化",
+          "工程管理一班",
+          {
+            "text": "1",
+            "modal": "cert-detail"
+          },
+          "国家/地方政府发证",
+          "34545",
+          "特种作业资格证",
+          "高压电工作业",
+          "2026-02-01",
+          {
+            "text": "2026-02-01",
+            "className": "cell-danger"
+          },
+          {
+            "text": "是",
+            "className": "cell-danger"
+          },
+          "",
+          "1年",
+          {
+            "text": "2023-02-01",
+            "className": "cell-danger"
+          },
+          "1年",
+          {
+            "text": "2026-02-01",
+            "className": "cell-danger"
+          },
+          "1年",
+          {
+            "text": "2022-02-01",
+            "className": "cell-danger"
+          },
+          "",
+          "公用工程部",
+          "肖鹏",
+          "2026-02-05 16:48:36",
+          "-",
+          "编辑 / 删除"
+        ]
+      ]
+    },
+    {
+      "type": "Info",
+      "title": "页面说明",
+      "fields": [
+        "页面操作：新增 / 导入 / 导出 / 模板下载 / 删除 / 编辑 / 查询 / 重置 / 批量复审/换证/注册"
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "cert-add",
+      "template": "certificate-detail-form",
+      "title": "证书新增",
+      "sectionTitle": "证书新增",
+      "headerActions": [
+        {
+          "label": "关闭",
+          "close": true
+        },
+        {
+          "label": "保存",
+          "primary": true
+        }
+      ],
+      "formFields": [
+        {
+          "label": "姓名",
+          "type": "picker",
+          "value": "点击选择人员",
+          "open": "person-select",
+          "buttonLabel": "选择"
+        },
+        {
+          "label": "统一身份",
+          "type": "text",
+          "value": "选择人员自动带出"
+        },
+        {
+          "label": "岗位",
+          "type": "text",
+          "value": "选择人员自动带出"
+        },
+        {
+          "label": "企业名称",
+          "type": "text",
+          "value": "选择人员自动带出"
+        },
+        {
+          "label": "部门",
+          "type": "text",
+          "value": "选择人员自动带出"
+        },
+        {
+          "label": "行政级别",
+          "type": "text",
+          "value": "选择人员自动带出"
+        },
+        {
+          "label": "二级单位",
+          "type": "text",
+          "value": "选择人员自动带出"
+        },
+        {
+          "label": "员工编号",
+          "type": "text",
+          "value": "选择人员自动带出"
+        },
+        {
+          "label": "证书名称",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "证书编号",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "发证机关级别",
+          "type": "select",
+          "value": "请选择发证机关级别",
+          "options": [
+            "请选择发证机关级别",
+            "国家/地方政府发证",
+            "集团公司发证",
+            "企业内部发证"
+          ]
+        },
+        {
+          "label": "证书种类",
+          "type": "select",
+          "value": "请选择发证机关级别",
+          "options": [
+            "请选择发证机关级别",
+            "HSE关键岗位资格",
+            "主要负责人安全合格证",
+            "特种作业资格证"
+          ]
+        },
+        {
+          "label": "证书小类",
+          "type": "select",
+          "value": "请选择证书种类",
+          "options": [
+            "请选择证书种类",
+            "高压电工作业",
+            "防爆电气作业",
+            "压力焊作业"
+          ]
+        },
+        {
+          "label": "发证机关",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "证书生效日期",
+          "type": "date",
+          "value": ""
+        },
+        {
+          "label": "证书有效期",
+          "type": "date",
+          "value": ""
+        },
+        {
+          "label": "是否需要复审",
+          "type": "select",
+          "value": "否",
+          "options": [
+            "否",
+            "是"
+          ]
+        },
+        {
+          "label": "复审周期",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "下次复审日期",
+          "type": "date",
+          "value": ""
+        },
+        {
+          "label": "是否需要换证",
+          "type": "select",
+          "value": "否",
+          "options": [
+            "否",
+            "是"
+          ]
+        },
+        {
+          "label": "换证周期",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "下次换证日期",
+          "type": "date",
+          "value": ""
+        },
+        {
+          "label": "是否需要注册",
+          "type": "select",
+          "value": "否",
+          "options": [
+            "否",
+            "是"
+          ]
+        },
+        {
+          "label": "初始注册时间",
+          "type": "date",
+          "value": ""
+        },
+        {
+          "label": "注册周期",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "下次注册日期",
+          "type": "date",
+          "value": ""
+        },
+        {
+          "label": "备注",
+          "type": "textarea",
+          "value": ""
+        },
+        {
+          "label": "证书附件",
+          "type": "text",
+          "value": "点击上传"
+        },
+        {
+          "label": "复审附件",
+          "type": "text",
+          "value": "点击上传"
+        },
+        {
+          "label": "换证附件",
+          "type": "text",
+          "value": "点击上传"
+        },
+        {
+          "label": "注册附件",
+          "type": "text",
+          "value": "点击上传"
+        }
+      ],
+      "actions": [
+        {
+          "label": "关闭"
+        }
+      ]
+    },
+    {
+      "id": "cert-detail",
+      "template": "certificate-detail-form",
+      "title": "证书详情",
+      "sectionTitle": "证书详情",
+      "headerActions": [
+        {
+          "label": "关闭",
+          "close": true
+        }
+      ],
+      "formFields": [
+        {
+          "label": "姓名",
+          "type": "text",
+          "value": "高杨"
+        },
+        {
+          "label": "统一身份",
+          "type": "text",
+          "value": "gaoy8566"
+        },
+        {
+          "label": "企业名称",
+          "type": "text",
+          "value": "中科炼化"
+        },
+        {
+          "label": "部门",
+          "type": "text",
+          "value": "工程管理一班"
+        },
+        {
+          "label": "岗位",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "行政级别",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "证书名称",
+          "type": "text",
+          "value": "高级证书测试测试测试"
+        },
+        {
+          "label": "证书编号",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "证书种类",
+          "type": "text",
+          "value": "HSE关键岗位资格"
+        },
+        {
+          "label": "证书小类",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "证书级别",
+          "type": "text",
+          "value": "集团公司发证"
+        },
+        {
+          "label": "发证机关",
+          "type": "text",
+          "value": "岗位证书预发"
+        },
+        {
+          "label": "证书生效日期",
+          "type": "date",
+          "value": "2026-02-26"
+        },
+        {
+          "label": "证书有效期",
+          "type": "date",
+          "value": "2026-02-28"
+        },
+        {
+          "label": "是否异常",
+          "type": "text",
+          "value": "否"
+        },
+        {
+          "label": "是否需要复审",
+          "type": "text",
+          "value": "是"
+        },
+        {
+          "label": "复审周期",
+          "type": "text",
+          "value": "1"
+        },
+        {
+          "label": "下次复审日期",
+          "type": "date",
+          "value": "2027-02-26"
+        },
+        {
+          "label": "是否需要换证",
+          "type": "text",
+          "value": "是"
+        },
+        {
+          "label": "换证周期",
+          "type": "text",
+          "value": "7"
+        },
+        {
+          "label": "下次换证日期",
+          "type": "date",
+          "value": "2033-02-26"
+        },
+        {
+          "label": "是否需要注册",
+          "type": "text",
+          "value": "否"
+        },
+        {
+          "label": "注册周期",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "初始注册时间",
+          "type": "date",
+          "value": ""
+        },
+        {
+          "label": "下次注册日期",
+          "type": "date",
+          "value": ""
+        },
+        {
+          "label": "备注",
+          "type": "textarea",
+          "value": "测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试"
+        },
+        {
+          "label": "证书附件",
+          "type": "text",
+          "value": "未上传文件"
+        },
+        {
+          "label": "复审附件",
+          "type": "text",
+          "value": "未上传文件"
+        },
+        {
+          "label": "换证附件",
+          "type": "text",
+          "value": "未上传文件"
+        },
+        {
+          "label": "注册附件",
+          "type": "text",
+          "value": "未上传文件"
+        }
+      ],
+      "historyTable": {
+        "title": "证书登记记录",
+        "columns": [
+          "序号",
+          "登记种类",
+          "发证/复审/注册/换证日期",
+          "下次复审/注册/换证日期",
+          "登记人",
+          "登记部门/单位",
+          "登记时间"
+        ],
+        "rows": [
+          [
+            "1",
+            "换证",
+            "2026年02月26日",
+            "2033年02月26日",
+            "肖鹏",
+            "公用工程部",
+            "2026年02月26日"
+          ],
+          [
+            "2",
+            "复审",
+            "2026年02月26日",
+            "2027年02月26日",
+            "肖鹏",
+            "公用工程部",
+            "2026年02月26日"
+          ]
+        ]
+      },
+      "actions": [
+        {
+          "label": "关闭"
+        }
+      ]
+    },
+    {
+      "id": "person-select",
+      "template": "certificate-detail-form",
+      "title": "选择人员",
+      "sectionTitle": "选择人员",
+      "headerActions": [
+        {
+          "label": "取消",
+          "close": true
+        },
+        {
+          "label": "保存",
+          "primary": true
+        }
+      ],
+      "formFields": [
+        {
+          "label": "机构名称",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "工号",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "姓名",
+          "type": "text",
+          "value": ""
+        }
+      ],
+      "historyTable": {
+        "title": "常用数据(0)",
+        "columns": [
+          "选择",
+          "姓名",
+          "员工编号",
+          "部门",
+          "企业名称"
+        ],
+        "rows": [
+          [
+            {
+              "type": "checkbox"
+            },
+            "张亮",
+            "0368547",
+            "储运部",
+            "中科炼化"
+          ],
+          [
+            {
+              "type": "checkbox"
+            },
+            "方月蒙",
+            "90013152",
+            "化工二部一班",
+            "中科炼化"
+          ],
+          [
+            {
+              "type": "checkbox"
+            },
+            "胡晓磊",
+            "19038",
+            "炼油三部",
+            "中科炼化"
+          ],
+          [
+            {
+              "type": "checkbox"
+            },
+            "尤红玉",
+            "00368974",
+            "储运部",
+            "中科炼化"
+          ],
+          [
+            {
+              "type": "checkbox"
+            },
+            "高杨",
+            "19001",
+            "工程管理一班",
+            "中科炼化"
+          ]
+        ]
+      },
+      "actions": [
+        {
+          "label": "关闭"
+        }
+      ]
+    }
+  ]
+}

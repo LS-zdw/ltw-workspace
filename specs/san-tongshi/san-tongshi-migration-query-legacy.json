@@ -1,0 +1,13 @@
+{
+  "module": "san-tongshi",
+  "pageId": "san-tongshi-migration-query-legacy",
+  "title": "安全三同时-老系统数据迁移查询",
+  "path": "/san-tongshi/migration-query-legacy",
+  "roles": [
+    "企业经办人",
+    "总部审查人"
+  ],
+  "source": "tech_project/安全三同时(老系统迁移数据).html",
+  "blocks": []
+}
+

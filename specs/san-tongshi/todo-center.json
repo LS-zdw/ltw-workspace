@@ -1,0 +1,159 @@
+{
+  "module": "san-tongshi",
+  "pageId": "todo-center",
+  "title": "待办",
+  "path": "/san-tongshi/todo",
+  "roles": [
+    "总部审批人",
+    "企业经办人"
+  ],
+  "source": "tech_project/待办.html",
+  "modals": [
+    {
+      "id": "approve-detail",
+      "title": "详情1",
+      "desc": "对应原型“详情1”动态面板",
+      "fields": [
+        "任务编号：{{taskNo}}",
+        "任务内容：{{project}}",
+        "模块名称：三同时管理",
+        "发起人：{{starter}}",
+        "发起单位：{{org}}",
+        "接收日期：{{receiveDate}}",
+        "任务时限：{{deadline}}",
+        "任务状态：待处理",
+        "任务节点：{{node}}",
+        "审批日志：下方显示审批流审批进度",
+        "任务流处理日志：下方显示任务流处理日志",
+        "本处理意见：请填写处理意见"
+      ],
+      "actions": [
+        {
+          "label": "关闭"
+        },
+        {
+          "label": "通过",
+          "open": "confirm-approve"
+        },
+        {
+          "label": "退回",
+          "open": "confirm-approve"
+        },
+        {
+          "label": "驳回",
+          "open": "confirm-approve"
+        },
+        {
+          "label": "项目详情",
+          "to": "__DRILL__"
+        }
+      ]
+    },
+    {
+      "id": "confirm-approve",
+      "title": "DM-确认弹窗",
+      "note": "确认",
+      "actions": [
+        {
+          "label": "取消"
+        },
+        {
+          "label": "确认",
+          "to": "__DRILL__"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "Tags",
+      "title": "任务视图切换",
+      "items": [
+        "我的待办",
+        "我的任务",
+        "我的审批",
+        "审批",
+        "任务",
+        "全部"
+      ]
+    },
+    {
+      "type": "Info",
+      "title": "处理规则",
+      "fields": [
+        "任务流和审批流页签内部细分模块页签",
+        "处理动作可根据流程节点配置",
+        "处理并下一步 / 处理并结束 / 退回此任务",
+        "没有下一级节点时可处理并结束",
+        "任务节点与处理状态由流程驱动"
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "待办列表",
+      "columns": [
+        "序号",
+        "模块名称",
+        "任务内容",
+        "任务类型",
+        "发起人",
+        "发起单位",
+        "接收日期",
+        "任务时限",
+        "任务状态",
+        "处理状态",
+        "任务编号",
+        "任务节点",
+        "操作"
+      ],
+      "rows": [
+        [
+          "1",
+          "三同时管理",
+          {
+            "text": "150万吨/年常减压改造试运行资料备案",
+            "modal": "approve-detail",
+            "to": "/san-tongshi/task-detail?project=17万吨SBC项目"
+          },
+          "试运行阶段行政许可信息维护",
+          "张明",
+          "海南炼化",
+          "2025-04-27",
+          "2025-05-22",
+          "待处理",
+          "处理中",
+          "RW-202504-001",
+          "试运行资料审核",
+          {
+            "text": "处理",
+            "modal": "approve-detail",
+            "to": "/san-tongshi/task-detail?project=17万吨SBC项目"
+          }
+        ],
+        [
+          "2",
+          "三同时管理",
+          {
+            "text": "竣工验收问题汇总表上传资料",
+            "modal": "approve-detail",
+            "to": "/san-tongshi/task-detail?project=204泊位苯水路出厂项目"
+          },
+          "竣工验收阶段信息维护",
+          "王虎",
+          "外部单位发起",
+          "2025-04-28",
+          "2025-05-31",
+          "待审批",
+          "未处理",
+          "RW-202504-008",
+          "竣工验收申请",
+          {
+            "text": "查看",
+            "modal": "approve-detail",
+            "to": "/san-tongshi/task-detail?project=204泊位苯水路出厂项目"
+          }
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "module": "edu/trainer",
+  "pageId": "training-record-management-migration-query",
+  "title": "教育培训-培训记录历史数据迁移-业务准备台账",
+  "path": "/edu/trainer/training-record-management-migration-query",
+  "roles": ["培训员", "企业培训管理员"],
+  "source": "edu-ep/培训记录(老系统迁移数据).html",
+  "blocks": [
+    {
+      "type": "Metrics",
+      "title": "准备情况概览",
+      "metrics": [
+        { "label": "老系统记录总数", "value": "3862" },
+        { "label": "可直接迁移", "value": "3576" },
+        { "label": "需业务确认", "value": "286" },
+        { "label": "待补充关键信息", "value": "173" },
+        { "label": "新系统已导入", "value": "0" }
+      ]
+    },
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        { "label": "年度", "type": "select", "options": ["全部", "2026", "2025", "2024"] },
+        { "label": "培训班名称", "type": "text", "placeholder": "请输入培训班名称" },
+        { "label": "培训计划名称", "type": "text", "placeholder": "请输入培训计划名称" },
+        { "label": "主办单位", "type": "text", "placeholder": "请输入主办单位" },
+        { "label": "准备状态", "type": "select", "options": ["全部", "可直接迁移", "需业务确认"] },
+        { "label": "缺失项类型", "type": "select", "options": ["全部", "培训对象", "主办单位", "培训方式", "培训地点", "培训内容"] }
+      ],
+      "actions": [
+        { "label": "查询", "primary": true },
+        { "label": "重置" },
+        { "label": "导出问题清单" },
+        { "label": "查看老系统原样页", "to": "/edu/trainer/training-record-migration-query" },
+        { "label": "迁移", "to": "/edu/trainer/training-record-management-migration-result" }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "待处理培训记录清单",
+      "columns": [
+        "序号",
+        "准备状态",
+        "业务处理建议",
+        "年度",
+        "培训班名称",
+        "培训计划名称",
+        "培训开始时间",
+        "培训结束时间",
+        "培训对象",
+        "主办单位",
+        "承办单位",
+        "培训方式",
+        "培训地点",
+        "培训内容",
+        "是否发证",
+        "登记部门",
+        "登记人",
+        "登记时间"
+      ],
+      "rows": [
+        [
+          "1",
+          { "text": "可直接迁移", "className": "cell-ok" },
+          "按记录迁移",
+          "2026",
+          { "text": "班组长安全提升一期", "modal": "drill-detail" },
+          "2026年班组长安全履职能力提升计划",
+          "2026-02-24",
+          "2026-03-07",
+          "一线班组长与安全员",
+          "中科（广东）炼化",
+          "湖南石油",
+          "集中面授",
+          "湛江培训中心A栋301",
+          "班组安全职责、风险辨识、隐患整改闭环",
+          "是",
+          "安环部",
+          "李晓",
+          "2026-02-18"
+        ],
+        [
+          "2",
+          { "text": "需业务确认", "className": "cell-warn" },
+          { "text": "请补充培训对象，建议同步核对培训方式", "className": "cell-warn" },
+          "2026",
+          { "text": "承包商入场培训（二期）", "modal": "drill-detail" },
+          "承包商高风险作业安全专项计划",
+          "2026-02-10",
+          "2026-02-11",
+          "",
+          "西南油气",
+          "江苏油田",
+          "",
+          "南京培训中心2号楼",
+          "动火、受限空间作业票证与应急处置流程",
+          "是",
+          "运行三部",
+          "周楠",
+          "2026-02-19"
+        ],
+        [
+          "3",
+          { "text": "需业务确认", "className": "cell-warn" },
+          { "text": "请补充主办单位与培训地点", "className": "cell-warn" },
+          "2025",
+          { "text": "环保法规专题班", "modal": "drill-detail" },
+          "环保合规与清洁生产培训计划",
+          "2025-09-03",
+          "2025-09-04",
+          "环保管理与运行岗位人员",
+          "",
+          "胜利油田",
+          "集中面授",
+          "",
+          "危废管理、排放合规与台账管理",
+          "否",
+          "安环部",
+          "王晨",
+          "2025-09-02"
+        ]
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "drill-detail",
+      "template": "certificate-detail-form",
+      "title": "培训记录迁移处理详情",
+      "sectionTitle": "处理摘要",
+      "headerActions": [
+        {
+          "label": "复制工单信息",
+          "copy": "老系统记录号=OLD-RECORD-000387; 准备批次=TR-PREP-20260301-01; 年度=2026; 培训班名称=承包商入场培训（二期）; 计划名称=承包商高风险作业安全专项计划; 准备状态=需业务确认; 缺失项=培训对象,培训方式"
+        },
+        { "label": "关闭", "close": true }
+      ],
+      "formFields": [
+        { "label": "年度", "type": "text", "value": "2026" },
+        { "label": "培训班名称", "type": "text", "value": "承包商入场培训（二期）" },
+        { "label": "培训计划名称", "type": "text", "value": "承包商高风险作业安全专项计划" },
+        { "label": "培训开始时间", "type": "text", "value": "2026-02-10" },
+        { "label": "培训结束时间", "type": "text", "value": "2026-02-11" },
+        { "label": "培训对象", "type": "text", "value": "" },
+        { "label": "主办单位", "type": "text", "value": "西南油气" },
+        { "label": "承办单位", "type": "text", "value": "江苏油田" },
+        { "label": "培训方式", "type": "text", "value": "" },
+        { "label": "培训地点", "type": "text", "value": "南京培训中心2号楼" },
+        { "label": "培训内容", "type": "textarea", "value": "动火、受限空间作业票证与应急处置流程" },
+        { "label": "当前状态", "type": "text", "value": "需业务确认" },
+        { "label": "业务处理建议", "type": "textarea", "value": "请先补充培训对象；培训方式可按历史签到记录补录为集中面授或外出研修。" }
+      ],
+      "historyTable": {
+        "title": "重点核对项",
+        "showAdd": false,
+        "columns": ["核对项", "老系统值", "系统拟导入值", "处理结论"],
+        "rows": [
+          ["培训班名称", "承包商入场培训（二期）", "承包商入场培训（二期）", { "text": "无风险", "className": "cell-ok" }],
+          ["培训计划名称", "承包商高风险作业安全专项计划", "承包商高风险作业安全专项计划", { "text": "无风险", "className": "cell-ok" }],
+          ["培训开始时间", "2026-02-10", "2026-02-10", { "text": "无风险", "className": "cell-ok" }],
+          ["培训结束时间", "2026-02-11", "2026-02-11", { "text": "无风险", "className": "cell-ok" }],
+          ["培训对象", "", "", { "text": "需补充", "className": "cell-danger" }],
+          ["主办单位", "西南油气", "西南油气", { "text": "无风险", "className": "cell-ok" }],
+          ["培训方式", "", "", { "text": "建议补充", "className": "cell-warn" }],
+          ["培训地点", "南京培训中心2号楼", "南京培训中心2号楼", { "text": "无风险", "className": "cell-ok" }]
+        ]
+      },
+      "actions": [{ "label": "关闭" }]
+    }
+  ]
+}

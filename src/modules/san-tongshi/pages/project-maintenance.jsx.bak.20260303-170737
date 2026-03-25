@@ -1,0 +1,306 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import Card from "/src/components/ui/Card.jsx";
+
+export default function Page() {
+  const navigate = useNavigate();
+  const projectName = new URLSearchParams(window.location.search).get("project");
+  const [activeModal, setActiveModal] = React.useState(null);
+  const [drillTarget, setDrillTarget] = React.useState("");
+  const [drillProject, setDrillProject] = React.useState(projectName || "");
+  const [modalStates, setModalStates] = React.useState({});
+  const resolveDynamic = (value) => String(value || "").replace(/\{\{project\}\}/g, drillProject || projectName || "");
+  const modalFormState = modalStates[activeModal] || {};
+  const setModalField = (key, value) => {
+    setModalFields({ [key]: value });
+  };
+  const setModalFields = (patch) => {
+    setModalStates((prev) => ({
+      ...prev,
+      [activeModal]: { ...(prev[activeModal] || {}), ...(patch || {}) }
+    }));
+  };
+  const isVisible = (showWhen) => {
+    if (!showWhen) return true;
+    return Object.entries(showWhen).every(([k, v]) => (modalFormState[k] || "") === String(v));
+  };
+  const openModal = (id, target = "") => {
+    setDrillTarget(target);
+    try {
+      const q = target.includes("?") ? target.split("?")[1] : "";
+      const p = new URLSearchParams(q).get("project");
+      if (p) setDrillProject(p);
+    } catch {
+      // ignore parse errors
+    }
+    const initialByModal = {};
+    if (initialByModal[id]) {
+      setModalStates((prev) => ({ ...prev, [id]: initialByModal[id] }));
+    }
+    setActiveModal(id);
+  };
+  const closeModal = () => setActiveModal(null);
+  const goto = (target) => {
+    closeModal();
+    if (navigate) navigate(target || drillTarget || "/");
+  };
+
+  return (
+    <div className="stack">
+      
+      <div className="filterbar">
+        <div className="filterbar-row">
+          <div className="filterbar-left"><div className="filterbar-item">
+        <div className="filterbar-label">项目级别</div>
+        <div className="filterbar-input"><select className="filterbar-control" defaultValue="全部">
+          <option value="全部">全部</option><option value="选项1">选项1</option><option value="选项2">选项2</option>
+        </select></div>
+      </div><div className="filterbar-item">
+        <div className="filterbar-label">项目类型</div>
+        <div className="filterbar-input"><select className="filterbar-control" defaultValue="全部">
+          <option value="全部">全部</option><option value="选项1">选项1</option><option value="选项2">选项2</option>
+        </select></div>
+      </div><div className="filterbar-item">
+        <div className="filterbar-label">项目名称</div>
+        <div className="filterbar-input"><input className="filterbar-control" placeholder="请输入项目名称" defaultValue="" /></div>
+      </div><div className="filterbar-item">
+        <div className="filterbar-label">所属板块</div>
+        <div className="filterbar-input"><input className="filterbar-control" placeholder="请输入所属板块" defaultValue="" /></div>
+      </div><div className="filterbar-item">
+        <div className="filterbar-label">建设类型</div>
+        <div className="filterbar-input"><select className="filterbar-control" defaultValue="全部">
+          <option value="全部">全部</option><option value="选项1">选项1</option><option value="选项2">选项2</option>
+        </select></div>
+      </div><div className="filterbar-item">
+        <div className="filterbar-label">三同时专业分类</div>
+        <div className="filterbar-input"><select className="filterbar-control" defaultValue="全部">
+          <option value="全部">全部</option><option value="选项1">选项1</option><option value="选项2">选项2</option>
+        </select></div>
+      </div><div className="filterbar-item">
+        <div className="filterbar-label">项目状态</div>
+        <div className="filterbar-input"><select className="filterbar-control" defaultValue="全部">
+          <option value="全部">全部</option><option value="选项1">选项1</option><option value="选项2">选项2</option>
+        </select></div>
+      </div><div className="filterbar-item">
+        <div className="filterbar-label">是否重点工程建设项目</div>
+        <div className="filterbar-input"><input className="filterbar-control" placeholder="请输入是否重点工程建设项目" defaultValue="" /></div>
+      </div><div className="filterbar-item">
+        <div className="filterbar-label">模糊搜索</div>
+        <div className="filterbar-input"><input className="filterbar-control" placeholder="请输入模糊搜索" defaultValue="" /></div>
+      </div></div>
+          <div className="filterbar-actions"><button type="button" className="btn btn-primary">查询</button><button type="button" className="btn">重置</button><button type="button" className="btn">导出</button></div>
+        </div>
+      </div>
+
+      <Card title="项目清单" desc="">
+        <div className="table-wrap">
+          <table className="proto-table">
+            <thead>
+              <tr>
+                <th className="table-checkbox"><input type="checkbox" readOnly /></th><th>序号</th><th>所属企业</th><th>项目名称</th><th>项目编码</th><th>项目级别</th><th>项目建设单位</th><th>项目阶段</th><th>项目状态</th><th>项目创建日期</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>1</td><td>海南炼化</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=17万吨SBC项目")}>17万吨SBC项目</button></td><td>H20018</td><td>一类项目（集团公司级）</td><td>海南巴陵化工新材料有限公司</td><td>可研前期</td><td>进行中</td><td>2024-02-01</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=17万吨SBC项目")}>详情</button></td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>2</td><td>九江石化</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=204泊位苯水路出厂项目")}>204泊位苯水路出厂项目</button></td><td>J20402</td><td>二类项目（事业部级）</td><td>九江石化</td><td>基础设计阶段</td><td>基础设计待审</td><td>2024-04-12</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=204泊位苯水路出厂项目")}>维护</button></td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>3</td><td>洛阳石化</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=全厂污水系统达标排")}>全厂污水系统达标排</button></td><td>LYS033</td><td>三类项目（企业级）</td><td>洛阳石化</td><td>竣工验收阶段</td><td>已验收</td><td>2023-05-07</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=全厂污水系统达标排")}>查看</button></td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>4</td><td>海南炼化</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=17万吨SBC项目")}>17万吨SBC项目</button></td><td>H20018</td><td>一类项目（集团公司级）</td><td>海南巴陵化工新材料有限公司</td><td>可研前期</td><td>进行中</td><td>2024-02-01</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=17万吨SBC项目")}>详情</button></td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>5</td><td>九江石化</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=204泊位苯水路出厂项目")}>204泊位苯水路出厂项目</button></td><td>J20402</td><td>二类项目（事业部级）</td><td>九江石化</td><td>基础设计阶段</td><td>基础设计待审</td><td>2024-04-12</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=204泊位苯水路出厂项目")}>维护</button></td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>6</td><td>洛阳石化</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=全厂污水系统达标排")}>全厂污水系统达标排</button></td><td>LYS033</td><td>三类项目（企业级）</td><td>洛阳石化</td><td>竣工验收阶段</td><td>已验收</td><td>2023-05-07</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=全厂污水系统达标排")}>查看</button></td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>7</td><td>海南炼化</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=17万吨SBC项目")}>17万吨SBC项目</button></td><td>H20018</td><td>一类项目（集团公司级）</td><td>海南巴陵化工新材料有限公司</td><td>可研前期</td><td>进行中</td><td>2024-02-01</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=17万吨SBC项目")}>详情</button></td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>8</td><td>九江石化</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=204泊位苯水路出厂项目")}>204泊位苯水路出厂项目</button></td><td>J20402</td><td>二类项目（事业部级）</td><td>九江石化</td><td>基础设计阶段</td><td>基础设计待审</td><td>2024-04-12</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=204泊位苯水路出厂项目")}>维护</button></td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>9</td><td>洛阳石化</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=全厂污水系统达标排")}>全厂污水系统达标排</button></td><td>LYS033</td><td>三类项目（企业级）</td><td>洛阳石化</td><td>竣工验收阶段</td><td>已验收</td><td>2023-05-07</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=全厂污水系统达标排")}>查看</button></td>
+          </tr>
+          <tr>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>10</td><td>海南炼化</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=17万吨SBC项目")}>17万吨SBC项目</button></td><td>H20018</td><td>一类项目（集团公司级）</td><td>海南巴陵化工新材料有限公司</td><td>可研前期</td><td>进行中</td><td>2024-02-01</td><td><button type="button" className="table-link-btn" onClick={() => openModal("project-detail", "/san-tongshi/task-detail?project=17万吨SBC项目")}>详情</button></td>
+          </tr>
+            </tbody>
+          </table>
+        </div>
+      </Card>
+
+      <Card title="说明" desc="是否重点工程建设项目字段由SUIP系统集成；项目维护需与项目主数据保持一致，再进入三同时项目清单。">
+        
+        <div className="pill">
+          <div className="k">说明</div>
+          <div className="v">是否重点工程建设项目字段由SUIP系统集成；项目维护需与项目主数据保持一致，再进入三同时项目清单。</div>
+        </div>
+      </Card>
+      
+      {activeModal === "project-detail" ? (
+        <div className="modal-mask" onClick={closeModal}>
+          <div className="modal modal-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-hd">
+              <div>
+                <div className="modal-title">项目详情</div>
+                <div className="modal-desc">对应原型中的“项目详情”动态面板</div>
+              </div>
+              <button type="button" className="modal-close" onClick={closeModal}>x</button>
+            </div>
+
+            <div className="modal-bd detail">
+              <div className="detail-section">
+                <div className="detail-section-title">项目基本信息</div>
+                <div className="detail-meta-grid">
+                  
+          <div className="detail-meta-item">
+            <div className="detail-meta-key">所属企业</div>
+            <div className="detail-meta-val">{resolveDynamic("海南炼化")}</div>
+          </div>
+          <div className="detail-meta-item">
+            <div className="detail-meta-key">项目名称</div>
+            <div className="detail-meta-val">{resolveDynamic("{{project}}")}</div>
+          </div>
+          <div className="detail-meta-item">
+            <div className="detail-meta-key">项目编码</div>
+            <div className="detail-meta-val">{resolveDynamic("H20018")}</div>
+          </div>
+          <div className="detail-meta-item">
+            <div className="detail-meta-key">项目建设单位</div>
+            <div className="detail-meta-val">{resolveDynamic("海南巴陵化工新材料有限公司")}</div>
+          </div>
+                </div>
+              </div>
+
+              <div className="detail-section">
+                <div className="detail-section-title">项目建设信息</div>
+                <div className="detail-meta-grid">
+                  
+          <div className="detail-meta-item">
+            <div className="detail-meta-key">所属板块</div>
+            <div className="detail-meta-val">{resolveDynamic("炼化板块")}</div>
+          </div>
+          <div className="detail-meta-item">
+            <div className="detail-meta-key">项目级别</div>
+            <div className="detail-meta-val">{resolveDynamic("一类项目（集团公司级）")}</div>
+          </div>
+          <div className="detail-meta-item">
+            <div className="detail-meta-key">项目状态</div>
+            <div className="detail-meta-val">{resolveDynamic("进行中")}</div>
+          </div>
+          <div className="detail-meta-item">
+            <div className="detail-meta-key">项目创建日期</div>
+            <div className="detail-meta-val">{resolveDynamic("2024年2月1日")}</div>
+          </div>
+                </div>
+              </div>
+
+              <div className="detail-stages">
+                
+                <div className="detail-stage active">
+                  <span className="detail-stage-dot"></span>
+                  <span>可研阶段</span>
+                </div>
+                <div className="detail-stage ">
+                  <span className="detail-stage-dot"></span>
+                  <span>基础设计阶段</span>
+                </div>
+                <div className="detail-stage ">
+                  <span className="detail-stage-dot"></span>
+                  <span>试运行阶段</span>
+                </div>
+                <div className="detail-stage ">
+                  <span className="detail-stage-dot"></span>
+                  <span>竣工验收阶段</span>
+                </div>
+              </div>
+
+              
+
+              
+              <div className="detail-section">
+                <div className="detail-section-title">项目基本信息</div>
+                <div className="detail-form-grid">
+                  
+              <div className="detail-form-item">
+                <div className="detail-form-key">项目类型</div>
+                <div className="detail-form-val">{resolveDynamic("危化品类项目")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">建设类型</div>
+                <div className="detail-form-val">{resolveDynamic("新建/改建/扩建/迁建/改造/收购/租赁")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">三同时专业分类</div>
+                <div className="detail-form-val">{resolveDynamic("安全三同时/消防三同时/职业卫生三同时")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">是否重点工程建设项目</div>
+                <div className="detail-form-val">{resolveDynamic("是/否（由SUIP系统集成）")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">计划开工日期</div>
+                <div className="detail-form-val">{resolveDynamic("选择时间")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">计划完工日期</div>
+                <div className="detail-form-val">{resolveDynamic("选择时间")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">计划投产日期</div>
+                <div className="detail-form-val">{resolveDynamic("选择时间")}</div>
+              </div>
+                </div>
+                
+              </div>
+              <div className="detail-section">
+                <div className="detail-section-title">维护说明</div>
+                <div className="detail-form-grid">
+                  
+              <div className="detail-form-item">
+                <div className="detail-form-key">数据来源</div>
+                <div className="detail-form-val">{resolveDynamic("先将部分基础信息集成至主数据")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">一致性要求</div>
+                <div className="detail-form-val">{resolveDynamic("项目需与项目主数据中的信息一致")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">集成字段</div>
+                <div className="detail-form-val">{resolveDynamic("标注为黄色字段由SUIP系统集成")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">组织口径</div>
+                <div className="detail-form-val">{resolveDynamic("总部-事业部-企业树状组织")}</div>
+              </div>
+                </div>
+                
+                <div className="detail-form-actions">
+                  <button type="button" className="btn btn-primary">保存</button><button type="button" className="btn btn-primary">提交</button>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-ft">
+              <button type="button" className="btn" onClick={closeModal}>
+              关闭
+            </button>
+<button type="button" className="btn btn-primary" onClick={() => goto(drillTarget)}>
+              进入任务详情
+            </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+  
+    </div>
+  );
+}

@@ -1,0 +1,80 @@
+{
+  "module": "edu/trainer",
+  "pageId": "kb-manage",
+  "title": "安全培训知识库-文章管理",
+  "path": "/edu/trainer/kb/manage",
+  "roles": [
+    "培训员",
+    "企业培训管理员"
+  ],
+  "blocks": [
+    {
+      "type": "Filters",
+      "title": "筛选条件",
+      "fields": [
+        { "key": "q", "label": "关键词", "type": "text", "placeholder": "标题/关键词/法规依据" },
+        { "key": "category", "label": "分类", "type": "select", "options": ["全部", "作业安全", "风险隐患", "自然灾害", "应急管理"] },
+        { "key": "status", "label": "发布状态", "type": "select", "options": ["全部", "草稿", "发布中", "已作废"] },
+        { "key": "risk", "label": "风险等级", "type": "select", "options": ["全部", "高", "中", "低"] }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "条目列表",
+      "columns": [
+        { "key": "id", "label": "条目ID" },
+        { "key": "title", "label": "标题" },
+        { "key": "category", "label": "分类" },
+        { "key": "risk", "label": "风险等级" },
+        { "key": "status", "label": "状态" },
+        { "key": "updatedAt", "label": "更新时间" },
+        { "key": "op", "label": "操作" }
+      ],
+      "rows": [
+        {
+          "id": "KB-2026-001",
+          "title": { "text": "受限空间作业安全要点（含典型事故案例）", "to": "/edu/kb/article-detail?id=KB-2026-001" },
+          "category": "作业安全",
+          "risk": "高",
+          "status": "发布中",
+          "updatedAt": "2026-02-03",
+          "op": { "text": "编辑/发布/作废", "modal": "kb-ops" }
+        },
+        {
+          "id": "KB-2026-002",
+          "title": { "text": "动火作业分级与监护清单（现场核对版）", "to": "/edu/kb/article-detail?id=KB-2026-002" },
+          "category": "作业安全",
+          "risk": "高",
+          "status": "草稿",
+          "updatedAt": "2026-01-28",
+          "op": { "text": "编辑/发布/作废", "modal": "kb-ops" }
+        }
+      ]
+    },
+    {
+      "type": "Info",
+      "title": "管理说明",
+      "fields": [
+        "此页用于演示管理端链路：新增/编辑/发布/作废/版本变更记录。",
+        "不接后端，操作以弹层展示为主。"
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "kb-ops",
+      "title": "条目操作（演示）",
+      "desc": "此处模拟管理端的编辑、发布与作废动作。",
+      "fields": [
+        "编辑：进入详情页或弹层修改字段",
+        "发布：状态从草稿变更为发布中",
+        "作废：状态变更为已作废（保留历史）"
+      ],
+      "actions": [
+        { "label": "去详情页", "to": "/edu/kb/article-detail?id=KB-2026-001" },
+        { "label": "关闭" }
+      ]
+    }
+  ]
+}
+

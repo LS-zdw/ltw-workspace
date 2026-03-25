@@ -1,0 +1,351 @@
+{
+  "module": "edu/trainer",
+  "pageId": "certificate-management-migration-query-legacy",
+  "title": "教育培训-证书管理-迁移数据查询",
+  "path": "/edu/trainer/certificate-management-migration-query-legacy",
+  "roles": [
+    "培训员",
+    "企业培训管理员"
+  ],
+  "source": "edu-ep/证书管理(老系统迁移数据).html",
+  "blocks": [
+    {
+      "type": "Filters",
+      "title": "查询条件",
+      "fields": [
+        {
+          "label": "证书名称",
+          "type": "text",
+          "placeholder": "请输入关键字"
+        },
+        {
+          "label": "状态",
+          "type": "select",
+          "options": [
+            "- 请选择 -",
+            "有效",
+            "无效"
+          ]
+        },
+        {
+          "label": "姓名",
+          "type": "text",
+          "placeholder": "请输入姓名"
+        },
+        {
+          "label": "企业名称",
+          "type": "select",
+          "options": [
+            "全部",
+            "安徽石油",
+            "中科炼化"
+          ]
+        },
+        {
+          "label": "工作单位",
+          "type": "text",
+          "placeholder": "请输入工作单位"
+        },
+        {
+          "label": "证书种类",
+          "type": "select",
+          "options": [
+            "全部",
+            "安全管理人员资格证",
+            "主要负责人安全合格证",
+            "特种作业资格证"
+          ]
+        },
+        {
+          "label": "证书小类",
+          "type": "select",
+          "options": [
+            "全部",
+            "高压电工作业",
+            "压力焊作业"
+          ]
+        },
+        {
+          "label": "发证机构",
+          "type": "text",
+          "placeholder": "请输入发证机构"
+        },
+        {
+          "label": "证书编号",
+          "type": "text",
+          "placeholder": "请输入证书编号"
+        }
+      ],
+      "actions": [
+        {
+          "label": "查询",
+          "primary": true
+        },
+        {
+          "label": "高级查询"
+        },
+        {
+          "label": "清空"
+        },
+        {
+          "label": "导出"
+        }
+      ]
+    },
+    {
+      "type": "Table",
+      "title": "教育培训-证书管理-迁移数据查询列表",
+      "columns": [
+        "序号",
+        "姓名",
+        "企业名称",
+        "工作单位",
+        "证书种类",
+        "证书名称",
+        "发证/复审/换证日期",
+        "状态",
+        "复审周期",
+        "应复审日期",
+        "换证周期",
+        "应换证日期",
+        "证书编号",
+        "证书小类",
+        "发证机构",
+        "现任职务",
+        "行政级别",
+        "备注",
+        "登记部门",
+        "登记人",
+        "登记日期"
+      ],
+      "rows": [
+        [
+          "1",
+          {
+            "text": "牛敬明",
+            "modal": "drill-detail"
+          },
+          "安徽石油",
+          "安庆石油",
+          "安全生产知识和管理能力考核合格证",
+          "安全生产知识和管理能力考核合格证",
+          "2023-06-07",
+          "有效",
+          "3",
+          "2026-06-06",
+          "3",
+          "2026-06-06",
+          "342301197305001234",
+          "",
+          "滁州市应急管理局",
+          "主办",
+          "一般管理人员",
+          "",
+          "城南加油站",
+          "赵丽",
+          "2024-06-11"
+        ],
+        [
+          "2",
+          {
+            "text": "陶红龙",
+            "modal": "drill-detail"
+          },
+          "安徽石油",
+          "向山加油站",
+          "安全管理人员资格证（安全管理人员）",
+          "安全生产管理资格证书",
+          "2020-07-10",
+          "无效",
+          "3",
+          {
+            "text": "2023-07-10",
+            "className": "cell-overdue"
+          },
+          "3",
+          {
+            "text": "2023-07-10",
+            "className": "cell-overdue"
+          },
+          "340503198001019876",
+          "",
+          "马鞍山市应急管理局",
+          "站长",
+          "一般管理人员",
+          "",
+          "城东加油站",
+          "孟芳芳",
+          "2024-04-03"
+        ]
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "id": "drill-detail",
+      "template": "certificate-detail-form",
+      "title": "教育培训-证书管理-迁移数据详情",
+      "sectionTitle": "证书发证/复审/换证信息登记",
+      "headerActions": [
+        {
+          "label": "保存",
+          "primary": true
+        },
+        {
+          "label": "返回",
+          "close": true
+        }
+      ],
+      "formFields": [
+        {
+          "label": "姓名",
+          "type": "text",
+          "value": "陶红龙"
+        },
+        {
+          "label": "职工编号",
+          "type": "text",
+          "value": "01081190"
+        },
+        {
+          "label": "工作单位",
+          "type": "text",
+          "value": "安全环保数质量部"
+        },
+        {
+          "label": "现任职务/岗位",
+          "type": "select",
+          "value": "主办",
+          "options": [
+            "主办",
+            "加油员",
+            "站长"
+          ]
+        },
+        {
+          "label": "行政级别",
+          "type": "text",
+          "value": "一般管理人员"
+        },
+        {
+          "label": "证书名称",
+          "type": "text",
+          "value": "安全生产知识和管理能力考核合格证"
+        },
+        {
+          "label": "证书编号",
+          "type": "text",
+          "value": "140402197903181613"
+        },
+        {
+          "label": "发证机关",
+          "type": "text",
+          "value": "滁州市应急管理局"
+        },
+        {
+          "label": "发证机关类别",
+          "type": "select",
+          "value": "国家/地方政府发证",
+          "options": [
+            "国家/地方政府发证",
+            "集团公司发证",
+            "企业内部发证"
+          ]
+        },
+        {
+          "label": "证书种类",
+          "type": "text",
+          "value": "安全生产知识和管理能力考核合格证"
+        },
+        {
+          "label": "证书小类",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "label": "发证/复审/换证日期",
+          "type": "date",
+          "value": "2023-09-19"
+        },
+        {
+          "label": "是否复审",
+          "type": "select",
+          "value": "是",
+          "options": [
+            "是",
+            "否"
+          ]
+        },
+        {
+          "label": "复审周期",
+          "type": "text",
+          "value": "3年"
+        },
+        {
+          "label": "下次复审日期",
+          "type": "date",
+          "value": "2026-09-18"
+        },
+        {
+          "label": "是否换证",
+          "type": "select",
+          "value": "是",
+          "options": [
+            "是",
+            "否"
+          ]
+        },
+        {
+          "label": "换证周期",
+          "type": "text",
+          "value": "3年"
+        },
+        {
+          "label": "下次换证日期",
+          "type": "date",
+          "value": "2026-09-18"
+        },
+        {
+          "label": "备注（可填写证书复制/补发时间）",
+          "type": "textarea",
+          "value": ""
+        },
+        {
+          "label": "附件",
+          "type": "textarea",
+          "value": ""
+        }
+      ],
+      "historyTable": {
+        "title": "发证/复审/换证记录",
+        "showAdd": false,
+        "columns": [
+          "选择",
+          "序号",
+          "登记种类",
+          "发证/复审/换证日期",
+          "下次复审/换证日期",
+          "证书编号",
+          "登记人",
+          "登记部门/单位",
+          "登记时间"
+        ],
+        "rows": [
+          [
+            {
+              "type": "checkbox"
+            },
+            "1",
+            "发证",
+            "2023-09-19",
+            "2026-09-18",
+            "140402197903181613",
+            "赵丽",
+            "安全环保数质量部",
+            "2024-06-11"
+          ]
+        ]
+      }
+    }
+  ]
+}
