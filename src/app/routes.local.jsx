@@ -2,6 +2,13 @@ import generatedRoutes from "./routes.generated.jsx";
 
 const localRoutes = [
   {
+    path: "/tools/template-library",
+    title: "工具-原型模板库",
+    module: "tools",
+    moduleGroup: "other",
+    elementPath: "./modules/tools/pages/template-library.jsx"
+  },
+  {
     path: "/three-same/tasks",
     title: "三同时任务列表",
     module: "san-tongshi",

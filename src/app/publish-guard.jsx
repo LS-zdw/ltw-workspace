@@ -12,6 +12,7 @@ export function isPublishRestricted() {
 
 export function isRouteAllowed(pathname) {
   const p = String(pathname || "");
+  if (p === "/tools/template-library") return true;
   if (!allowedRouteSet) return true;
   return allowedRouteSet.has(p);
 }
