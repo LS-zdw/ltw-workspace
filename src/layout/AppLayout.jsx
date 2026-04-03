@@ -70,10 +70,16 @@ function isEduDevRoute(route) {
     "/edu/trainer/enterprise-training-statistics",
     "/edu/trainer/training-one-person-one-file",
     "/edu/trainer/training-one-person-one-file-enterprise",
+    "/edu/trainer/personal-training-archive-query-enterprise",
     "/edu/trainer/certificate-management-enterprise",
     "/edu/trainer/hq-training-statistics",
-    "/edu/trainer/education-training-nav"
+    "/edu/trainer/education-training-nav",
+    "/edu/trainer/hse-knowledge-sharing-training-class-management"
   ].includes(p);
+}
+
+function isHseKnowledgeSharingRoute(route) {
+  return String(route?.path || "") === "/edu/trainer/hse-knowledge-sharing-training-class-management";
 }
 
 function isEduDevEnterpriseRoute(route) {
@@ -87,6 +93,7 @@ function isEduDevEnterpriseRoute(route) {
     "/edu/trainer/training-record-management-enterprise",
     "/edu/trainer/enterprise-training-statistics",
     "/edu/trainer/training-one-person-one-file-enterprise",
+    "/edu/trainer/personal-training-archive-query-enterprise",
     "/edu/trainer/certificate-management-enterprise",
     "/edu/trainer/education-training-nav"
   ].includes(p);
@@ -165,6 +172,17 @@ function navLabel(title = "") {
     .replace(/^安全三同时-/, "")
     .replace(/^安全培训知识库-/, "")
     .trim();
+}
+
+function toHashAddress(path = "") {
+  const p = String(path || "");
+  return p ? `/#${p}` : "";
+}
+
+function toSourceFilePath(route = {}) {
+  const raw = String(route.elementPath || "").trim();
+  if (!raw) return "-";
+  return raw.startsWith("./") ? `/src/${raw.slice(2)}` : raw;
 }
 
 function buildAutoPagerNode() {
@@ -278,7 +296,7 @@ function writeNavCustomizeState(state) {
 
 function getDefaultNavPlacement(route) {
   const p = String(route?.path || "");
-  if (p === "/tools/publish-center" || p === "/tools/template-library") {
+  if (p === "/tools/publish-center" || p === "/tools/template-library" || p === "/tools/dialog") {
     return { major: "常用入口", minor: "常用入口" };
   }
   if (p.startsWith("/san-tongshi/")) {
@@ -289,6 +307,7 @@ function getDefaultNavPlacement(route) {
   if (p.startsWith("/edu/")) {
     if (isPrototypeCardRoute(route)) return { major: "教育培训", minor: "原型说明卡" };
     if (isKbRoute(route)) return { major: "教育培训", minor: "安全培训知识库" };
+    if (isHseKnowledgeSharingRoute(route)) return { major: "教育培训", minor: "HSE知识共享平台" };
     if (isEduDevEnterpriseRoute(route)) return { major: "教育培训", minor: "教育培训开发页面-企业端" };
     if (isEduDevHeadquartersRoute(route)) return { major: "教育培训", minor: "教育培训开发页面-总部端" };
     if (isMigrationLedgerRoute(route)) return { major: "教育培训", minor: "历史迁移（新系统台账）" };
@@ -379,15 +398,20 @@ function RouteMultiPicker({
 
 export default function AppLayout({ children }) {
   const location = useLocation();
+  const isHseKspStandalonePage =
+    location.pathname === "/edu/trainer/hse-knowledge-sharing-training-class-management";
   const isEduDevPrototype = isEduDevPath(location.pathname);
   const isDataMigrationPrototype = isDataMigrationPath(location.pathname);
   const isHome = location.pathname === "/";
+  const publishRestricted = isPublishRestricted();
   const homeAllowed = isRouteAllowed("/");
+  const showHomeTab = !publishRestricted || homeAllowed;
   const navClickable =
     typeof window !== "undefined" ? window.__PUBLISH_NAV_CLICKABLE__ !== false : true;
   const [showQuickNav, setShowQuickNav] = React.useState(false);
   const [navCustomize, setNavCustomize] = React.useState(readNavCustomizeState);
   const [isNavEditMode, setIsNavEditMode] = React.useState(false);
+  const [showCollabEntry, setShowCollabEntry] = React.useState(false);
   const [addingMajorName, setAddingMajorName] = React.useState("");
   const [addingMajorColor, setAddingMajorColor] = React.useState(DEFAULT_MAJOR_TEXT_COLOR);
   const [majorEditor, setMajorEditor] = React.useState(null);
@@ -407,6 +431,12 @@ export default function AppLayout({ children }) {
   const [dropMajorPos, setDropMajorPos] = React.useState("before");
   const [dropMinorPos, setDropMinorPos] = React.useState("before");
   const [dropRoutePos, setDropRoutePos] = React.useState("before");
+  const [copyMessage, setCopyMessage] = React.useState("");
+  const [collabMajorFilter, setCollabMajorFilter] = React.useState("ALL");
+  const [collabMinorFilter, setCollabMinorFilter] = React.useState("ALL");
+  const [collabKeyword, setCollabKeyword] = React.useState("");
+  const [collabSelectedRowKeys, setCollabSelectedRowKeys] = React.useState([]);
+  const copyTimerRef = React.useRef(null);
   const mainRef = React.useRef(null);
   const visibleRoutes = routes;
   const navVisibleRoutes = visibleRoutes.filter(
@@ -425,6 +455,9 @@ export default function AppLayout({ children }) {
   }, []);
   React.useEffect(() => {
     setShowQuickNav(false);
+  }, [location.pathname]);
+  React.useEffect(() => {
+    if (location.pathname !== "/") setShowCollabEntry(false);
   }, [location.pathname]);
   React.useEffect(() => {
     if (!navClickable && showQuickNav) {
@@ -613,6 +646,189 @@ export default function AppLayout({ children }) {
   const quickNavSectionsToRender = currentQuickNavSection
     ? [currentQuickNavSection]
     : quickNavSections;
+  const collabSections = React.useMemo(
+    () =>
+      navGroups
+        .map((major) => ({
+          majorKey: major.majorKey,
+          majorTitle: major.majorTitle,
+          sections: major.sections
+            .map((section) => ({
+              minorKey: section.minorKey,
+              minorTitle: section.minorTitle,
+              routes: section.routes.map((route) => ({
+                name: route.displayTitle,
+                path: route.path,
+                address: toHashAddress(route.path),
+                filePath: toSourceFilePath(route)
+              }))
+            }))
+            .filter((section) => section.routes.length > 0)
+        }))
+        .filter((major) => major.sections.length > 0),
+    [navGroups]
+  );
+  const collabRows = React.useMemo(
+    () =>
+      collabSections.flatMap((major) =>
+        major.sections.flatMap((section) =>
+          section.routes.map((route) => ({
+            rowKey: `${major.majorKey}-${section.minorKey}-${route.path}`,
+            majorKey: major.majorKey,
+            majorTitle: major.majorTitle,
+            minorKey: section.minorKey,
+            minorTitle: section.minorTitle,
+            name: route.name,
+            address: route.address,
+            filePath: route.filePath
+          }))
+        )
+      ),
+    [collabSections]
+  );
+  const collabCopyText = React.useMemo(() => {
+    const all = collabRows
+      .map((row) => `${row.majorTitle} / ${row.minorTitle} | ${row.name} | ${row.address}`)
+      .join("\n");
+    const allWithFile = collabRows
+      .map(
+        (row) =>
+          `${row.majorTitle} / ${row.minorTitle} | ${row.name} | ${row.address} | ${row.filePath}`
+      )
+      .join("\n");
+    const major = {};
+    const minor = {};
+    collabSections.forEach((majorItem) => {
+      major[majorItem.majorKey] = majorItem.sections
+        .flatMap((section) =>
+          section.routes.map(
+            (route) =>
+              `${majorItem.majorTitle} / ${section.minorTitle} | ${route.name} | ${route.address} | ${route.filePath}`
+          )
+        )
+        .join("\n");
+      majorItem.sections.forEach((section) => {
+        minor[`${majorItem.majorKey}::${section.minorKey}`] = section.routes
+          .map(
+            (route) =>
+              `${majorItem.majorTitle} / ${section.minorTitle} | ${route.name} | ${route.address} | ${route.filePath}`
+          )
+          .join("\n");
+      });
+    });
+    return { all, allWithFile, major, minor };
+  }, [collabRows, collabSections]);
+  const collabMajorOptions = React.useMemo(
+    () => collabSections.map((major) => ({ key: major.majorKey, label: major.majorTitle })),
+    [collabSections]
+  );
+  const collabMinorOptions = React.useMemo(() => {
+    const map = new Map();
+    collabSections.forEach((major) => {
+      if (collabMajorFilter !== "ALL" && collabMajorFilter !== major.majorKey) return;
+      major.sections.forEach((section) => {
+        const key = `${major.majorKey}::${section.minorKey}`;
+        map.set(key, {
+          key,
+          label:
+            collabMajorFilter === "ALL"
+              ? `${major.majorTitle} / ${section.minorTitle}`
+              : section.minorTitle
+        });
+      });
+    });
+    return Array.from(map.values());
+  }, [collabMajorFilter, collabSections]);
+  React.useEffect(() => {
+    if (collabMinorFilter === "ALL") return;
+    if (!collabMinorOptions.some((item) => item.key === collabMinorFilter)) {
+      setCollabMinorFilter("ALL");
+    }
+  }, [collabMinorFilter, collabMinorOptions]);
+  const filteredCollabRows = React.useMemo(() => {
+    const kw = String(collabKeyword || "").trim().toLowerCase();
+    return collabRows.filter((row) => {
+      if (collabMajorFilter !== "ALL" && row.majorKey !== collabMajorFilter) return false;
+      if (collabMinorFilter !== "ALL" && `${row.majorKey}::${row.minorKey}` !== collabMinorFilter) {
+        return false;
+      }
+      if (!kw) return true;
+      return [
+        row.majorTitle,
+        row.minorTitle,
+        row.name,
+        row.address,
+        row.filePath
+      ]
+        .join(" ")
+        .toLowerCase()
+        .includes(kw);
+    });
+  }, [collabKeyword, collabMajorFilter, collabMinorFilter, collabRows]);
+  const collabSelectedSet = React.useMemo(
+    () => new Set(collabSelectedRowKeys),
+    [collabSelectedRowKeys]
+  );
+  const filteredCollabRowKeys = React.useMemo(
+    () => filteredCollabRows.map((row) => row.rowKey),
+    [filteredCollabRows]
+  );
+  const allFilteredChecked = React.useMemo(
+    () =>
+      filteredCollabRowKeys.length > 0 &&
+      filteredCollabRowKeys.every((key) => collabSelectedSet.has(key)),
+    [collabSelectedSet, filteredCollabRowKeys]
+  );
+  const selectedCollabRows = React.useMemo(
+    () => collabRows.filter((row) => collabSelectedSet.has(row.rowKey)),
+    [collabRows, collabSelectedSet]
+  );
+  const filteredCollabCopyText = React.useMemo(
+    () =>
+      filteredCollabRows
+        .map((row) => `${row.majorTitle} / ${row.minorTitle} | ${row.name} | ${row.address} | ${row.filePath}`)
+        .join("\n"),
+    [filteredCollabRows]
+  );
+  const selectedCollabCopyText = React.useMemo(
+    () =>
+      selectedCollabRows
+        .map((row) => `${row.majorTitle} / ${row.minorTitle} | ${row.name} | ${row.address} | ${row.filePath}`)
+        .join("\n"),
+    [selectedCollabRows]
+  );
+  const writeToClipboard = React.useCallback(async (text, okText) => {
+    const content = String(text || "").trim();
+    if (!content) return;
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(content);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = content;
+        textarea.setAttribute("readonly", "readonly");
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+      setCopyMessage(okText || "已复制");
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopyMessage(""), 1500);
+    } catch {
+      setCopyMessage("复制失败，请手动复制");
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopyMessage(""), 1500);
+    }
+  }, []);
+  React.useEffect(
+    () => () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    },
+    []
+  );
   const ensureMajorMeta = React.useCallback((nextState, majorKey) => {
     if (!nextState.majorMeta[majorKey]) nextState.majorMeta[majorKey] = {};
     if (!nextState.majorOrder.includes(majorKey)) nextState.majorOrder.push(majorKey);
@@ -1200,30 +1416,34 @@ export default function AppLayout({ children }) {
   return (
     <div className="page">
       <div className="wrap">
-        <div className="topbar">
-          <div />
-          <div />
-        </div>
-
-        <div className="page-tabs-row">
-          <div className="topbar-tabs">
-            {homeAllowed ? <Link className="topbar-tab" to="/">首页</Link> : <span className="topbar-tab disabled">首页</span>}
-            <button
-              type="button"
-              className={`topbar-tab ${showQuickNav ? "active" : ""} ${!navClickable ? "disabled" : ""}`}
-              onClick={() => {
-                if (!navClickable) return;
-                setShowQuickNav((v) => !v);
-              }}
-              disabled={!navClickable}
-            >
-              页面导航
-            </button>
+        {!isHseKspStandalonePage ? (
+          <div className="topbar">
+            <div />
+            <div />
           </div>
-        </div>
+        ) : null}
 
-        <div className={`layout-body ${showQuickNav ? "with-left-nav" : ""}`}>
-          {showQuickNav ? (
+        {!isHseKspStandalonePage ? (
+          <div className="page-tabs-row">
+            <div className="topbar-tabs">
+              {showHomeTab ? (homeAllowed ? <Link className="topbar-tab" to="/">首页</Link> : <span className="topbar-tab disabled">首页</span>) : null}
+              <button
+                type="button"
+                className={`topbar-tab ${showQuickNav ? "active" : ""} ${!navClickable ? "disabled" : ""}`}
+                onClick={() => {
+                  if (!navClickable) return;
+                  setShowQuickNav((v) => !v);
+                }}
+                disabled={!navClickable}
+              >
+                页面导航
+              </button>
+            </div>
+          </div>
+        ) : null}
+
+        <div className={`layout-body ${!isHseKspStandalonePage && showQuickNav ? "with-left-nav" : ""}`}>
+          {!isHseKspStandalonePage && showQuickNav ? (
             <aside className="quick-nav-panel">
               {quickNavSectionsToRender.map((g) => (
                 <div key={`${g.majorKey}-${g.minorKey}`} className="quick-nav-group">
@@ -1245,7 +1465,7 @@ export default function AppLayout({ children }) {
           ) : null}
 
           <main
-            className={`layout-main${isEduDevPrototype ? " edu-dev-prototype" : ""}${isDataMigrationPrototype ? " data-migration-prototype" : ""}`}
+            className={`layout-main${isEduDevPrototype ? " edu-dev-prototype" : ""}${isDataMigrationPrototype ? " data-migration-prototype" : ""}${isHseKspStandalonePage ? " layout-main-standalone" : ""}`}
             ref={mainRef}
             onClickCapture={handleEduDevClickCapture}
           >
@@ -1268,6 +1488,13 @@ export default function AppLayout({ children }) {
                     }}
                   >
                     {isNavEditMode ? "完成配置" : "导航配置"}
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn ${showCollabEntry ? "btn-primary" : ""}`}
+                    onClick={() => setShowCollabEntry((v) => !v)}
+                  >
+                    {showCollabEntry ? "收起开发协作入口" : "展开开发协作入口"}
                   </button>
                   {isNavEditMode ? (
                     <>
@@ -1295,6 +1522,219 @@ export default function AppLayout({ children }) {
                     </>
                   ) : null}
                 </div>
+                {showCollabEntry ? (
+                  <div className="pill nav-collab-panel" style={{ marginBottom: 10 }}>
+                    <div className="k">开发协作入口</div>
+                    <div className="v nav-collab-content">
+                      <div className="nav-collab-header-actions">
+                        <button type="button" className="btn" onClick={() => setShowCollabEntry(false)}>
+                          收起
+                        </button>
+                      </div>
+                    <div className="nav-collab-layout">
+                      <aside className="nav-collab-sidebar">
+                        <div className="nav-collab-filter-grid">
+                          <select
+                            className="filterbar-control"
+                            value={collabMajorFilter}
+                            onChange={(e) => setCollabMajorFilter(e.target.value)}
+                          >
+                            <option value="ALL">全部大类</option>
+                            {collabMajorOptions.map((item) => (
+                              <option key={`major-filter-${item.key}`} value={item.key}>{item.label}</option>
+                            ))}
+                          </select>
+                          <select
+                            className="filterbar-control"
+                            value={collabMinorFilter}
+                            onChange={(e) => setCollabMinorFilter(e.target.value)}
+                          >
+                            <option value="ALL">全部小类</option>
+                            {collabMinorOptions.map((item) => (
+                              <option key={`minor-filter-${item.key}`} value={item.key}>{item.label}</option>
+                            ))}
+                          </select>
+                          <input
+                            className="filterbar-control"
+                            placeholder="搜索名称/地址/文件"
+                            value={collabKeyword}
+                            onChange={(e) => setCollabKeyword(e.target.value)}
+                          />
+                          <button
+                            type="button"
+                            className="btn"
+                            onClick={() => {
+                              setCollabMajorFilter("ALL");
+                              setCollabMinorFilter("ALL");
+                              setCollabKeyword("");
+                            }}
+                          >
+                            清空筛选
+                          </button>
+                        </div>
+                        <div className="nav-collab-group-row">
+                          {collabSections.map((major) => (
+                            <div key={`collab-group-${major.majorKey}`} className="nav-collab-group-item">
+                              <button
+                                type="button"
+                                className="btn"
+                                onClick={() => writeToClipboard(collabCopyText.major[major.majorKey], `已复制${major.majorTitle}分类`)}
+                              >
+                                复制{major.majorTitle}
+                              </button>
+                              <div className="nav-collab-minor-actions">
+                                {major.sections.map((section) => (
+                                  <button
+                                    key={`collab-group-${major.majorKey}-${section.minorKey}`}
+                                    type="button"
+                                    className="btn"
+                                    onClick={() =>
+                                      writeToClipboard(
+                                        collabCopyText.minor[`${major.majorKey}::${section.minorKey}`],
+                                        `已复制${section.minorTitle}`
+                                      )
+                                    }
+                                  >
+                                    {section.minorTitle}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </aside>
+                      <div className="nav-collab-main">
+                        <div className="nav-collab-toolbar">
+                          <button
+                            type="button"
+                            className="btn"
+                            onClick={() =>
+                              writeToClipboard(collabCopyText.all, "已复制全部入口（名称+地址）")
+                            }
+                          >
+                            复制全部入口
+                          </button>
+                          <button
+                            type="button"
+                            className="btn"
+                            onClick={() =>
+                              writeToClipboard(collabCopyText.allWithFile, "已复制全部入口（含源码路径）")
+                            }
+                          >
+                            复制全部（含源码路径）
+                          </button>
+                          <button
+                            type="button"
+                            className="btn"
+                            onClick={() =>
+                              writeToClipboard(filteredCollabCopyText, "已复制当前筛选结果")
+                            }
+                          >
+                            复制当前筛选结果
+                          </button>
+                          <button
+                            type="button"
+                            className="btn"
+                            onClick={() =>
+                              writeToClipboard(selectedCollabCopyText, "已复制勾选结果")
+                            }
+                          >
+                            复制勾选结果
+                          </button>
+                          <button
+                            type="button"
+                            className="btn"
+                            onClick={() => setCollabSelectedRowKeys([])}
+                          >
+                            清空勾选
+                          </button>
+                          <span className="nav-collab-count">当前 {filteredCollabRows.length} 条</span>
+                          <span className="nav-collab-count">已勾选 {collabSelectedRowKeys.length} 条</span>
+                          {copyMessage ? <span className="nav-collab-copy-msg">{copyMessage}</span> : null}
+                        </div>
+                        <div className="table-wrap nav-collab-table-wrap">
+                          <table className="proto-table nav-collab-table">
+                            <thead>
+                              <tr>
+                                <th className="nav-collab-check-col">
+                                  <input
+                                    type="checkbox"
+                                    checked={allFilteredChecked}
+                                    onChange={(e) => {
+                                      const checked = e.target.checked;
+                                      setCollabSelectedRowKeys((prev) => {
+                                        const next = new Set(prev);
+                                        if (checked) filteredCollabRowKeys.forEach((key) => next.add(key));
+                                        else filteredCollabRowKeys.forEach((key) => next.delete(key));
+                                        return Array.from(next);
+                                      });
+                                    }}
+                                  />
+                                </th>
+                                <th>大类</th>
+                                <th>小类</th>
+                                <th>页面名称</th>
+                                <th>地址</th>
+                                <th>源码路径</th>
+                                <th>复制</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {filteredCollabRows.map((row) => (
+                                <tr key={row.rowKey}>
+                                  <td className="nav-collab-check-col">
+                                    <input
+                                      type="checkbox"
+                                      checked={collabSelectedSet.has(row.rowKey)}
+                                      onChange={(e) => {
+                                        const checked = e.target.checked;
+                                        setCollabSelectedRowKeys((prev) => {
+                                          const next = new Set(prev);
+                                          if (checked) next.add(row.rowKey);
+                                          else next.delete(row.rowKey);
+                                          return Array.from(next);
+                                        });
+                                      }}
+                                    />
+                                  </td>
+                                  <td>{row.majorTitle}</td>
+                                  <td>{row.minorTitle}</td>
+                                  <td>{row.name}</td>
+                                  <td><code>{row.address}</code></td>
+                                  <td><code>{row.filePath}</code></td>
+                                  <td>
+                                    <div className="nav-collab-row-actions">
+                                      <button type="button" className="btn" onClick={() => writeToClipboard(row.name, "已复制名称")}>名称</button>
+                                      <button type="button" className="btn" onClick={() => writeToClipboard(row.address, "已复制地址")}>地址</button>
+                                      <button
+                                        type="button"
+                                        className="btn"
+                                        onClick={() =>
+                                          writeToClipboard(
+                                            `${row.name}\n${row.address}\n${row.filePath}`,
+                                            "已复制入口信息"
+                                          )
+                                        }
+                                      >
+                                        本行
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
+                              {filteredCollabRows.length === 0 ? (
+                                <tr>
+                                  <td colSpan={7} className="nav-collab-empty">没有匹配的页面</td>
+                                </tr>
+                              ) : null}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                ) : null}
                 {navGroups.map((majorGroup) => (
                   <div
                     key={majorGroup.majorKey}

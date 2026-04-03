@@ -1,10 +1,13 @@
 import React from "react";
+import NavCategoryFilter from "../components/nav-category-filter.jsx";
 
 const DEFAULT_OUTPUT_BASE = "/data/pcitc/一体化/教育培训";
 const DEFAULT_FOLDER_NAME = "edu-ep";
 const LAST_OUTPUT_BASE_KEY = "publish_center_last_output_base";
 const FLASH_NOTICE_KEY = "publish_center_flash_notice";
 const PENDING_PUBLISH_ID_KEY = "publish_center_pending_publish_id";
+const NAV_CUSTOMIZE_STORAGE_KEY = "proto_workbench_nav_customize_v1";
+const DEFAULT_MAJOR_ORDER = ["常用入口", "三同时管理", "教育培训", "其他页面"];
 
 function readLastOutputBase() {
   try {
@@ -25,15 +28,43 @@ function saveLastOutputBase(value) {
   }
 }
 
+function normalizeNavCustomizeState(raw) {
+  const state = raw && typeof raw === "object" ? raw : {};
+  return {
+    routeMeta: state.routeMeta && typeof state.routeMeta === "object" ? state.routeMeta : {},
+    majorMeta: state.majorMeta && typeof state.majorMeta === "object" ? state.majorMeta : {},
+    minorMeta: state.minorMeta && typeof state.minorMeta === "object" ? state.minorMeta : {},
+    majorOrder: Array.isArray(state.majorOrder) ? state.majorOrder : [],
+    minorOrder: state.minorOrder && typeof state.minorOrder === "object" ? state.minorOrder : {}
+  };
+}
+
+function sectionMinorLabelKey(majorKey, minorKey) {
+  return `${majorKey}::${minorKey}`;
+}
+
+function readNavCustomizeState() {
+  if (typeof window === "undefined") return normalizeNavCustomizeState(null);
+  try {
+    const raw = window.localStorage.getItem(NAV_CUSTOMIZE_STORAGE_KEY);
+    if (!raw) return normalizeNavCustomizeState(null);
+    return normalizeNavCustomizeState(JSON.parse(raw));
+  } catch {
+    return normalizeNavCustomizeState(null);
+  }
+}
+
 export default function PublishCenterPage() {
   const [routes, setRoutes] = React.useState([]);
   const [selected, setSelected] = React.useState(new Set());
   const [keyword, setKeyword] = React.useState("");
-  const [category, setCategory] = React.useState("all");
+  const [majorCategory, setMajorCategory] = React.useState("all");
+  const [minorCategory, setMinorCategory] = React.useState("all");
   const [outputBase, setOutputBase] = React.useState(readLastOutputBase);
   const [folderName, setFolderName] = React.useState(DEFAULT_FOLDER_NAME);
   const [publishMode, setPublishMode] = React.useState("compat");
   const [navClickable, setNavClickable] = React.useState(true);
+  const [includeHome, setIncludeHome] = React.useState(false);
   const [running, setRunning] = React.useState(false);
   const [logs, setLogs] = React.useState("");
   const [message, setMessage] = React.useState("");
@@ -46,6 +77,7 @@ export default function PublishCenterPage() {
   const [browseLoading, setBrowseLoading] = React.useState(false);
   const [browseError, setBrowseError] = React.useState("");
   const [routesSyncedAt, setRoutesSyncedAt] = React.useState(0);
+  const [navCustomize, setNavCustomize] = React.useState(readNavCustomizeState);
   const selectAllRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -103,6 +135,17 @@ export default function PublishCenterPage() {
     }, 5000);
     return () => window.clearTimeout(timer);
   }, [flashNotice]);
+
+  React.useEffect(() => {
+    const syncNavCustomize = () => setNavCustomize(readNavCustomizeState());
+    syncNavCustomize();
+    const timer = window.setInterval(syncNavCustomize, 1500);
+    window.addEventListener("storage", syncNavCustomize);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("storage", syncNavCustomize);
+    };
+  }, []);
 
   const isKbRoute = React.useCallback((route) => {
     const p = String(route?.path || "");
@@ -172,26 +215,53 @@ export default function PublishCenterPage() {
     ].includes(p);
   }, []);
 
-  const classifyRoute = React.useCallback(
+  const resolveRouteCategory = React.useCallback(
     (route) => {
       const p = String(route?.path || "");
-      if (p === "/") return "首页";
-      const isEdu = p.startsWith("/edu/");
-      const isSan = p.startsWith("/san-tongshi/");
+      const routeMeta = navCustomize.routeMeta?.[p] || {};
 
-      if (isSanDevRoute(route)) return "三同时管理";
-      if (isPrototypeCardRoute(route)) return "原型说明卡";
-      if (isSan && !isSanMigrationRoute(route)) return "安全三同时";
-      if (isKbRoute(route)) return "安全培训知识库";
-      if (isEdu && isEduDevRoute(route)) return "教育培训开发页面";
-      if (isEdu && isMigrationLedgerRoute(route)) return "历史迁移（新系统台账）";
-      if ((isEdu && isLegacyEduRoute(route)) || isSanMigrationRoute(route)) return "数据迁移";
-      if (isEdu && !isKbRoute(route) && !isLegacyEduRoute(route) && !isMigrationLedgerRoute(route) && !isEduDevRoute(route)) {
-        return "新系统页面";
+      let majorKey = String(routeMeta.major || "").trim();
+      let minorKey = String(routeMeta.minor || "").trim();
+
+      if (!majorKey) {
+        if (p === "/tools/publish-center" || p === "/tools/template-library" || p === "/tools/dialog") {
+          majorKey = "常用入口";
+          minorKey = "常用入口";
+        } else if (p.startsWith("/san-tongshi/")) {
+          majorKey = "三同时管理";
+          if (isSanDevRoute(route)) minorKey = "三同时管理";
+          else if (!isSanMigrationRoute(route)) minorKey = "其他三同时页面";
+          else minorKey = "安全三同时";
+        } else if (p.startsWith("/edu/")) {
+          majorKey = "教育培训";
+          if (isPrototypeCardRoute(route)) minorKey = "原型说明卡";
+          else if (isKbRoute(route)) minorKey = "安全培训知识库";
+          else if (isEduDevRoute(route)) minorKey = "教育培训开发页面";
+          else if (isMigrationLedgerRoute(route)) minorKey = "历史迁移（新系统台账）";
+          else if (isLegacyEduRoute(route) || isSanMigrationRoute(route)) minorKey = "数据迁移";
+          else minorKey = "新系统页面";
+        } else {
+          majorKey = "其他页面";
+          minorKey = "其他页面";
+        }
       }
-      return "其他";
+
+      if (!minorKey) minorKey = majorKey || "其他页面";
+      if (!majorKey) majorKey = "其他页面";
+
+      const majorLabel = String(navCustomize.majorMeta?.[majorKey]?.label || "").trim() || majorKey;
+      const minorLabel =
+        String(navCustomize.minorMeta?.[sectionMinorLabelKey(majorKey, minorKey)]?.label || "").trim() ||
+        minorKey;
+
+      return {
+        majorKey,
+        minorKey,
+        majorLabel,
+        minorLabel
+      };
     },
-    [isEduDevRoute, isKbRoute, isLegacyEduRoute, isMigrationLedgerRoute, isPrototypeCardRoute, isSanDevRoute, isSanMigrationRoute]
+    [isEduDevRoute, isKbRoute, isLegacyEduRoute, isMigrationLedgerRoute, isPrototypeCardRoute, isSanDevRoute, isSanMigrationRoute, navCustomize]
   );
 
   const loadRoutes = React.useCallback(async ({ silent = false } = {}) => {
@@ -230,6 +300,8 @@ export default function PublishCenterPage() {
         const lastPublishMode = String(state.publishMode || "").trim().toLowerCase();
         const lastNavClickable =
           typeof state.navClickable === "boolean" ? state.navClickable : true;
+        const lastIncludeHome =
+          typeof state.includeHome === "boolean" ? state.includeHome : false;
         if (lastOutputBase) {
           setOutputBase(lastOutputBase);
           setBrowsePath(lastOutputBase);
@@ -242,6 +314,7 @@ export default function PublishCenterPage() {
           setPublishMode(lastPublishMode);
         }
         setNavClickable(lastNavClickable);
+        setIncludeHome(lastIncludeHome);
       } catch {
         // ignore
       }
@@ -257,28 +330,98 @@ export default function PublishCenterPage() {
     return () => window.clearInterval(timer);
   }, [loadRoutes]);
 
+  const routesWithCategory = React.useMemo(() => {
+    return routes.map((r) => ({ ...r, category: resolveRouteCategory(r) }));
+  }, [routes, resolveRouteCategory]);
+
+  const majorCategoryOptions = React.useMemo(() => {
+    const counter = new Map();
+    const majorLabelByKey = new Map();
+    routesWithCategory.forEach((item) => {
+      const key = item.category.majorKey;
+      counter.set(key, (counter.get(key) || 0) + 1);
+      majorLabelByKey.set(key, item.category.majorLabel);
+    });
+
+    const orderedMajorKeys = [];
+    const pushKey = (key) => {
+      const normalized = String(key || "").trim();
+      if (!normalized || orderedMajorKeys.includes(normalized)) return;
+      if (!counter.has(normalized)) return;
+      orderedMajorKeys.push(normalized);
+    };
+    (Array.isArray(navCustomize.majorOrder) ? navCustomize.majorOrder : []).forEach(pushKey);
+    DEFAULT_MAJOR_ORDER.forEach(pushKey);
+    Array.from(counter.keys())
+      .sort((a, b) => a.localeCompare(b, "zh-Hans-CN"))
+      .forEach(pushKey);
+
+    return orderedMajorKeys.map((key) => ({
+      key,
+      label: majorLabelByKey.get(key) || key,
+      count: counter.get(key) || 0
+    }));
+  }, [routesWithCategory, navCustomize]);
+
+  const minorCategoryOptions = React.useMemo(() => {
+    const counter = new Map();
+    routesWithCategory.forEach((item) => {
+      const { majorKey, majorLabel, minorKey, minorLabel } = item.category;
+      if (majorCategory !== "all" && majorCategory !== majorKey) return;
+      const key = `${majorKey}::${minorKey}`;
+      if (!counter.has(key)) {
+        counter.set(key, {
+          majorKey,
+          majorLabel,
+          minorKey,
+          minorLabel,
+          count: 0
+        });
+      }
+      counter.get(key).count += 1;
+    });
+
+    const majorIndex = new Map(majorCategoryOptions.map((item, idx) => [item.key, idx]));
+
+    return Array.from(counter.values()).sort((a, b) => {
+      const ai = majorIndex.has(a.majorKey) ? majorIndex.get(a.majorKey) : Number.MAX_SAFE_INTEGER;
+      const bi = majorIndex.has(b.majorKey) ? majorIndex.get(b.majorKey) : Number.MAX_SAFE_INTEGER;
+      if (ai !== bi) return ai - bi;
+
+      const minorOrder = Array.isArray(navCustomize.minorOrder?.[a.majorKey])
+        ? navCustomize.minorOrder[a.majorKey]
+        : [];
+      const minorIndex = new Map(minorOrder.map((key, idx) => [String(key), idx]));
+      const am = minorIndex.has(a.minorKey) ? minorIndex.get(a.minorKey) : Number.MAX_SAFE_INTEGER;
+      const bm = minorIndex.has(b.minorKey) ? minorIndex.get(b.minorKey) : Number.MAX_SAFE_INTEGER;
+      if (am !== bm) return am - bm;
+
+      return String(a.minorLabel || "").localeCompare(String(b.minorLabel || ""), "zh-Hans-CN");
+    });
+  }, [routesWithCategory, majorCategory, majorCategoryOptions, navCustomize]);
+
+  React.useEffect(() => {
+    if (minorCategory === "all") return;
+    const exists = minorCategoryOptions.some(
+      (item) => `${item.majorKey}::${item.minorKey}` === minorCategory
+    );
+    if (!exists) setMinorCategory("all");
+  }, [minorCategory, minorCategoryOptions]);
+
   const filteredRoutes = React.useMemo(() => {
     const kw = keyword.trim().toLowerCase();
-    return routes.filter((r) => {
-      if (category !== "all" && classifyRoute(r) !== category) return false;
+    return routesWithCategory.filter((r) => {
+      if (majorCategory !== "all" && r.category.majorKey !== majorCategory) return false;
+      if (minorCategory !== "all" && `${r.category.majorKey}::${r.category.minorKey}` !== minorCategory) {
+        return false;
+      }
       if (!kw) return true;
       return (
         String(r.title || "").toLowerCase().includes(kw) ||
         String(r.path || "").toLowerCase().includes(kw)
       );
     });
-  }, [routes, keyword, category, classifyRoute]);
-
-  const categoryOptions = React.useMemo(() => {
-    const counts = routes.reduce((acc, r) => {
-      const key = classifyRoute(r);
-      acc.set(key, (acc.get(key) || 0) + 1);
-      return acc;
-    }, new Map());
-    return Array.from(counts.entries())
-      .sort((a, b) => a[0].localeCompare(b[0], "zh-Hans-CN"))
-      .map(([name, count]) => ({ name, count }));
-  }, [routes, classifyRoute]);
+  }, [routesWithCategory, keyword, majorCategory, minorCategory]);
 
   const filteredSelectedCount = React.useMemo(() => {
     return filteredRoutes.reduce((count, r) => count + (selected.has(r.path) ? 1 : 0), 0);
@@ -402,6 +545,7 @@ export default function PublishCenterPage() {
           runGen: false,
           publishMode,
           navClickable,
+          includeHome,
           selectedPaths: Array.from(selected)
         })
       });
@@ -523,6 +667,14 @@ export default function PublishCenterPage() {
                   />
                   发布后允许点击页面导航
                 </label>
+                <label style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, marginLeft: 14 }}>
+                  <input
+                    type="checkbox"
+                    checked={includeHome}
+                    onChange={(e) => setIncludeHome(e.target.checked)}
+                  />
+                  发布产物包含首页入口
+                </label>
               </div>
             </div>
           </div>
@@ -530,17 +682,17 @@ export default function PublishCenterPage() {
           <div className="pill mt-10" style={{ border: "1px solid #b8c7df", background: "#f8fbff" }}>
             <div className="k" style={{ fontWeight: 700, marginBottom: 6 }}>页面筛选</div>
             <div className="filterbar-inline-actions" style={{ marginTop: 6, marginLeft: 0 }}>
-              <select
-                className="filterbar-control"
-                style={{ minWidth: 180 }}
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <option value="all">全部分类</option>
-                {categoryOptions.map((item) => (
-                  <option key={item.name} value={item.name}>{item.name}（{item.count}）</option>
-                ))}
-              </select>
+              <NavCategoryFilter
+                majorValue={majorCategory}
+                minorValue={minorCategory}
+                majorOptions={majorCategoryOptions}
+                minorOptions={minorCategoryOptions}
+                onMajorChange={(value) => {
+                  setMajorCategory(value);
+                  setMinorCategory("all");
+                }}
+                onMinorChange={setMinorCategory}
+              />
               <input
                 className="filterbar-control"
                 style={{ minWidth: 320 }}
@@ -608,6 +760,8 @@ export default function PublishCenterPage() {
                     />
                   </th>
                   <th>页面名称</th>
+                  <th>大类</th>
+                  <th>小类</th>
                   <th>路由</th>
                 </tr>
               </thead>
@@ -622,6 +776,8 @@ export default function PublishCenterPage() {
                       />
                     </td>
                     <td>{r.title}</td>
+                    <td>{r.category.majorLabel}</td>
+                    <td>{r.category.minorLabel}</td>
                     <td>{r.path}</td>
                   </tr>
                 ))}

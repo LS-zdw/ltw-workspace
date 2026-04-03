@@ -30,7 +30,7 @@ export default [
   { path: "/edu/trainer/training-class-management", title: "教育培训-培训班管理", module: "edu/trainer", moduleGroup: "edu", elementPath: "./modules/edu/trainer/pages/training-class-management.jsx" },
   { path: "/edu/trainer/training-demand-management-enterprise", title: "教育培训-培训需求管理-企业端", module: "edu/trainer", moduleGroup: "edu", elementPath: "./modules/edu/trainer/pages/training-demand-management-enterprise.jsx" },
   { path: "/edu/trainer/training-demand-report-enterprise", title: "教育培训-培训需求上报-企业端", module: "edu/trainer", moduleGroup: "edu", elementPath: "./modules/edu/trainer/pages/training-demand-report-enterprise.jsx" },
-  { path: "/edu/trainer/training-one-person-one-file", title: "教育培训-一人一档", module: "edu/trainer", moduleGroup: "edu", elementPath: "./modules/edu/trainer/pages/training-one-person-one-file.jsx" },
+  { path: "/edu/trainer/training-one-person-one-file", title: "教育培训-培训档案查询", module: "edu/trainer", moduleGroup: "edu", elementPath: "./modules/edu/trainer/pages/training-one-person-one-file.jsx" },
   { path: "/edu/trainer/training-plan-approval-enterprise", title: "教育培训-培训计划审批-企业端", module: "edu/trainer", moduleGroup: "edu", elementPath: "./modules/edu/trainer/pages/training-plan-approval-enterprise.jsx" },
   { path: "/edu/trainer/training-plan-management-migration-query", title: "教育培训-培训计划历史数据迁移-业务准备台账", module: "edu/trainer", moduleGroup: "edu", elementPath: "./modules/edu/trainer/pages/training-plan-management-migration-query.jsx" },
   { path: "/edu/trainer/training-plan-management-migration-result", title: "教育培训-培训计划历史数据迁移-执行结果台账", module: "edu/trainer", moduleGroup: "edu", elementPath: "./modules/edu/trainer/pages/training-plan-management-migration-result.jsx" },

@@ -60,7 +60,7 @@ const cards = [
   },
   {
     id: "one-file",
-    title: "一人一档",
+    title: "培训档案查询",
     metric: "档案总数",
     count: "3200",
     desc: "已建档: 3100 | 待补充: 100",
@@ -81,7 +81,7 @@ const moduleNames = {
   headquarters: "进入总部培训模块",
   operations: "进入运行部模块",
   "trainer-resource": "进入培训师资管理",
-  "one-file": "进入一人一档",
+  "one-file": "进入培训档案查询",
   team: "进入班组安全活动管理",
   online: "进入线上培训与考试",
   cert: "进入证书管理",

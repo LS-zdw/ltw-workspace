@@ -15,6 +15,7 @@ const PUBLISH_DIR = path.resolve(process.env.PUBLISH_DIR || DEFAULT_PUBLISH_DIR)
 const SHOULD_CLEAN = process.env.PUBLISH_CLEAN === "true";
 const PUBLISH_MODE = (process.env.PUBLISH_MODE || "slim").toLowerCase();
 const PUBLISH_NAV_CLICKABLE = String(process.env.PUBLISH_NAV_CLICKABLE || "true").toLowerCase() !== "false";
+const PUBLISH_INCLUDE_HOME = String(process.env.PUBLISH_INCLUDE_HOME || "false").toLowerCase() === "true";
 const COMPAT_SOURCE_DIR = path.resolve(process.env.PUBLISH_COMPAT_SOURCE_DIR || DEFAULT_COMPAT_SOURCE_DIR);
 const FILTER_PATHS = (() => {
   const raw = process.env.PUBLISH_ROUTE_PATHS_JSON;
@@ -349,7 +350,11 @@ function main() {
     const html = buildEntryHtml({ title: route.title, routePath: route.path });
     fs.writeFileSync(path.join(PUBLISH_DIR, route.filename), html, "utf8");
   }
-  writePublishRouteWhitelist(PUBLISH_DIR, withFilenames.map((r) => r.path));
+  const allowedRoutePaths = withFilenames.map((r) => r.path);
+  if (PUBLISH_INCLUDE_HOME) {
+    allowedRoutePaths.unshift("/");
+  }
+  writePublishRouteWhitelist(PUBLISH_DIR, allowedRoutePaths);
   writePublishNavClickableFlag(PUBLISH_DIR, PUBLISH_NAV_CLICKABLE);
 
   if (PUBLISH_MODE === "slim") {

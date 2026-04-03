@@ -1,27 +1,217 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const rowData = {
-  id: 1,
-  name: "智能物联网平台建设项目",
-  builder: "智能科技建设有限公司",
-  stage: "可研阶段",
-  status: "已拒绝",
-  category: "安全、职业卫生、消防",
-  buildType: "改造",
-  projectType: "其他",
-  startDate: "2024-01-01",
-  endDate: "2024-12-31",
-  block: "专业公司",
-  createdAt: "2026-01-01"
-};
+const projectRows = [
+  {
+    id: 1,
+    company: "海南炼化",
+    code: "HNLH-2026-001",
+    name: "120万吨/年乙烯装置优化改造项目",
+    builder: "海南炼化有限责任公司",
+    level: "一类项目（集团公司级）",
+    stage: "基础设计阶段",
+    status: "进行中",
+    category: "安全、职业卫生、消防",
+    buildType: "改造",
+    projectType: "危化类项目",
+    startDate: "2026-03-01",
+    endDate: "2027-06-30",
+    produceDate: "2027-09-30",
+    planningYears: "2",
+    block: "炼油",
+    keyProject: "是",
+    createdAt: "2026-02-18"
+  },
+  {
+    id: 2,
+    company: "茂名石化",
+    code: "MMSH-2026-007",
+    name: "公用工程系统节能提效改造项目",
+    builder: "茂名石化公司",
+    level: "二类项目（事业部级）",
+    stage: "可研前期",
+    status: "已创建",
+    category: "安全、消防",
+    buildType: "改造",
+    projectType: "其他",
+    startDate: "2026-05-01",
+    endDate: "2026-12-31",
+    produceDate: "2027-01-20",
+    planningYears: "1",
+    block: "炼化工程",
+    keyProject: "否",
+    createdAt: "2026-03-03"
+  },
+  {
+    id: 3,
+    company: "镇海炼化",
+    code: "ZHLH-2026-015",
+    name: "罐区智能巡检及联锁完善项目",
+    builder: "镇海炼化分公司",
+    level: "三类项目（企业级）",
+    stage: "可研前期",
+    status: "已拒绝",
+    category: "安全、消防",
+    buildType: "新建",
+    projectType: "其他",
+    startDate: "2026-04-15",
+    endDate: "2026-11-30",
+    produceDate: "2026-12-20",
+    planningYears: "1",
+    block: "炼油",
+    keyProject: "否",
+    createdAt: "2026-03-05"
+  },
+  {
+    id: 4,
+    company: "扬子石化",
+    code: "YZSH-2026-003",
+    name: "芳烃装置安全联锁升级项目",
+    builder: "扬子石化有限责任公司",
+    level: "二类项目（事业部级）",
+    stage: "试运行阶段",
+    status: "进行中",
+    category: "安全、职业卫生",
+    buildType: "改造",
+    projectType: "危化类项目",
+    startDate: "2025-11-20",
+    endDate: "2026-08-30",
+    produceDate: "2026-09-20",
+    planningYears: "1",
+    block: "化工",
+    keyProject: "是",
+    createdAt: "2025-10-28"
+  },
+  {
+    id: 5,
+    company: "齐鲁石化",
+    code: "QLSH-2026-011",
+    name: "危化品仓储能力提升项目",
+    builder: "齐鲁石化分公司",
+    level: "三类项目（企业级）",
+    stage: "竣工验收阶段",
+    status: "进行中",
+    category: "安全、消防",
+    buildType: "迁建",
+    projectType: "危化类项目",
+    startDate: "2025-07-01",
+    endDate: "2026-04-30",
+    produceDate: "2026-06-01",
+    planningYears: "1",
+    block: "化工",
+    keyProject: "否",
+    createdAt: "2025-06-15"
+  },
+  {
+    id: 6,
+    company: "燕山石化",
+    code: "YSSH-2026-009",
+    name: "检维修作业中心扩建项目",
+    builder: "燕山石化公司",
+    level: "三类项目（企业级）",
+    stage: "基础设计阶段",
+    status: "进行中",
+    category: "安全、职业卫生",
+    buildType: "新建",
+    projectType: "其他",
+    startDate: "2026-02-10",
+    endDate: "2027-02-28",
+    produceDate: "2027-03-30",
+    planningYears: "2",
+    block: "炼化工程",
+    keyProject: "否",
+    createdAt: "2026-01-26"
+  },
+  {
+    id: 7,
+    company: "金陵石化",
+    code: "JLSH-2026-004",
+    name: "硫磺回收装置升级项目",
+    builder: "金陵石化有限责任公司",
+    level: "二类项目（事业部级）",
+    stage: "可研前期",
+    status: "已创建",
+    category: "安全、职业卫生、消防",
+    buildType: "改造",
+    projectType: "危化类项目",
+    startDate: "2026-06-01",
+    endDate: "2027-03-31",
+    produceDate: "2027-05-15",
+    planningYears: "2",
+    block: "炼油",
+    keyProject: "是",
+    createdAt: "2026-03-08"
+  },
+  {
+    id: 8,
+    company: "九江石化",
+    code: "JJSH-2026-006",
+    name: "污水处理系统提标改造项目",
+    builder: "九江石化公司",
+    level: "三类项目（企业级）",
+    stage: "基础设计阶段",
+    status: "进行中",
+    category: "职业卫生、消防",
+    buildType: "改造",
+    projectType: "其他",
+    startDate: "2026-03-18",
+    endDate: "2026-12-31",
+    produceDate: "2027-01-31",
+    planningYears: "1",
+    block: "科研",
+    keyProject: "否",
+    createdAt: "2026-03-10"
+  },
+  {
+    id: 9,
+    company: "天津石化",
+    code: "TJSH-2026-002",
+    name: "加氢裂化装置更新改造项目",
+    builder: "天津石化公司",
+    level: "一类项目（集团公司级）",
+    stage: "试运行阶段",
+    status: "进行中",
+    category: "安全、职业卫生",
+    buildType: "改造",
+    projectType: "危化类项目",
+    startDate: "2025-09-01",
+    endDate: "2026-09-30",
+    produceDate: "2026-11-15",
+    planningYears: "2",
+    block: "炼油",
+    keyProject: "是",
+    createdAt: "2025-08-20"
+  },
+  {
+    id: 10,
+    company: "上海石化",
+    code: "SHSH-2026-013",
+    name: "化工管廊完整性治理项目",
+    builder: "上海石化股份有限公司",
+    level: "二类项目（事业部级）",
+    stage: "可研前期",
+    status: "已创建",
+    category: "安全、消防",
+    buildType: "改造",
+    projectType: "其他",
+    startDate: "2026-07-01",
+    endDate: "2027-01-31",
+    produceDate: "2027-03-01",
+    planningYears: "1",
+    block: "化工",
+    keyProject: "否",
+    createdAt: "2026-03-12"
+  }
+];
 
 export default function Page() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = React.useState(false);
-  const total = 10;
+  const [activeRow, setActiveRow] = React.useState(projectRows[0]);
+  const total = projectRows.length;
   const page = 1;
   const totalPages = 1;
+  const canDrill = (id) => id === 1;
 
   return (
     <div className="stack stpm-page">
@@ -35,30 +225,47 @@ export default function Page() {
             <span>项目级别：</span>
             <select className="stpm-input">
               <option>请选择项目级别</option>
+              <option>一类项目（集团公司级）</option>
+              <option>二类项目（事业部级）</option>
+              <option>三类项目（企业级）</option>
             </select>
           </label>
           <label className="stpm-item">
             <span>项目阶段：</span>
             <select className="stpm-input">
               <option>请选择项目阶段</option>
+              <option>可研前期</option>
+              <option>基础设计阶段</option>
+              <option>试运行阶段</option>
+              <option>竣工验收阶段</option>
             </select>
           </label>
           <label className="stpm-item">
             <span>专业分类：</span>
             <select className="stpm-input">
               <option>请选择专业分类</option>
+              <option>安全</option>
+              <option>职业卫生</option>
+              <option>消防</option>
+              <option>安全、职业卫生、消防</option>
             </select>
           </label>
           <label className="stpm-item">
             <span>建设类型：</span>
             <select className="stpm-input">
               <option>请选择建设类型</option>
+              <option>新建</option>
+              <option>改造</option>
+              <option>迁建</option>
             </select>
           </label>
           <label className="stpm-item">
             <span>项目类型：</span>
             <select className="stpm-input">
               <option>请选择项目类型</option>
+              <option>危化类项目</option>
+              <option>非煤矿山类项目</option>
+              <option>其他</option>
             </select>
           </label>
           <button type="button" className="btn btn-primary stpm-export-btn">导出</button>
@@ -69,6 +276,8 @@ export default function Page() {
             <span>是否重点建设工程项目：</span>
             <select className="stpm-input">
               <option>请选择是否重点工程</option>
+              <option>是</option>
+              <option>否</option>
             </select>
           </label>
           <label className="stpm-item stpm-range-item">
@@ -105,25 +314,35 @@ export default function Page() {
             </tr>
           </thead>
           <tbody>
-            <tr className="stpm-row-selected">
-              <td className="table-checkbox"><input type="checkbox" readOnly /></td>
-              <td>{rowData.id}</td>
-              <td>
-                <button type="button" className="table-link-btn" onClick={() => setShowModal(true)}>
-                  {rowData.name}
-                </button>
-              </td>
-              <td>{rowData.builder}</td>
-              <td>{rowData.stage}</td>
-              <td>{rowData.status}</td>
-              <td>{rowData.category}</td>
-              <td>{rowData.buildType}</td>
-              <td>{rowData.projectType}</td>
-              <td>{rowData.startDate}</td>
-              <td>{rowData.endDate}</td>
-              <td>{rowData.block}</td>
-              <td>{rowData.createdAt}</td>
-            </tr>
+            {projectRows.map((row) => (
+              <tr key={row.id} className={row.id === 1 ? "stpm-row-selected" : undefined}>
+                <td className="table-checkbox"><input type="checkbox" readOnly /></td>
+                <td>{row.id}</td>
+                <td>
+                  <button
+                    type="button"
+                    className="table-link-btn"
+                    onClick={() => {
+                      if (!canDrill(row.id)) return;
+                      setActiveRow(row);
+                      setShowModal(true);
+                    }}
+                  >
+                    {row.name}
+                  </button>
+                </td>
+                <td>{row.builder}</td>
+                <td>{row.stage}</td>
+                <td>{row.status}</td>
+                <td>{row.category}</td>
+                <td>{row.buildType}</td>
+                <td>{row.projectType}</td>
+                <td>{row.startDate}</td>
+                <td>{row.endDate}</td>
+                <td>{row.block}</td>
+                <td>{row.createdAt}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -152,32 +371,32 @@ export default function Page() {
               <div className="detail-section">
                 <div className="detail-section-title">项目基本信息</div>
                 <div className="detail-form-grid">
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>所属企业</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue="海南炼化" /></div></div>
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目名称</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue="17万吨SBC项目" /></div></div>
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目编码</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue="H20018" /></div></div>
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目建设单位</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue="海南巴陵化工新材料有限公司" /></div></div>
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>所属板块</div><div className="detail-form-val"><select className="stpm-yellow"><option>炼化板块</option><option>专业公司</option></select></div></div>
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目级别</div><div className="detail-form-val"><select className="stpm-yellow"><option>一类项目（集团公司级）</option><option>二类项目（事业部级）</option><option>三类项目（企业级）</option></select></div></div>
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目状态</div><div className="detail-form-val"><select className="stpm-yellow"><option>已创建</option><option>已拒绝</option><option>进行中</option></select></div></div>
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目创建日期</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue="2024年2月1日" /></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>所属企业</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue={activeRow.company} /></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目名称</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue={activeRow.name} /></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目编码</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue={activeRow.code} /></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目建设单位</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue={activeRow.builder} /></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>所属板块</div><div className="detail-form-val"><select className="stpm-yellow" value={activeRow.block} onChange={() => {}}><option>石油工程</option><option>炼油</option><option>化工</option><option>销售</option><option>炼化工程</option><option>科研</option><option>其他</option></select></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目级别</div><div className="detail-form-val"><select className="stpm-yellow" value={activeRow.level} onChange={() => {}}><option>一类项目（集团公司级）</option><option>二类项目（事业部级）</option><option>三类项目（企业级）</option></select></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目状态</div><div className="detail-form-val"><select className="stpm-yellow" value={activeRow.status} onChange={() => {}}><option>已创建</option><option>已拒绝</option><option>进行中</option></select></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目创建日期</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue={activeRow.createdAt} /></div></div>
                 </div>
               </div>
 
               <div className="detail-section">
                 <div className="detail-section-title">项目建设信息</div>
                 <div className="detail-form-grid">
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>计划开工日期</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue="2024年2月1日" /></div></div>
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>计划完工日期</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue="2025年2月1日" /></div></div>
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>计划投产日期</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue="2025年2月1日" /></div></div>
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>规划年数</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue="1" /></div></div>
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>建设类型</div><div className="detail-form-val"><select className="stpm-yellow"><option>迁建</option><option>改造</option><option>新建</option></select></div></div>
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目类型</div><div className="detail-form-val"><select className="stpm-yellow"><option>非煤矿山类项目</option><option>危化类项目</option><option>其他</option></select></div></div>
-                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目阶段</div><div className="detail-form-val"><select className="stpm-yellow"><option>可研前期</option><option>基础设计阶段</option><option>试运行阶段</option><option>竣工验收阶段</option></select></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>计划开工日期</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue={activeRow.startDate} /></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>计划完工日期</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue={activeRow.endDate} /></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>计划投产日期</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue={activeRow.produceDate} /></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>规划年数</div><div className="detail-form-val"><input className="stpm-yellow" defaultValue={activeRow.planningYears} /></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>建设类型</div><div className="detail-form-val"><select className="stpm-yellow" value={activeRow.buildType} onChange={() => {}}><option>迁建</option><option>改造</option><option>新建</option></select></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目类型</div><div className="detail-form-val"><select className="stpm-yellow" value={activeRow.projectType} onChange={() => {}}><option>非煤矿山类项目</option><option>危化类项目</option><option>其他</option></select></div></div>
+                  <div className="detail-form-item"><div className="detail-form-key"><span className="required-mark">*</span>项目阶段</div><div className="detail-form-val"><select className="stpm-yellow" value={activeRow.stage} onChange={() => {}}><option>可研前期</option><option>基础设计阶段</option><option>试运行阶段</option><option>竣工验收阶段</option></select></div></div>
                   <div className="detail-form-item">
                     <div className="detail-form-key"><span className="required-mark">*</span>是否重点工程建设项目</div>
                     <div className="detail-form-val stpm-yesno">
-                      <label><input type="radio" name="origin-key-project" /> 是</label>
-                      <label><input type="radio" name="origin-key-project" defaultChecked /> 否</label>
+                      <label><input type="radio" name="origin-key-project" checked={activeRow.keyProject === "是"} readOnly /> 是</label>
+                      <label><input type="radio" name="origin-key-project" checked={activeRow.keyProject === "否"} readOnly /> 否</label>
                     </div>
                   </div>
                   <div className="detail-form-item">
@@ -197,7 +416,7 @@ export default function Page() {
                 type="button"
                 className="btn btn-primary"
                 onClick={() => {
-                  navigate(`/three-same/task/new?projectName=${encodeURIComponent(rowData.name)}`);
+                  navigate(`/three-same/task/new?projectName=${encodeURIComponent(activeRow.name)}`);
                 }}
               >
                 按此项目创建任务

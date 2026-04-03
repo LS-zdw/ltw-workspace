@@ -2,6 +2,20 @@ import generatedRoutes from "./routes.generated.jsx";
 
 const localRoutes = [
   {
+    path: "/tools/dialog",
+    title: "对话",
+    module: "tools",
+    moduleGroup: "other",
+    elementPath: "./modules/tools/pages/dialog.jsx"
+  },
+  {
+    path: "/tools/test",
+    title: "测试",
+    module: "tools",
+    moduleGroup: "other",
+    elementPath: "./modules/tools/pages/test.jsx"
+  },
+  {
     path: "/tools/template-library",
     title: "工具-原型模板库",
     module: "tools",
@@ -87,17 +101,24 @@ const localRoutes = [
   },
   {
     path: "/edu/trainer/training-one-person-one-file",
-    title: "教育培训-一人一档-总部端",
+    title: "教育培训-培训档案查询-总部端",
     module: "edu/trainer",
     moduleGroup: "edu",
     elementPath: "./modules/edu/trainer/pages/training-one-person-one-file.jsx"
   },
   {
     path: "/edu/trainer/training-one-person-one-file-enterprise",
-    title: "教育培训-一人一档-企业端",
+    title: "教育培训-培训档案查询-企业端",
     module: "edu/trainer",
     moduleGroup: "edu",
     elementPath: "./modules/edu/trainer/pages/training-one-person-one-file-enterprise.jsx"
+  },
+  {
+    path: "/edu/trainer/personal-training-archive-query-enterprise",
+    title: "教育培训-个人培训档案查询-企业端",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/personal-training-archive-query-enterprise.jsx"
   },
   {
     path: "/edu/trainer/education-training-nav",
@@ -112,6 +133,13 @@ const localRoutes = [
     module: "edu/trainer",
     moduleGroup: "edu",
     elementPath: "./modules/edu/trainer/pages/education-training-prototype-cards.jsx"
+  },
+  {
+    path: "/edu/trainer/hse-knowledge-sharing-training-class-management",
+    title: "教育培训-HSE知识共享平台-培训班管理",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/hse-knowledge-sharing-training-class-management.jsx"
   },
   {
     path: "/san-tongshi/safety-three-same",

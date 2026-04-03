@@ -137,7 +137,7 @@ export default function Page() {
   const [showCreateEntry, setShowCreateEntry] = React.useState(false);
   const [viewRow, setViewRow] = React.useState(null);
   const [flowRow, setFlowRow] = React.useState(null);
-  const createMode = "origin";
+  const [createMode, setCreateMode] = React.useState("origin");
   const [projectRows, setProjectRows] = React.useState([]);
   const [selectedProjectId, setSelectedProjectId] = React.useState("p1");
   const [taskName, setTaskName] = React.useState("");
@@ -202,6 +202,7 @@ export default function Page() {
 
   React.useEffect(() => {
     if (!showCreateEntry) return;
+    setCreateMode("origin");
     setSelectedProjectId("p1");
     setTaskName("");
     setIdentify(emptyIdentify);
@@ -447,6 +448,17 @@ export default function Page() {
           <div className="modal modal-xl stpm-create-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-hd"><div><div className="modal-title">创建识别</div></div><button type="button" className="modal-close" onClick={() => setShowCreateEntry(false)}>×</button></div>
             <div className="modal-bd detail">
+              <div className="detail-section mt-10" style={{ margin: 0 }}>
+                <div className="stpm-create-grid">
+                  <div className="stpm-create-item stpm-create-item-wide">
+                    <div className="stpm-create-key">项目来源</div>
+                    <div className="stpm-create-val stpm-yesno">
+                      <label><input type="radio" checked={createMode === "origin"} onChange={() => setCreateMode("origin")} /> 从项目信息管理选择</label>
+                      <label><input type="radio" checked={createMode === "manual"} onChange={() => setCreateMode("manual")} /> 手动新增项目</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
               {createMode === "origin" ? (
                 <>
                   <div className="detail-section mt-10" style={{ margin: 0 }}>
@@ -538,7 +550,7 @@ export default function Page() {
               {milestoneError ? <div className="pill mt-10"><div className="v" style={{ color: "#c62828", fontWeight: 700 }}>{milestoneError}</div></div> : null}
               {createErr ? <div className="pill mt-10"><div className="v" style={{ color: "#c62828", fontWeight: 700 }}>{createErr}</div></div> : null}
             </div>
-            <div className="modal-ft"><button type="button" className="btn" onClick={() => setShowCreateEntry(false)}>取消</button><button type="button" className="btn btn-primary" onClick={onCreateDraftInModal} disabled={!!milestoneError}>创建任务</button></div>
+            <div className="modal-ft"><button type="button" className="btn" onClick={() => setShowCreateEntry(false)}>关闭</button><button type="button" className="btn btn-primary" onClick={onCreateDraftInModal} disabled={!!milestoneError}>创建任务</button></div>
           </div>
         </div>
       ) : null}
