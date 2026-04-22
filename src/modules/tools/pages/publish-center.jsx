@@ -8,6 +8,8 @@ const FLASH_NOTICE_KEY = "publish_center_flash_notice";
 const PENDING_PUBLISH_ID_KEY = "publish_center_pending_publish_id";
 const NAV_CUSTOMIZE_STORAGE_KEY = "proto_workbench_nav_customize_v1";
 const DEFAULT_MAJOR_ORDER = ["常用入口", "三同时管理", "教育培训", "其他页面"];
+const PINNED_HOME_MAJOR_KEY = "常用入口";
+const ROUTE_META_ELEMENT_KEY = "__elementPath";
 
 function readLastOutputBase() {
   try {
@@ -31,11 +33,13 @@ function saveLastOutputBase(value) {
 function normalizeNavCustomizeState(raw) {
   const state = raw && typeof raw === "object" ? raw : {};
   return {
+    ...state,
     routeMeta: state.routeMeta && typeof state.routeMeta === "object" ? state.routeMeta : {},
     majorMeta: state.majorMeta && typeof state.majorMeta === "object" ? state.majorMeta : {},
     minorMeta: state.minorMeta && typeof state.minorMeta === "object" ? state.minorMeta : {},
     majorOrder: Array.isArray(state.majorOrder) ? state.majorOrder : [],
-    minorOrder: state.minorOrder && typeof state.minorOrder === "object" ? state.minorOrder : {}
+    minorOrder: state.minorOrder && typeof state.minorOrder === "object" ? state.minorOrder : {},
+    routeOrder: state.routeOrder && typeof state.routeOrder === "object" ? state.routeOrder : {}
   };
 }
 
@@ -51,6 +55,21 @@ function readNavCustomizeState() {
     return normalizeNavCustomizeState(JSON.parse(raw));
   } catch {
     return normalizeNavCustomizeState(null);
+  }
+}
+
+function writeNavCustomizeState(state) {
+  if (typeof window === "undefined") return;
+  try {
+    const normalized = normalizeNavCustomizeState(state);
+    window.localStorage.setItem(NAV_CUSTOMIZE_STORAGE_KEY, JSON.stringify(normalized));
+    fetch("/api/nav-customize/state", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ state: normalized })
+    }).catch(() => {});
+  } catch {
+    // ignore
   }
 }
 
@@ -167,9 +186,8 @@ export default function PublishCenterPage() {
     return String(route?.title || "").includes("历史数据迁移");
   }, []);
 
-  const isSanMigrationRoute = React.useCallback((route) => {
-    const p = String(route?.path || "");
-    return p === "/san-tongshi/safety-migration-query" || p === "/san-tongshi/safety-migration-query/detail";
+  const isSanLegacyOnlyRoute = React.useCallback((route) => {
+    return String(route?.path || "") === "/san-tongshi/migration-query-legacy";
   }, []);
 
   const isSanDevRoute = React.useCallback((route) => {
@@ -192,33 +210,58 @@ export default function PublishCenterPage() {
     ].includes(p);
   }, []);
 
-  const isEduDevRoute = React.useCallback((route) => {
+  const isHseKnowledgeSharingRoute = React.useCallback((route) => {
+    return String(route?.path || "") === "/edu/trainer/hse-knowledge-sharing-training-class-management";
+  }, []);
+
+  const isEduDevEnterpriseRoute = React.useCallback((route) => {
     const p = String(route?.path || "");
     return [
       "/edu/trainer/team-safety-activity-management",
       "/edu/trainer/trainer-resource-management",
-      "/edu/trainer/trainer-resource-management-hq",
       "/edu/trainer/training-demand-report-enterprise",
-      "/edu/trainer/training-demand-report-hq",
       "/edu/trainer/training-demand-management-enterprise",
-      "/edu/trainer/training-demand-management-hq",
-      "/edu/trainer/training-plan-management",
       "/edu/trainer/training-plan-management-enterprise",
-      "/edu/trainer/training-record-management",
       "/edu/trainer/training-record-management-enterprise",
       "/edu/trainer/enterprise-training-statistics",
-      "/edu/trainer/training-one-person-one-file",
       "/edu/trainer/training-one-person-one-file-enterprise",
+      "/edu/trainer/personal-training-archive-query-enterprise",
       "/edu/trainer/certificate-management-enterprise",
-      "/edu/trainer/hq-training-statistics",
       "/edu/trainer/education-training-nav"
     ].includes(p);
   }, []);
 
+  const isEduDevHeadquartersRoute = React.useCallback((route) => {
+    const p = String(route?.path || "");
+    return [
+      "/edu/trainer/trainer-resource-management-hq",
+      "/edu/trainer/training-demand-report-hq",
+      "/edu/trainer/training-demand-management-hq",
+      "/edu/trainer/training-plan-management",
+      "/edu/trainer/training-record-management",
+      "/edu/trainer/training-one-person-one-file",
+      "/edu/trainer/hq-training-statistics"
+    ].includes(p);
+  }, []);
+
+  const routeMetaByElementPath = React.useMemo(() => {
+    const map = new Map();
+    Object.values(navCustomize.routeMeta || {}).forEach((meta) => {
+      if (!meta || typeof meta !== "object") return;
+      const key = String(meta[ROUTE_META_ELEMENT_KEY] || "").trim();
+      if (!key || map.has(key)) return;
+      map.set(key, meta);
+    });
+    return map;
+  }, [navCustomize]);
+
   const resolveRouteCategory = React.useCallback(
     (route) => {
       const p = String(route?.path || "");
-      const routeMeta = navCustomize.routeMeta?.[p] || {};
+      const elementPath = String(route?.elementPath || "").trim();
+      const directMeta = navCustomize.routeMeta?.[p];
+      const fallbackMeta = !directMeta && elementPath ? routeMetaByElementPath.get(elementPath) : null;
+      const routeMeta = directMeta || fallbackMeta || {};
 
       let majorKey = String(routeMeta.major || "").trim();
       let minorKey = String(routeMeta.minor || "").trim();
@@ -230,15 +273,18 @@ export default function PublishCenterPage() {
         } else if (p.startsWith("/san-tongshi/")) {
           majorKey = "三同时管理";
           if (isSanDevRoute(route)) minorKey = "三同时管理";
-          else if (!isSanMigrationRoute(route)) minorKey = "其他三同时页面";
-          else minorKey = "安全三同时";
+          else if (isSanLegacyOnlyRoute(route)) minorKey = "安全三同时";
+          else minorKey = "其他三同时页面";
         } else if (p.startsWith("/edu/")) {
           majorKey = "教育培训";
           if (isPrototypeCardRoute(route)) minorKey = "原型说明卡";
           else if (isKbRoute(route)) minorKey = "安全培训知识库";
-          else if (isEduDevRoute(route)) minorKey = "教育培训开发页面";
+          else if (isHseKnowledgeSharingRoute(route)) minorKey = "HSE知识共享平台";
+          else if (p === "/edu/trainer/team-safety-activity-management-1") minorKey = "新系统页面（1）";
+          else if (isEduDevEnterpriseRoute(route)) minorKey = "教育培训开发页面-企业端";
+          else if (isEduDevHeadquartersRoute(route)) minorKey = "教育培训开发页面-总部端";
           else if (isMigrationLedgerRoute(route)) minorKey = "历史迁移（新系统台账）";
-          else if (isLegacyEduRoute(route) || isSanMigrationRoute(route)) minorKey = "数据迁移";
+          else if (isLegacyEduRoute(route)) minorKey = "数据迁移";
           else minorKey = "新系统页面";
         } else {
           majorKey = "其他页面";
@@ -261,7 +307,19 @@ export default function PublishCenterPage() {
         minorLabel
       };
     },
-    [isEduDevRoute, isKbRoute, isLegacyEduRoute, isMigrationLedgerRoute, isPrototypeCardRoute, isSanDevRoute, isSanMigrationRoute, navCustomize]
+    [
+      isEduDevEnterpriseRoute,
+      isEduDevHeadquartersRoute,
+      isHseKnowledgeSharingRoute,
+      isKbRoute,
+      isLegacyEduRoute,
+      isMigrationLedgerRoute,
+      isPrototypeCardRoute,
+      isSanDevRoute,
+      isSanLegacyOnlyRoute,
+      navCustomize,
+      routeMetaByElementPath
+    ]
   );
 
   const loadRoutes = React.useCallback(async ({ silent = false } = {}) => {
@@ -330,6 +388,51 @@ export default function PublishCenterPage() {
     return () => window.clearInterval(timer);
   }, [loadRoutes]);
 
+  React.useEffect(() => {
+    if (!Array.isArray(routes) || routes.length === 0) return;
+    setNavCustomize((prev) => {
+      const next = normalizeNavCustomizeState(prev);
+      const routeMeta = next.routeMeta || {};
+      const pathByElementPath = new Map();
+      const elementPathByPath = new Map();
+      routes.forEach((route) => {
+        const path = String(route?.path || "").trim();
+        const elementPath = String(route?.elementPath || "").trim();
+        if (!path || !elementPath) return;
+        pathByElementPath.set(elementPath, path);
+        elementPathByPath.set(path, elementPath);
+      });
+      let changed = false;
+      Object.keys(routeMeta).forEach((storedPath) => {
+        const currentMeta = routeMeta[storedPath];
+        if (!currentMeta || typeof currentMeta !== "object") return;
+        let elementPath = String(currentMeta[ROUTE_META_ELEMENT_KEY] || "").trim();
+        if (!elementPath) {
+          const inferredElementPath = String(elementPathByPath.get(storedPath) || "").trim();
+          if (inferredElementPath) {
+            routeMeta[storedPath] = {
+              ...currentMeta,
+              [ROUTE_META_ELEMENT_KEY]: inferredElementPath
+            };
+            elementPath = inferredElementPath;
+            changed = true;
+          }
+        }
+        if (!elementPath) return;
+        const latestPath = String(pathByElementPath.get(elementPath) || "").trim();
+        if (!latestPath || latestPath === storedPath || routeMeta[latestPath]) return;
+        routeMeta[latestPath] = {
+          ...routeMeta[storedPath],
+          [ROUTE_META_ELEMENT_KEY]: elementPath
+        };
+        changed = true;
+      });
+      if (!changed) return prev;
+      writeNavCustomizeState(next);
+      return next;
+    });
+  }, [routes]);
+
   const routesWithCategory = React.useMemo(() => {
     return routes.map((r) => ({ ...r, category: resolveRouteCategory(r) }));
   }, [routes, resolveRouteCategory]);
@@ -356,7 +459,10 @@ export default function PublishCenterPage() {
       .sort((a, b) => a.localeCompare(b, "zh-Hans-CN"))
       .forEach(pushKey);
 
-    return orderedMajorKeys.map((key) => ({
+    const orderedMajorKeysToRender = orderedMajorKeys.includes(PINNED_HOME_MAJOR_KEY)
+      ? [PINNED_HOME_MAJOR_KEY, ...orderedMajorKeys.filter((key) => key !== PINNED_HOME_MAJOR_KEY)]
+      : orderedMajorKeys;
+    return orderedMajorKeysToRender.map((key) => ({
       key,
       label: majorLabelByKey.get(key) || key,
       count: counter.get(key) || 0

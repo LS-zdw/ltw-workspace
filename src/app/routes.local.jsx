@@ -135,6 +135,20 @@ const localRoutes = [
     elementPath: "./modules/edu/trainer/pages/education-training-prototype-cards.jsx"
   },
   {
+    path: "/edu/trainer/team-safety-activity-ai-meeting",
+    title: "教育培训-班组安全活动-AI应用-会议模式",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/team-safety-activity-ai-meeting.jsx"
+  },
+  {
+    path: "/edu/trainer/team-safety-activity-management-1",
+    title: "教育培训-班组安全活动管理_1",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/team-safety-activity-management-1.jsx"
+  },
+  {
     path: "/edu/trainer/hse-knowledge-sharing-training-class-management",
     title: "教育培训-HSE知识共享平台-培训班管理",
     module: "edu/trainer",

@@ -35,6 +35,14 @@ const cards = [
     items: ["已完成: 5", "超期未开展: 3"]
   },
   {
+    id: "team-ai",
+    title: "AI应用-会议模式",
+    metric: "班组活动AI",
+    count: "9步",
+    desc: "会议录音转写 | 纪要生成 | 记录初稿",
+    items: ["AI步骤: 2", "人工确认: 1"]
+  },
+  {
     id: "online",
     title: "线上培训与考试",
     metric: "课程/考试",
@@ -83,6 +91,7 @@ const moduleNames = {
   "trainer-resource": "进入培训师资管理",
   "one-file": "进入培训档案查询",
   team: "进入班组安全活动管理",
+  "team-ai": "进入班组安全活动AI应用",
   online: "进入线上培训与考试",
   cert: "进入证书管理",
   stat: "进入企业教育培训情况统计"
@@ -91,6 +100,8 @@ const moduleNames = {
 const moduleRoutes = {
   "trainer-resource": "/edu/trainer/trainer-resource-management",
   "one-file": "/edu/trainer/training-one-person-one-file-enterprise",
+  team: "/edu/trainer/team-safety-activity-management",
+  "team-ai": "/edu/trainer/team-safety-activity-ai-meeting",
   stat: "/edu/trainer/enterprise-training-statistics"
 };
 

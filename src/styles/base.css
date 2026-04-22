@@ -3534,6 +3534,384 @@ select:disabled.cert-field-control {
   overflow: visible;
 }
 
+.tsa-section-title {
+  background: #2b77ea;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.8;
+  padding: 0 10px;
+  margin: 2px 0 8px;
+}
+
+.tsa-action-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  align-items: center;
+}
+
+.tsa-status-overdue {
+  color: #ff6a00;
+}
+
+.tsa-status-done {
+  color: #1a9d4a;
+}
+
+.tsa-btn-outline {
+  border-color: #2b77ea !important;
+  color: #2b77ea !important;
+  background: #fff !important;
+}
+
+.tsa-btn-green {
+  background: #52c41a !important;
+  border-color: #52c41a !important;
+  color: #fff !important;
+}
+
+.tsa-btn-warning {
+  background: #f0a30a !important;
+  border-color: #f0a30a !important;
+  color: #fff !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  min-height: 30px;
+  padding: 4px 14px;
+}
+
+.tsa-modal .tsa-full-btn-row {
+  grid-template-columns: 1fr;
+}
+
+/* 班组安全活动管理_1：按钮/链接交互态保持与默认态一致 */
+.tsa-static-interaction button,
+.tsa-static-interaction .btn,
+.tsa-static-interaction .table-link-btn,
+.tsa-static-interaction a {
+  transition: none !important;
+  animation: none !important;
+}
+
+.tsa-static-interaction .btn:hover,
+.tsa-static-interaction .btn:active,
+.tsa-static-interaction .btn:focus,
+.tsa-static-interaction .btn:focus-visible,
+.tsa-static-interaction button:hover,
+.tsa-static-interaction button:active,
+.tsa-static-interaction button:focus,
+.tsa-static-interaction button:focus-visible,
+.tsa-static-interaction .table-link-btn:hover,
+.tsa-static-interaction .table-link-btn:active,
+.tsa-static-interaction .table-link-btn:focus,
+.tsa-static-interaction .table-link-btn:focus-visible,
+.tsa-static-interaction a:hover,
+.tsa-static-interaction a:active,
+.tsa-static-interaction a:focus,
+.tsa-static-interaction a:focus-visible {
+  text-decoration: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+}
+
+.tsa-static-interaction .btn-primary:hover,
+.tsa-static-interaction .btn-primary:active,
+.tsa-static-interaction .btn-primary:focus,
+.tsa-static-interaction .btn-primary:focus-visible {
+  border-color: var(--brand-main) !important;
+  background: var(--brand-main) !important;
+  color: #fff !important;
+}
+
+.tsa-static-interaction .btn:hover,
+.tsa-static-interaction .btn:active,
+.tsa-static-interaction .btn:focus,
+.tsa-static-interaction .btn:focus-visible {
+  border-color: #bcbcbc !important;
+  background: #fff !important;
+  color: #222 !important;
+}
+
+.tsa-static-interaction .tsa-btn-green:hover,
+.tsa-static-interaction .tsa-btn-green:active,
+.tsa-static-interaction .tsa-btn-green:focus,
+.tsa-static-interaction .tsa-btn-green:focus-visible {
+  background: #52c41a !important;
+  border-color: #52c41a !important;
+  color: #fff !important;
+}
+
+.tsa-static-interaction .tsa-btn-warning:hover,
+.tsa-static-interaction .tsa-btn-warning:active,
+.tsa-static-interaction .tsa-btn-warning:focus,
+.tsa-static-interaction .tsa-btn-warning:focus-visible {
+  background: #f0a30a !important;
+  border-color: #f0a30a !important;
+  color: #fff !important;
+}
+
+.tsa-static-interaction .tsa-btn-outline:hover,
+.tsa-static-interaction .tsa-btn-outline:active,
+.tsa-static-interaction .tsa-btn-outline:focus,
+.tsa-static-interaction .tsa-btn-outline:focus-visible {
+  border-color: #2b77ea !important;
+  color: #2b77ea !important;
+  background: #fff !important;
+}
+
+.tsa-static-interaction .table-link-btn,
+.tsa-static-interaction .table-link-btn:hover,
+.tsa-static-interaction .table-link-btn:active,
+.tsa-static-interaction .table-link-btn:focus,
+.tsa-static-interaction .table-link-btn:focus-visible {
+  color: var(--brand-main-dark) !important;
+  background: transparent !important;
+}
+
+.tsa-static-interaction .stpm-main-page-btn,
+.tsa-static-interaction .stpm-main-page-btn:hover,
+.tsa-static-interaction .stpm-main-page-btn:active,
+.tsa-static-interaction .stpm-main-page-btn:focus,
+.tsa-static-interaction .stpm-main-page-btn:focus-visible {
+  border-color: #bcbcbc !important;
+  background: #fff !important;
+  color: #222 !important;
+}
+
+.tsa-static-interaction .stpm-main-page-btn.active,
+.tsa-static-interaction .stpm-main-page-btn.active:hover,
+.tsa-static-interaction .stpm-main-page-btn.active:active,
+.tsa-static-interaction .stpm-main-page-btn.active:focus,
+.tsa-static-interaction .stpm-main-page-btn.active:focus-visible {
+  border-color: var(--brand-main) !important;
+  background: var(--brand-main) !important;
+  color: #fff !important;
+}
+
+.tsa-static-interaction .modal-close,
+.tsa-static-interaction .modal-close:hover,
+.tsa-static-interaction .modal-close:active,
+.tsa-static-interaction .modal-close:focus,
+.tsa-static-interaction .modal-close:focus-visible {
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.tsa-static-interaction .tsa-no-color-shift,
+.tsa-static-interaction .tsa-no-color-shift:hover,
+.tsa-static-interaction .tsa-no-color-shift:active,
+.tsa-static-interaction .tsa-no-color-shift:focus,
+.tsa-static-interaction .tsa-no-color-shift:focus-visible {
+  border-color: var(--brand-main) !important;
+  background: var(--brand-main) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+}
+
+.tsa-ai-meeting .cert-field-control {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.tsa-modal > .modal-hd {
+  background: #f2f2f2;
+  color: #222;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.tsa-modal > .modal-hd .modal-title {
+  color: #222;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.tsa-modal > .modal-hd .modal-close {
+  border: 1px solid #c6c6c6;
+  background: #fff;
+  color: #222;
+  font-size: 18px;
+  width: 24px;
+  height: 24px;
+  line-height: 22px;
+}
+
+.tsa-ai-dialog {
+  width: min(860px, calc(100vw - 120px));
+  max-height: calc(100vh - 80px);
+}
+
+.tsa-ai-meeting {
+  font-size: 14px;
+}
+
+.tsa-ai-meeting .btn,
+.tsa-ai-meeting .table-link-btn {
+  font-size: 14px;
+}
+
+.tsa-ai-meeting-top-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 30px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.tsa-ai-meeting-top-grid .k {
+  color: #444;
+  font-size: 14px;
+}
+
+.tsa-ai-meeting-top-grid .v {
+  color: #111;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.tsa-ai-meeting-block {
+  border-bottom: 1px solid #e5e5e5;
+  padding: 10px 0;
+}
+
+.tsa-ai-meeting-block-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.tsa-ai-sign-grid {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.tsa-ai-qrcode-box {
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  min-height: 0;
+  padding: 10px 0 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 6px;
+  width: 220px;
+}
+
+.tsa-ai-qrcode {
+  color: #98a2b3;
+  font-size: 34px;
+}
+
+.tsa-ai-qrcode-card {
+  width: 176px;
+  height: 176px;
+  padding: 6px;
+  border-radius: 6px;
+  background: #f5f5f5;
+}
+
+.tsa-ai-qrcode-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tsa-ai-qrcode-label {
+  color: #222;
+  font-size: 14px;
+}
+
+.tsa-ai-sign-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tsa-ai-sign-count {
+  font-size: 14px;
+}
+
+.tsa-ai-sign-count span {
+  color: #2b77ea;
+  font-weight: 600;
+}
+
+.tsa-ai-sign-list {
+  color: #333;
+  font-size: 14px;
+}
+
+.tsa-ai-sign-attach {
+  color: #333;
+  font-size: 14px;
+}
+
+.tsa-fake-link {
+  color: #2b77ea;
+  cursor: pointer;
+}
+
+.tsa-ai-sign-right .btn {
+  width: 100%;
+}
+
+.tsa-ai-sign-right .btn.btn-primary,
+.tsa-ai-sign-right .btn.btn-primary:hover,
+.tsa-ai-sign-right .btn.btn-primary:active,
+.tsa-ai-sign-right .btn.btn-primary:focus,
+.tsa-ai-sign-right .btn.btn-primary:focus-visible {
+  border-color: #2b77ea !important;
+  background: #2b77ea !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.tsa-ai-recorder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tsa-ai-transcript-box {
+  margin-top: 8px;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  min-height: 120px;
+  padding: 8px;
+  color: #586174;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.tsa-ai-draft {
+  min-height: 220px;
+  font-size: 14px !important;
+  line-height: 1.5;
+  resize: none;
+  overflow-y: hidden;
+}
+
+.tsa-supplement-modal {
+  width: min(1200px, 92vw);
+}
+
+.tsa-supplement-meta {
+  color: #444;
+  margin-bottom: 4px;
+}
+
+.tsa-supplement-meta span {
+  color: #d92d20;
+}
+
 .plan-time-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

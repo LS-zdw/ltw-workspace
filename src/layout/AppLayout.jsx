@@ -238,6 +238,8 @@ function normalizeEduDevDateInputs(rootEl) {
 
 const NAV_CUSTOMIZE_STORAGE_KEY = "proto_workbench_nav_customize_v1";
 const DEFAULT_MAJOR_ORDER = ["常用入口", "三同时管理", "教育培训", "其他页面"];
+const PINNED_HOME_MAJOR_KEY = "常用入口";
+const ROUTE_META_ELEMENT_KEY = "__elementPath";
 const DEFAULT_TEXT_COLOR = "#1f2a44";
 const DEFAULT_MAJOR_TEXT_COLOR = "#0f1b33";
 
@@ -265,6 +267,7 @@ function normalizeNavCustomizeState(raw) {
     if (!minorMeta[sectionKey].label) minorMeta[sectionKey].label = legacyMinorLabels[sectionKey];
   });
   return {
+    ...state,
     routeMeta: state.routeMeta && typeof state.routeMeta === "object" ? state.routeMeta : {},
     majorMeta,
     minorMeta,
@@ -294,6 +297,41 @@ function writeNavCustomizeState(state) {
   }
 }
 
+function hasMeaningfulNavCustomize(state) {
+  const s = normalizeNavCustomizeState(state);
+  return (
+    Object.keys(s.routeMeta || {}).length > 0 ||
+    Object.keys(s.majorMeta || {}).length > 0 ||
+    Object.keys(s.minorMeta || {}).length > 0 ||
+    (Array.isArray(s.majorOrder) && s.majorOrder.length > 0) ||
+    Object.keys(s.minorOrder || {}).length > 0 ||
+    Object.keys(s.routeOrder || {}).length > 0
+  );
+}
+
+async function readNavCustomizeStateFromServer() {
+  try {
+    const res = await fetch("/api/nav-customize/state");
+    const data = await res.json();
+    if (!data?.ok) return null;
+    return normalizeNavCustomizeState(data.state || {});
+  } catch {
+    return null;
+  }
+}
+
+async function writeNavCustomizeStateToServer(state) {
+  try {
+    await fetch("/api/nav-customize/state", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ state: normalizeNavCustomizeState(state) })
+    });
+  } catch {
+    // ignore
+  }
+}
+
 function getDefaultNavPlacement(route) {
   const p = String(route?.path || "");
   if (p === "/tools/publish-center" || p === "/tools/template-library" || p === "/tools/dialog") {
@@ -308,6 +346,7 @@ function getDefaultNavPlacement(route) {
     if (isPrototypeCardRoute(route)) return { major: "教育培训", minor: "原型说明卡" };
     if (isKbRoute(route)) return { major: "教育培训", minor: "安全培训知识库" };
     if (isHseKnowledgeSharingRoute(route)) return { major: "教育培训", minor: "HSE知识共享平台" };
+    if (p === "/edu/trainer/team-safety-activity-management-1") return { major: "教育培训", minor: "新系统页面（1）" };
     if (isEduDevEnterpriseRoute(route)) return { major: "教育培训", minor: "教育培训开发页面-企业端" };
     if (isEduDevHeadquartersRoute(route)) return { major: "教育培训", minor: "教育培训开发页面-总部端" };
     if (isMigrationLedgerRoute(route)) return { major: "教育培训", minor: "历史迁移（新系统台账）" };
@@ -446,13 +485,86 @@ export default function AppLayout({ children }) {
   const updateNavCustomize = React.useCallback((updater) => {
     setNavCustomize((prev) => {
       const base = normalizeNavCustomizeState(prev);
-      const next = normalizeNavCustomizeState(
+      const nextBase = normalizeNavCustomizeState(
         typeof updater === "function" ? updater(base) : updater
       );
+      const next = { ...nextBase, updatedAt: Date.now() };
       writeNavCustomizeState(next);
+      void writeNavCustomizeStateToServer(next);
       return next;
     });
   }, []);
+  React.useEffect(() => {
+    let cancelled = false;
+    async function syncInitialNavCustomize() {
+      const remote = await readNavCustomizeStateFromServer();
+      if (!remote || cancelled) return;
+      const local = normalizeNavCustomizeState(readNavCustomizeState());
+      const remoteUpdatedAt = Number(remote.updatedAt || 0);
+      const localUpdatedAt = Number(local.updatedAt || 0);
+      if (hasMeaningfulNavCustomize(remote) && remoteUpdatedAt >= localUpdatedAt) {
+        setNavCustomize(remote);
+        writeNavCustomizeState(remote);
+        return;
+      }
+      if (hasMeaningfulNavCustomize(local)) {
+        const mergedLocal = { ...local, updatedAt: Date.now() };
+        if (cancelled) return;
+        writeNavCustomizeState(mergedLocal);
+        setNavCustomize(mergedLocal);
+        void writeNavCustomizeStateToServer(mergedLocal);
+      }
+    }
+    syncInitialNavCustomize();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  React.useEffect(() => {
+    setNavCustomize((prev) => {
+      const next = normalizeNavCustomizeState(prev);
+      const routeMeta = next.routeMeta || {};
+      const pathByElementPath = new Map();
+      const elementPathByPath = new Map();
+      moduleRoutes.forEach((route) => {
+        const path = String(route?.path || "").trim();
+        const elementPath = String(route?.elementPath || "").trim();
+        if (!path || !elementPath) return;
+        pathByElementPath.set(elementPath, path);
+        elementPathByPath.set(path, elementPath);
+      });
+      let changed = false;
+      Object.keys(routeMeta).forEach((storedPath) => {
+        const currentMeta = routeMeta[storedPath];
+        if (!currentMeta || typeof currentMeta !== "object") return;
+        let elementPath = String(currentMeta[ROUTE_META_ELEMENT_KEY] || "").trim();
+        if (!elementPath) {
+          const inferredElementPath = String(elementPathByPath.get(storedPath) || "").trim();
+          if (inferredElementPath) {
+            routeMeta[storedPath] = {
+              ...currentMeta,
+              [ROUTE_META_ELEMENT_KEY]: inferredElementPath
+            };
+            elementPath = inferredElementPath;
+            changed = true;
+          }
+        }
+        if (!elementPath) return;
+        const latestPath = String(pathByElementPath.get(elementPath) || "").trim();
+        if (!latestPath || latestPath === storedPath || routeMeta[latestPath]) return;
+        routeMeta[latestPath] = {
+          ...routeMeta[storedPath],
+          [ROUTE_META_ELEMENT_KEY]: elementPath
+        };
+        changed = true;
+      });
+      if (!changed) return prev;
+      next.updatedAt = Date.now();
+      writeNavCustomizeState(next);
+      void writeNavCustomizeStateToServer(next);
+      return next;
+    });
+  }, [moduleRoutes]);
   React.useEffect(() => {
     setShowQuickNav(false);
   }, [location.pathname]);
@@ -496,6 +608,13 @@ export default function AppLayout({ children }) {
     [isEduDevPrototype]
   );
   const allNavEntries = React.useMemo(() => {
+    const routeMetaByElementPath = new Map();
+    Object.values(navCustomize.routeMeta || {}).forEach((meta) => {
+      if (!meta || typeof meta !== "object") return;
+      const elementPath = String(meta[ROUTE_META_ELEMENT_KEY] || "").trim();
+      if (!elementPath || routeMetaByElementPath.has(elementPath)) return;
+      routeMetaByElementPath.set(elementPath, meta);
+    });
     const entries = [...moduleRoutes];
     if (!isPublishRestricted() && isRouteAllowed("/tools/publish-center")) {
       if (!entries.some((it) => it.path === "/tools/publish-center")) {
@@ -509,7 +628,11 @@ export default function AppLayout({ children }) {
     }
     return entries.map((route) => {
       const path = String(route.path || "");
-      const meta = navCustomize.routeMeta?.[path] || {};
+      const elementPath = String(route.elementPath || "").trim();
+      const directMeta = navCustomize.routeMeta?.[path];
+      const fallbackMeta =
+        !directMeta && elementPath ? routeMetaByElementPath.get(elementPath) : null;
+      const meta = (directMeta || fallbackMeta || {});
       const placement = getDefaultNavPlacement(route);
       const majorKey = String(meta.major || placement.major || "其他页面").trim() || "其他页面";
       const minorKey = String(meta.minor || placement.minor || majorKey).trim() || majorKey;
@@ -555,7 +678,11 @@ export default function AppLayout({ children }) {
     majorKeysFromMeta
       .sort((a, b) => a.localeCompare(b, "zh-CN"))
       .forEach(pushMajor);
-    return majorOrder.map((majorKey) => {
+    const majorOrderToRender = [
+      PINNED_HOME_MAJOR_KEY,
+      ...majorOrder.filter((key) => key !== PINNED_HOME_MAJOR_KEY)
+    ];
+    return majorOrderToRender.map((majorKey) => {
       const minorMap = majorMap.get(majorKey) || new Map();
       const minorKeys = [];
       const configuredMinorOrder = Array.isArray(navCustomize.minorOrder?.[majorKey])

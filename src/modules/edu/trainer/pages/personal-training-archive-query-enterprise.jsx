@@ -90,27 +90,37 @@ export default function Page() {
     });
   };
 
-  const trainingTotal = TRAINING_ROWS.length;
-  const examTotal = EXAM_ROWS.length;
+  const scopedTrainingRows = React.useMemo(() => {
+    if (timeFilter === "all") return TRAINING_ROWS;
+    return TRAINING_ROWS.filter((row) => String(row.startDate || "").slice(0, 4) === timeFilter);
+  }, [timeFilter]);
+
+  const scopedExamRows = React.useMemo(() => {
+    if (timeFilter === "all") return EXAM_ROWS;
+    return EXAM_ROWS.filter((row) => String(row.date || "").slice(0, 4) === timeFilter);
+  }, [timeFilter]);
+
+  const trainingTotal = scopedTrainingRows.length;
+  const examTotal = scopedExamRows.length;
   const certTotal = CERT_ROWS.length;
-  const totalHours = TRAINING_ROWS.reduce((sum, row) => sum + Number(row.hours || 0), 0);
-  const trainingAbnormal = TRAINING_ROWS.filter((row) => row.result === "未合格").length;
-  const examAbnormal = EXAM_ROWS.filter((row) => row.result === "未通过").length;
+  const totalHours = scopedTrainingRows.reduce((sum, row) => sum + Number(row.hours || 0), 0);
+  const trainingAbnormal = scopedTrainingRows.filter((row) => row.result === "未合格").length;
+  const examAbnormal = scopedExamRows.filter((row) => row.result === "未通过").length;
   const certAbnormal = CERT_ROWS.filter((row) => row.status === "异常").length;
-  const trainingRate = `${((trainingTotal - trainingAbnormal) / Math.max(trainingTotal, 1) * 100).toFixed(1)}%`;
+  const trainingRate = `${(((trainingTotal - trainingAbnormal) / Math.max(trainingTotal, 1)) * 100).toFixed(1)}%`;
   const examRate = `${(((examTotal - examAbnormal) / Math.max(examTotal, 1)) * 100).toFixed(1)}%`;
   const certRate = `${(((certTotal - certAbnormal) / Math.max(certTotal, 1)) * 100).toFixed(1)}%`;
-  const currentKeyMetric = activeTab === "training"
-    ? `合格率 ${trainingRate}`
-    : activeTab === "exam"
-      ? `通过率 ${examRate}`
-      : `有效率 ${certRate}`;
   const scopeLabel =
     timeFilter === "2025"
       ? "2025年"
       : timeFilter === "2026"
         ? "2026年"
         : "全部";
+  const currentKeyMetric = activeTab === "training"
+    ? `培训合格率（${scopeLabel}） ${trainingRate}`
+    : activeTab === "exam"
+      ? `考试通过率（${scopeLabel}） ${examRate}`
+      : `证书有效率（当前） ${certRate}`;
 
   return (
     <div className="stack personal-archive-page">
@@ -147,7 +157,7 @@ export default function Page() {
           <div className="metrics-row personal-archive-metrics">
             <div className="pill"><div className="k">培训记录数（{scopeLabel}）</div><div className="v">{trainingTotal}</div></div>
             <div className="pill"><div className="k">考试记录数（{scopeLabel}）</div><div className="v">{examTotal}</div></div>
-            <div className="pill"><div className="k">有效证书数</div><div className="v">{certTotal - certAbnormal}</div></div>
+            <div className="pill"><div className="k">有效证书数（当前）</div><div className="v">{certTotal - certAbnormal}</div></div>
             <div className="pill"><div className="k">累计学时（{scopeLabel}）</div><div className="v">{totalHours}</div></div>
           </div>
         </div>

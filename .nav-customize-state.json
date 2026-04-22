@@ -1,0 +1,207 @@
+{
+  "routeMeta": {
+    "/edu/trainer/team-safety-activity-management-1": {
+      "title": "教育培训-班组安全活动管理-AI版本",
+      "__elementPath": "./modules/edu/trainer/pages/team-safety-activity-management-1.jsx"
+    },
+    "/tools/dialog": {
+      "hidden": true,
+      "__elementPath": "./modules/tools/pages/dialog.jsx"
+    },
+    "/san-tongshi/migration-query-legacy": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/san-tongshi-migration-query-legacy.jsx"
+    },
+    "/san-tongshi/todo": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/todo-center.jsx",
+      "major": "其他页面",
+      "minor": "其他三同时页面"
+    },
+    "/san-tongshi/permit/basic-design/class-23": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/permit-basic-design-class-23.jsx",
+      "major": "其他页面",
+      "minor": "其他三同时页面"
+    },
+    "/san-tongshi/permit/feasibility/class-23": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/permit-feasibility-class-23.jsx",
+      "major": "其他页面",
+      "minor": "其他三同时页面"
+    },
+    "/san-tongshi/permit/completion": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/permit-completion.jsx",
+      "major": "其他页面",
+      "minor": "其他三同时页面"
+    },
+    "/san-tongshi/three-same-prototype-cards": {
+      "hidden": false,
+      "__elementPath": "./modules/san-tongshi/pages/three-same-prototype-cards.jsx",
+      "major": "其他页面",
+      "minor": "原型说明卡"
+    },
+    "/san-tongshi/permit/trial-run": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/permit-trial-run.jsx",
+      "major": "其他页面",
+      "minor": "其他三同时页面"
+    },
+    "/san-tongshi/permit/basic-design/class-1": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/permit-basic-design-class-1.jsx",
+      "major": "其他页面",
+      "minor": "其他三同时页面"
+    },
+    "/san-tongshi/permit/feasibility/class-1": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/permit-feasibility-class-1.jsx",
+      "major": "其他页面",
+      "minor": "其他三同时页面"
+    },
+    "/san-tongshi/task-approval": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/task-approval.jsx",
+      "major": "其他页面",
+      "minor": "其他三同时页面"
+    },
+    "/san-tongshi/task-init": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/task-init.jsx",
+      "major": "其他页面",
+      "minor": "其他三同时页面"
+    },
+    "/san-tongshi/occupational-health-three-same": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/occupational-health-three-same.jsx"
+    },
+    "/san-tongshi/fire-three-same": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/fire-three-same.jsx"
+    },
+    "/tools/test": {
+      "hidden": true,
+      "__elementPath": "./modules/tools/pages/test.jsx"
+    },
+    "/three-same/task/new": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/three-same-task-new.jsx"
+    },
+    "/three-same/tasks": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/three-same-tasks.jsx"
+    },
+    "/projects": {
+      "hidden": true,
+      "__elementPath": "./modules/san-tongshi/pages/projects.jsx"
+    },
+    "/edu/trainer/team-safety-activity-ai-meeting": {
+      "hidden": true,
+      "__elementPath": "./modules/edu/trainer/pages/team-safety-activity-ai-meeting.jsx"
+    },
+    "/edu/trainer/education-training-prototype-cards": {
+      "major": "其他页面",
+      "minor": "原型说明卡",
+      "__elementPath": "./modules/edu/trainer/pages/education-training-prototype-cards.jsx"
+    },
+    "/san-tongshi/safety-migration-query": {
+      "major": "其他页面",
+      "minor": "其他三同时页面",
+      "__elementPath": "./modules/san-tongshi/pages/safety-three-same-migration-query.jsx"
+    },
+    "/san-tongshi/safety-migration-query/detail": {
+      "major": "其他页面",
+      "minor": "其他三同时页面",
+      "__elementPath": "./modules/san-tongshi/pages/safety-three-same-migration-query-detail.jsx"
+    },
+    "/edu/trainer/training-plan-management-migration-query": {
+      "hidden": true,
+      "__elementPath": "./modules/edu/trainer/pages/training-plan-management-migration-query.jsx"
+    },
+    "/edu/trainer/training-plan-management-migration-result": {
+      "hidden": true,
+      "__elementPath": "./modules/edu/trainer/pages/training-plan-management-migration-result.jsx"
+    },
+    "/edu/trainer/training-record-management-migration-query": {
+      "hidden": true,
+      "__elementPath": "./modules/edu/trainer/pages/training-record-management-migration-query.jsx"
+    },
+    "/edu/trainer/training-record-management-migration-result": {
+      "hidden": true,
+      "__elementPath": "./modules/edu/trainer/pages/training-record-management-migration-result.jsx"
+    },
+    "/edu/trainer/certificate-management-migration-query": {
+      "hidden": true,
+      "__elementPath": "./modules/edu/trainer/pages/certificate-management-migration-query.jsx"
+    },
+    "/edu/trainer/certificate-management-migration-result": {
+      "hidden": true,
+      "__elementPath": "./modules/edu/trainer/pages/certificate-management-migration-result.jsx"
+    },
+    "/edu/trainer/certificate-management-migration-query-legacy": {
+      "major": "其他页面",
+      "minor": "数据迁移",
+      "__elementPath": "./modules/edu/trainer/pages/certificate-management-migration-query-legacy.jsx"
+    },
+    "/edu/trainer/training-plan-migration-query": {
+      "major": "其他页面",
+      "minor": "数据迁移",
+      "__elementPath": "./modules/edu/trainer/pages/training-plan-migration-query.jsx"
+    },
+    "/edu/trainer/training-record-migration-query": {
+      "major": "其他页面",
+      "minor": "数据迁移",
+      "__elementPath": "./modules/edu/trainer/pages/training-record-migration-query.jsx"
+    }
+  },
+  "majorMeta": {
+    "教育培训": {},
+    "其他页面": {}
+  },
+  "minorMeta": {
+    "教育培训::安全培训知识库": {},
+    "其他页面::原型说明卡": {},
+    "教育培训::教育培训开发页面-企业端": {
+      "label": "教育培训-企业端"
+    },
+    "教育培训::教育培训开发页面-总部端": {
+      "label": "教育培训-总部端"
+    },
+    "其他页面::其他三同时页面": {
+      "label": "安全三同时-数据迁移"
+    },
+    "其他页面::数据迁移": {
+      "label": "教育培训数据迁移"
+    },
+    "教育培训::新系统页面（1）": {
+      "label": "AI赋能"
+    }
+  },
+  "majorOrder": [
+    "教育培训",
+    "其他页面"
+  ],
+  "minorOrder": {
+    "教育培训": [],
+    "其他页面": [
+      "原型说明卡",
+      "其他三同时页面",
+      "数据迁移"
+    ],
+    "三同时管理": []
+  },
+  "routeOrder": {
+    "教育培训::安全培训知识库": [
+      "/edu/kb",
+      "/edu/kb/article-detail",
+      "/edu/trainer/kb/manage"
+    ],
+    "其他页面::原型说明卡": [
+      "/edu/trainer/education-training-prototype-cards",
+      "/san-tongshi/three-same-prototype-cards"
+    ],
+    "其他页面::其他三同时页面": []
+  },
+  "updatedAt": 1776844475397
+}

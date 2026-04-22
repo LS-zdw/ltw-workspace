@@ -11,16 +11,24 @@ const ROOT = __dirname;
 const ROUTES_FILE = path.join(ROOT, "src", "app", "routes.generated.jsx");
 const ROUTES_LOCAL_FILE = path.join(ROOT, "src", "app", "routes.local.jsx");
 const PUBLISH_STATE_FILE = path.join(ROOT, ".publish-center-state.json");
+const NAV_CUSTOMIZE_STATE_FILE = path.join(ROOT, ".nav-customize-state.json");
 
 function parseRoutes(routesSource) {
   const routes = [];
-  const re = /\{\s*path:\s*"([^"]+)",\s*title:\s*"([^"]+)"/g;
+  const re = /\{[\s\S]*?\}/g;
   let m;
   while ((m = re.exec(routesSource)) !== null) {
-    const routePath = m[1];
-    const routeTitle = m[2];
+    const block = m[0];
+    const pathMatch = block.match(/path:\s*"([^"]+)"/);
+    const titleMatch = block.match(/title:\s*"([^"]+)"/);
+    const elementPathMatch = block.match(/elementPath:\s*(null|"([^"]+)")/);
+    const routePath = pathMatch ? pathMatch[1] : "";
+    const routeTitle = titleMatch ? titleMatch[1] : "";
+    const elementPath = elementPathMatch
+      ? (elementPathMatch[1] === "null" ? null : (elementPathMatch[2] || null))
+      : null;
     if (!routePath) continue;
-    routes.push({ path: routePath, title: routeTitle });
+    routes.push({ path: routePath, title: routeTitle, elementPath });
   }
   return routes;
 }
@@ -125,6 +133,22 @@ function writePublishState(nextState) {
   fs.writeFileSync(PUBLISH_STATE_FILE, JSON.stringify(merged, null, 2), "utf8");
 }
 
+function readNavCustomizeState() {
+  if (!fs.existsSync(NAV_CUSTOMIZE_STATE_FILE)) return {};
+  try {
+    const raw = fs.readFileSync(NAV_CUSTOMIZE_STATE_FILE, "utf8");
+    const data = JSON.parse(raw);
+    return data && typeof data === "object" ? data : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeNavCustomizeState(nextState) {
+  const state = nextState && typeof nextState === "object" ? nextState : {};
+  fs.writeFileSync(NAV_CUSTOMIZE_STATE_FILE, JSON.stringify(state, null, 2), "utf8");
+}
+
 function publishApiPlugin() {
   return {
     name: "local-publish-api",
@@ -141,6 +165,26 @@ function publishApiPlugin() {
           return sendJson(res, 405, { ok: false, message: "Method Not Allowed" });
         }
         return sendJson(res, 200, { ok: true, state: readPublishState() });
+      });
+
+      server.middlewares.use("/api/nav-customize/state", async (req, res) => {
+        if (req.method === "GET") {
+          return sendJson(res, 200, { ok: true, state: readNavCustomizeState() });
+        }
+        if (req.method !== "POST") {
+          return sendJson(res, 405, { ok: false, message: "Method Not Allowed" });
+        }
+        try {
+          const body = await readJsonBody(req);
+          const state = body && typeof body.state === "object" ? body.state : {};
+          writeNavCustomizeState(state);
+          return sendJson(res, 200, { ok: true });
+        } catch (error) {
+          return sendJson(res, 500, {
+            ok: false,
+            message: error?.message || "保存首页导航配置失败"
+          });
+        }
       });
 
       server.middlewares.use("/api/publish/run", async (req, res) => {

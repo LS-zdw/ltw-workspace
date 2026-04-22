@@ -11,11 +11,17 @@ const ROUTES_LOCAL_FILE = path.join(ROOT, "src", "app", "routes.local.jsx");
 
 const DEFAULT_PUBLISH_DIR = "/data/pcitc/一体化/教育培训/edu-ep";
 const DEFAULT_COMPAT_SOURCE_DIR = "/data/pcitc/一体化/教育培训/edu-ep";
+const DEFAULT_INDEX_TEMPLATE_FILE = "/data/pcitc/一体化/教育培训/教育培训2.26/index.html";
+const APP_ENTRY_HTML = "app-index.html";
+const LEGACY_APP_ENTRY_HTML = ".app-index.html";
 const PUBLISH_DIR = path.resolve(process.env.PUBLISH_DIR || DEFAULT_PUBLISH_DIR);
 const SHOULD_CLEAN = process.env.PUBLISH_CLEAN === "true";
 const PUBLISH_MODE = (process.env.PUBLISH_MODE || "slim").toLowerCase();
 const PUBLISH_NAV_CLICKABLE = String(process.env.PUBLISH_NAV_CLICKABLE || "true").toLowerCase() !== "false";
 const PUBLISH_INCLUDE_HOME = String(process.env.PUBLISH_INCLUDE_HOME || "false").toLowerCase() === "true";
+const INDEX_TEMPLATE_FILE = String(
+  process.env.PUBLISH_INDEX_TEMPLATE_FILE || DEFAULT_INDEX_TEMPLATE_FILE
+).trim();
 const COMPAT_SOURCE_DIR = path.resolve(process.env.PUBLISH_COMPAT_SOURCE_DIR || DEFAULT_COMPAT_SOURCE_DIR);
 const FILTER_PATHS = (() => {
   const raw = process.env.PUBLISH_ROUTE_PATHS_JSON;
@@ -33,11 +39,11 @@ function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
-function inlineIndexAssets(publishDir) {
-  const indexFile = path.join(publishDir, "index.html");
-  if (!fs.existsSync(indexFile)) return;
+function inlineHtmlAssets(publishDir, htmlName = "index.html") {
+  const htmlFile = path.join(publishDir, htmlName);
+  if (!fs.existsSync(htmlFile)) return;
 
-  let html = fs.readFileSync(indexFile, "utf8");
+  let html = fs.readFileSync(htmlFile, "utf8");
 
   const cssMatch = html.match(/<link[^>]*rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/i);
   if (cssMatch) {
@@ -60,7 +66,7 @@ function inlineIndexAssets(publishDir) {
     }
   }
 
-  fs.writeFileSync(indexFile, html, "utf8");
+  fs.writeFileSync(htmlFile, html, "utf8");
 }
 
 function mimeTypeOf(filePath) {
@@ -83,11 +89,11 @@ function toDataUri(filePath) {
   return `data:${mime};base64,${buf.toString("base64")}`;
 }
 
-function inlineIndexResourceUrls(publishDir) {
-  const indexFile = path.join(publishDir, "index.html");
-  if (!fs.existsSync(indexFile)) return;
+function inlineHtmlResourceUrls(publishDir, htmlName = "index.html") {
+  const htmlFile = path.join(publishDir, htmlName);
+  if (!fs.existsSync(htmlFile)) return;
 
-  let html = fs.readFileSync(indexFile, "utf8");
+  let html = fs.readFileSync(htmlFile, "utf8");
 
   html = html.replace(/url\((['"]?)([^'")]+)\1\)/g, (full, quote, rawUrl) => {
     const assetUrl = String(rawUrl || "").trim();
@@ -110,48 +116,59 @@ function inlineIndexResourceUrls(publishDir) {
     html = html.replace(/<\/head>/i, '  <link rel="icon" href="data:," />\n  </head>');
   }
 
-  fs.writeFileSync(indexFile, html, "utf8");
+  fs.writeFileSync(htmlFile, html, "utf8");
+}
+
+function writeScriptById(htmlFile, scriptId, scriptContent) {
+  if (!fs.existsSync(htmlFile)) return;
+  let html = fs.readFileSync(htmlFile, "utf8");
+  const script = scriptContent ? `<script id="${scriptId}">${scriptContent}</script>` : "";
+  const scriptPattern = new RegExp(
+    `<script[^>]*id="${scriptId}"[^>]*>[\\s\\S]*?<\\/script>\\n?`,
+    "i"
+  );
+
+  if (html.includes(`id="${scriptId}"`)) {
+    html = script ? html.replace(scriptPattern, script) : html.replace(scriptPattern, "");
+  } else if (script) {
+    html = html.replace(/<\/head>/i, `  ${script}\n  </head>`);
+  }
+
+  fs.writeFileSync(htmlFile, html, "utf8");
+}
+
+function writePublishScriptToAppEntries(publishDir, scriptId, scriptContent) {
+  const targets = [
+    path.join(publishDir, "index.html"),
+    path.join(publishDir, APP_ENTRY_HTML),
+    path.join(publishDir, LEGACY_APP_ENTRY_HTML)
+  ];
+  targets.forEach((file) => writeScriptById(file, scriptId, scriptContent));
 }
 
 function writePublishRouteWhitelist(publishDir, routePaths) {
-  const indexFile = path.join(publishDir, "index.html");
-  if (!fs.existsSync(indexFile)) return;
-
-  let html = fs.readFileSync(indexFile, "utf8");
   const payload = JSON.stringify((routePaths || []).map((p) => String(p))).replace(/</g, "\\u003c");
-  const scriptId = "publish-routes-whitelist";
-  const script = `<script id="${scriptId}">window.__PUBLISH_ALLOWED_ROUTES__=${payload};</script>`;
-
-  if (html.includes(`id="${scriptId}"`)) {
-    html = html.replace(
-      /<script[^>]*id="publish-routes-whitelist"[^>]*>[\s\S]*?<\/script>/i,
-      script
-    );
-  } else {
-    html = html.replace(/<\/head>/i, `  ${script}\n  </head>`);
-  }
-
-  fs.writeFileSync(indexFile, html, "utf8");
+  writePublishScriptToAppEntries(
+    publishDir,
+    "publish-routes-whitelist",
+    `window.__PUBLISH_ALLOWED_ROUTES__=${payload};`
+  );
 }
 
 function writePublishNavClickableFlag(publishDir, navClickable) {
-  const indexFile = path.join(publishDir, "index.html");
-  if (!fs.existsSync(indexFile)) return;
+  writePublishScriptToAppEntries(
+    publishDir,
+    "publish-nav-clickable",
+    `window.__PUBLISH_NAV_CLICKABLE__=${navClickable ? "true" : "false"};`
+  );
+}
 
-  let html = fs.readFileSync(indexFile, "utf8");
-  const scriptId = "publish-nav-clickable";
-  const script = `<script id="${scriptId}">window.__PUBLISH_NAV_CLICKABLE__=${navClickable ? "true" : "false"};</script>`;
-
-  if (html.includes(`id="${scriptId}"`)) {
-    html = html.replace(
-      /<script[^>]*id="publish-nav-clickable"[^>]*>[\s\S]*?<\/script>/i,
-      script
-    );
-  } else {
-    html = html.replace(/<\/head>/i, `  ${script}\n  </head>`);
-  }
-
-  fs.writeFileSync(indexFile, html, "utf8");
+function writePublishDefaultRoute(publishDir, routePath) {
+  const route = String(routePath || "").trim();
+  const script = route
+    ? `(function(){if(!window.location.hash||window.location.hash==="#"){window.location.hash=${JSON.stringify(route)};}})();`
+    : "";
+  writePublishScriptToAppEntries(publishDir, "publish-default-route", script);
 }
 
 function sanitizeFilename(name) {
@@ -211,13 +228,13 @@ function buildEntryHtml({ title, routePath }) {
     <p>正在打开：${title}</p>
     <script>
       (function () {
-        var target = new URL("./index.html", window.location.href);
+        var target = new URL("./${APP_ENTRY_HTML}", window.location.href);
         target.hash = ${JSON.stringify(routePath)};
         window.location.replace(target.toString());
       })();
     </script>
     <noscript>
-      <a href="./index.html#${routePath}">点击进入页面</a>
+      <a href="./${APP_ENTRY_HTML}#${routePath}">点击进入页面</a>
     </noscript>
   </body>
 </html>
@@ -252,15 +269,16 @@ function buildNavHtml(routes) {
 `;
 }
 
-function cleanupPublishArtifacts(publishDir) {
+function cleanupPublishArtifacts(publishDir, { keepAssets = false } = {}) {
   const removeTargets = [
-    "assets",
-    "proto",
     "vite.svg",
     "_publish-manifest.json",
     "一键隐藏资源-仅Windows.bat",
     "一键显示资源-仅Windows.bat"
   ];
+  if (!keepAssets) {
+    removeTargets.unshift("assets");
+  }
 
   for (const name of removeTargets) {
     const target = path.join(publishDir, name);
@@ -270,14 +288,70 @@ function cleanupPublishArtifacts(publishDir) {
   }
 }
 
-function cleanupCompatArtifacts(publishDir) {
-  const removeTargets = ["assets", "proto", "vite.svg"];
+function cleanupCompatArtifacts(publishDir, { keepAssets = false } = {}) {
+  const removeTargets = ["vite.svg"];
+  if (!keepAssets) {
+    removeTargets.unshift("assets");
+  }
   for (const name of removeTargets) {
     const target = path.join(publishDir, name);
     if (fs.existsSync(target)) {
       fs.rmSync(target, { recursive: true, force: true });
     }
   }
+}
+
+function applyIndexTemplate(publishDir) {
+  const templatePath = INDEX_TEMPLATE_FILE;
+  if (!templatePath) return false;
+  if (!fs.existsSync(templatePath)) {
+    console.warn(`[publish] index模板不存在，跳过覆盖：${templatePath}`);
+    return false;
+  }
+  const appIndex = path.join(publishDir, APP_ENTRY_HTML);
+  const legacyAppIndex = path.join(publishDir, LEGACY_APP_ENTRY_HTML);
+  const target = path.join(publishDir, "index.html");
+  if (fs.existsSync(legacyAppIndex)) {
+    fs.rmSync(legacyAppIndex, { force: true });
+  }
+  if (fs.existsSync(target)) {
+    fs.copyFileSync(target, appIndex);
+  }
+  fs.copyFileSync(templatePath, target);
+  // Copy template companion assets to avoid missing-resource errors.
+  const templateDir = path.dirname(templatePath);
+  const companionNames = [
+    "resources",
+    "plugins",
+    "images",
+    "files",
+    "data",
+    "start.html",
+    "start_with_pages.html",
+    "start_c_1.html"
+  ];
+  for (const name of companionNames) {
+    const src = path.join(templateDir, name);
+    const dst = path.join(publishDir, name);
+    if (!fs.existsSync(src)) continue;
+    fs.cpSync(src, dst, { recursive: true, force: true });
+  }
+
+  // Bridge hash routes to React entry to keep SPA pages reachable.
+  let html = fs.readFileSync(target, "utf8");
+  const scriptId = "publish-template-bridge";
+  const script = `<script id="${scriptId}">(function(){var h=window.location.hash||\"\";if(h.indexOf(\"#/\")===0){var u=new URL(\"./${APP_ENTRY_HTML}\",window.location.href);u.hash=h;window.location.replace(u.toString());}})();</script>`;
+  if (html.includes(`id="${scriptId}"`)) {
+    html = html.replace(
+      /<script[^>]*id="publish-template-bridge"[^>]*>[\s\S]*?<\/script>/i,
+      script
+    );
+  } else {
+    html = html.replace(/<\/head>/i, `  ${script}\n  </head>`);
+  }
+  fs.writeFileSync(target, html, "utf8");
+  console.log(`[publish] 已使用index模板：${templatePath}`);
+  return true;
 }
 
 function copyCompatScaffold(publishDir) {
@@ -319,9 +393,12 @@ function main() {
   }
   ensureDir(PUBLISH_DIR);
   fs.cpSync(DIST_DIR, PUBLISH_DIR, { recursive: true, force: true });
-  inlineIndexAssets(PUBLISH_DIR);
+  const templateApplied = applyIndexTemplate(PUBLISH_DIR);
+  inlineHtmlAssets(PUBLISH_DIR, "index.html");
+  inlineHtmlAssets(PUBLISH_DIR, APP_ENTRY_HTML);
   if (PUBLISH_MODE === "slim" || PUBLISH_MODE === "compat") {
-    inlineIndexResourceUrls(PUBLISH_DIR);
+    inlineHtmlResourceUrls(PUBLISH_DIR, "index.html");
+    inlineHtmlResourceUrls(PUBLISH_DIR, APP_ENTRY_HTML);
   }
 
   let routes = readRoutesMerged();
@@ -353,15 +430,20 @@ function main() {
   const allowedRoutePaths = withFilenames.map((r) => r.path);
   if (PUBLISH_INCLUDE_HOME) {
     allowedRoutePaths.unshift("/");
+    writePublishDefaultRoute(PUBLISH_DIR, "");
+  } else {
+    writePublishDefaultRoute(PUBLISH_DIR, withFilenames[0]?.path || "");
   }
   writePublishRouteWhitelist(PUBLISH_DIR, allowedRoutePaths);
   writePublishNavClickableFlag(PUBLISH_DIR, PUBLISH_NAV_CLICKABLE);
 
   if (PUBLISH_MODE === "slim") {
-    cleanupPublishArtifacts(PUBLISH_DIR);
+    // When template mode is enabled, app-index.html may still depend on assets chunks.
+    // Keep assets to avoid blank pages under hash routes.
+    cleanupPublishArtifacts(PUBLISH_DIR, { keepAssets: Boolean(templateApplied) });
   } else if (PUBLISH_MODE === "compat") {
     copyCompatScaffold(PUBLISH_DIR);
-    cleanupCompatArtifacts(PUBLISH_DIR);
+    cleanupCompatArtifacts(PUBLISH_DIR, { keepAssets: Boolean(templateApplied) });
   }
 
   console.log(`Published to ${PUBLISH_DIR}`);
