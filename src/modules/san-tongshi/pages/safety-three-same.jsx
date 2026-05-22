@@ -15,6 +15,50 @@ const rows = [
   { id: 10, projectName: "公辅系统升级项目", stage: "可研", evalOrg: "", designOrg: "", replyDate: "", acceptDate: "", projectStage: "可研", creator: "赵敏", createdAt: "2026-01-15" }
 ];
 
+const stageTaskConfigs = {
+  可研阶段: {
+    title: "可研阶段任务分发与反馈",
+    deadline: "2026-03-18",
+    ownerDept: "安全环保部",
+    tasks: [
+      { id: "ky-1", task: "设计单位资质材料、方案确认意见、适用规范清单", dept: "设计管理部", owner: "李明", dispatchStatus: "已分发", status: "已反馈", due: "03-12", feedback: "已上传营业执照、资质证书、项目负责人授权书", attachments: ["设计单位资质证书.pdf", "方案确认意见.docx", "项目负责人授权书.pdf"] },
+      { id: "ky-2", task: "项目可研报告及项目立项目录、投资估算、工艺技术说明", dept: "运行部", owner: "王强", dispatchStatus: "已分发", status: "待补充", due: "03-15", feedback: "已反馈可研报告，工艺路线说明需补充盖章版", missing: "工艺路线说明盖章版", attachments: ["项目可研报告.pdf", "投资估算表.xlsx"] },
+      { id: "ky-3", task: "项目危险有害因素识别资料、总图布置及安全间距说明", dept: "工程管理部", owner: "赵敏", dispatchStatus: "已分发", status: "待反馈", due: "03-18", feedback: "等待负责人反馈", attachments: [] },
+      { id: "ky-4", task: "周边环境敏感目标、外部安全防护距离基础资料", dept: "属地单位", owner: "陈伟", dispatchStatus: "待分发", status: "待反馈", due: "03-20", feedback: "尚未分发", attachments: [] }
+    ]
+  },
+  基础设计阶段: {
+    title: "基础设计阶段任务分发与反馈",
+    deadline: "2026-04-10",
+    ownerDept: "安全环保部",
+    tasks: [
+      { id: "sj-1", task: "安全设施设计专篇、HAZOP/SIL分析报告及审查意见", dept: "设计管理部", owner: "李明", dispatchStatus: "已分发", status: "已反馈", due: "04-02", feedback: "专篇预审版已上传，等待专家意见定稿", attachments: ["安全设施设计专篇预审版.pdf", "HAZOP分析报告.pdf", "SIL分析报告.pdf"] },
+      { id: "sj-2", task: "重大危险源辨识、总平面布置与安全间距复核材料", dept: "生产技术部", owner: "刘宁", dispatchStatus: "已分发", status: "待补充", due: "04-06", feedback: "安全间距复核表缺少装置边界图附件", missing: "装置边界图附件", attachments: ["重大危险源辨识表.xlsx"] },
+      { id: "sj-3", task: "消防、应急、仪表联锁相关基础设计输入资料", dept: "机动部", owner: "陈伟", dispatchStatus: "已分发", status: "待反馈", due: "04-10", feedback: "等待负责人反馈", attachments: [] }
+    ]
+  },
+  试运行阶段: {
+    title: "试运行阶段任务分发与反馈",
+    deadline: "2026-06-05",
+    ownerDept: "安全环保部",
+    tasks: [
+      { id: "sy-1", task: "试生产方案、操作规程、岗位培训记录", dept: "运行部", owner: "王强", dispatchStatus: "已分发", status: "已反馈", due: "05-24", feedback: "试生产方案已提交，培训记录齐全", attachments: ["试生产方案.pdf", "岗位培训记录.xlsx"] },
+      { id: "sy-2", task: "联锁投用证明、设备调试记录、隐患整改闭环清单", dept: "机动部", owner: "陈伟", dispatchStatus: "已分发", status: "已反馈", due: "05-28", feedback: "联锁投用证明已盖章，整改闭环清单已归档", attachments: ["联锁投用证明.pdf", "设备调试记录.zip", "隐患整改闭环清单.xlsx"] },
+      { id: "sy-3", task: "应急预案演练记录、现场安全条件确认表", dept: "应急管理部", owner: "周岚", dispatchStatus: "已分发", status: "待补充", due: "06-05", feedback: "演练照片已上传，现场确认表待签字", missing: "现场安全条件确认表签字版", attachments: ["应急预案演练照片.zip"] }
+    ]
+  },
+  竣工验收阶段: {
+    title: "竣工验收阶段任务分发与反馈",
+    deadline: "2026-08-20",
+    ownerDept: "安全环保部",
+    tasks: [
+      { id: "ys-1", task: "安全设施施工情况报告、监理报告、变更说明", dept: "工程管理部", owner: "刘宁", dispatchStatus: "已分发", status: "待补充", due: "08-10", feedback: "施工情况报告已反馈，监理报告缺少附件目录", missing: "监理报告附件目录", attachments: ["安全设施施工情况报告.pdf", "变更说明.docx"] },
+      { id: "ys-2", task: "安全验收评价报告、专家评审意见及整改证明", dept: "评价机构", owner: "孙洁", dispatchStatus: "已分发", status: "待反馈", due: "08-16", feedback: "待评价机构上传", attachments: [] },
+      { id: "ys-3", task: "重大危险源备案、操作人员取证及投用前确认材料", dept: "运行部", owner: "王强", dispatchStatus: "已分发", status: "已反馈", due: "08-20", feedback: "已反馈备案证明和取证台账", attachments: ["重大危险源备案证明.pdf", "操作人员取证台账.xlsx"] }
+    ]
+  }
+};
+
 function Section({ title, children, showSubmit = false }) {
   return (
     <div className="detail-section" style={{ marginTop: 12 }}>
@@ -23,6 +67,98 @@ function Section({ title, children, showSubmit = false }) {
         {showSubmit ? <button type="button" className="btn btn-primary">提交</button> : null}
       </div>
       <div className="stpm-create-grid" style={{ padding: 12 }}>{children}</div>
+    </div>
+  );
+}
+
+function TaskDispatchPanel({ config, onTemplate, onDispatch, onView, onRemind }) {
+  const statusClass = {
+    已反馈: "done",
+    待补充: "warn",
+    待反馈: "pending"
+  };
+  const dispatchClass = {
+    已分发: "done",
+    待分发: "pending"
+  };
+  const statusCounts = config.tasks.reduce((acc, item) => {
+    acc[item.status] = (acc[item.status] || 0) + 1;
+    return acc;
+  }, {});
+
+  return (
+    <div className="stage-task-panel">
+      <div className="stage-task-head">
+        <div>
+          <div className="stage-task-title">{config.title}</div>
+          <div className="stage-task-sub">由{config.ownerDept}统一配置材料清单，按阶段分发至实施单位并跟踪反馈。</div>
+        </div>
+        <div className="stage-task-actions">
+          <button type="button" className="btn btn-primary" onClick={() => onDispatch()}>批量分发</button>
+          <button type="button" className="btn" onClick={onTemplate}>配置模板</button>
+        </div>
+      </div>
+      <div className="stage-task-summary">
+        <div className="stage-task-summary-item">
+          <span>发起部门</span>
+          <strong>{config.ownerDept}</strong>
+        </div>
+        <div className="stage-task-summary-item">
+          <span>反馈截止</span>
+          <strong>{config.deadline}</strong>
+        </div>
+        <div className="stage-task-summary-item stage-task-counts">
+          <span>反馈情况</span>
+          <strong>已反馈 {statusCounts.已反馈 || 0}</strong>
+          <strong>待补充 {statusCounts.待补充 || 0}</strong>
+          <strong>待反馈 {statusCounts.待反馈 || 0}</strong>
+        </div>
+      </div>
+      <table className="stage-task-table">
+        <thead>
+          <tr>
+            <th>工作任务</th>
+            <th>实施单位</th>
+            <th>负责人</th>
+            <th>分发状态</th>
+            <th>反馈状态</th>
+            <th>截止日期</th>
+            <th>已反馈附件</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {config.tasks.map((item) => (
+            <tr key={item.id}>
+              <td>{item.task}</td>
+              <td>{item.dept}</td>
+              <td>{item.owner}</td>
+              <td><span className={`stage-task-status ${dispatchClass[item.dispatchStatus] || ""}`}>{item.dispatchStatus}</span></td>
+              <td><span className={`stage-task-status ${statusClass[item.status] || ""}`}>{item.status}</span></td>
+              <td>{item.due}</td>
+              <td>
+                {item.attachments.length ? (
+                  <div className="stage-task-files">
+                    {item.attachments.map((file) => (
+                      <button key={file} type="button" className="task-download-btn">{file}</button>
+                    ))}
+                    {item.missing ? <span className="stage-task-missing">缺：{item.missing}</span> : null}
+                  </div>
+                ) : (
+                  <span className="stage-task-empty">暂无</span>
+                )}
+              </td>
+              <td>
+                <div className="stage-task-row-actions">
+                  {item.dispatchStatus === "待分发" ? <button type="button" onClick={() => onDispatch(item)}>分发</button> : null}
+                  {item.status !== "已反馈" && item.dispatchStatus === "已分发" ? <button type="button" onClick={() => onRemind(item)}>催办</button> : null}
+                  <button type="button" onClick={() => onView(item)}>查看</button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -44,8 +180,14 @@ function UploadField({ label, required = false, wide = false, extraText = "", ke
         {label}
       </div>
       <div className="stpm-create-val">
-        <div className="filterbar-control stpm-integrated-control" style={{ color: "#8b95a1", textAlign: "center" }}>
-          将文件拖到此处或 <span style={{ color: "#1677ff" }}>点击上传</span>{extraText ? <span>（{extraText}）</span> : null}
+        <div className="filterbar-control stpm-integrated-control stpm-upload-control">
+          <span className="stpm-upload-placeholder">将文件拖到此处或</span>
+          <span className="stpm-upload-actions">
+            <button type="button" className="stpm-upload-link-btn">本地上传</button>
+            <span className="stpm-upload-divider">|</span>
+            <button type="button" className="stpm-upload-link-btn">云盘上传</button>
+          </span>
+          {extraText ? <span className="stpm-upload-extra">（{extraText}）</span> : null}
         </div>
         {hintText ? (
           <div style={{ color: "#6b7280", fontSize: 12, textAlign: "center", marginTop: 4 }}>
@@ -76,8 +218,158 @@ function YesNo({ label, required = false, value = "否", disabled = false, onCha
   );
 }
 
+function TaskActionModal({ action, config, stage, onClose }) {
+  if (!action) return null;
+
+  const titleMap = {
+    template: "配置任务模板",
+    dispatch: action.task ? "分发给负责人" : "批量分发阶段任务",
+    detail: "任务反馈详情",
+    remind: "催办任务"
+  };
+  const task = action.task || config.tasks[0];
+  const dispatchTasks = action.task ? [action.task] : config.tasks;
+
+  return (
+    <div className="modal-mask task-action-mask" onClick={onClose}>
+      <div className="modal task-action-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-hd">
+          <div>
+            <div className="modal-title">{titleMap[action.type]}</div>
+            <div className="modal-desc">{stage} · {config.ownerDept}</div>
+          </div>
+          <button type="button" className="modal-close" onClick={onClose}>×</button>
+        </div>
+        <div className="modal-bd detail">
+          {action.type === "template" ? (
+            <>
+              <Section title="模板基础配置">
+                <div className="stpm-create-item">
+                  <div className="stpm-create-key"><span className="required-mark">*</span>模板名称</div>
+                  <div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" defaultValue={`${stage}材料收集模板`} /></div>
+                </div>
+                <div className="stpm-create-item">
+                  <div className="stpm-create-key"><span className="required-mark">*</span>适用阶段</div>
+                  <div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" value={stage} readOnly /></div>
+                </div>
+                <div className="stpm-create-item">
+                  <div className="stpm-create-key">默认发起部门</div>
+                  <div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" value={config.ownerDept} readOnly /></div>
+                </div>
+                <div className="stpm-create-item">
+                  <div className="stpm-create-key">反馈时限</div>
+                  <div className="stpm-create-val"><select className="filterbar-control stpm-integrated-control" defaultValue="7"><option value="3">3个工作日</option><option value="7">7个工作日</option><option value="10">10个工作日</option></select></div>
+                </div>
+              </Section>
+              <Section title="材料清单配置">
+                <div className="task-config-table-wrap">
+                  <table className="task-config-table">
+                    <thead><tr><th>启用</th><th>工作任务</th><th>默认实施单位</th><th>默认负责人</th><th>反馈方式</th><th>是否必填</th></tr></thead>
+                    <tbody>
+                      {config.tasks.map((item) => (
+                        <tr key={item.id}>
+                          <td><input type="checkbox" defaultChecked /></td>
+                          <td><input className="filterbar-control" defaultValue={item.task} /></td>
+                          <td><select className="filterbar-control" defaultValue={item.dept}><option>{item.dept}</option><option>设计管理部</option><option>运行部</option><option>工程管理部</option><option>机动部</option></select></td>
+                          <td><input className="filterbar-control" defaultValue={item.owner} /></td>
+                          <td><select className="filterbar-control" defaultValue="附件+说明"><option>附件+说明</option><option>仅附件</option><option>仅说明</option></select></td>
+                          <td><input type="checkbox" defaultChecked /></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Section>
+            </>
+          ) : null}
+
+          {action.type === "dispatch" ? (
+            <>
+              <Section title="分发设置">
+                <div className="stpm-create-item">
+                  <div className="stpm-create-key"><span className="required-mark">*</span>任务主题</div>
+                  <div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" defaultValue={`请反馈${stage}安全三同时资料`} /></div>
+                </div>
+                <div className="stpm-create-item">
+                  <div className="stpm-create-key"><span className="required-mark">*</span>反馈截止日期</div>
+                  <div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" defaultValue={config.deadline} /></div>
+                </div>
+                <div className="stpm-create-item stpm-create-item-wide">
+                  <div className="stpm-create-key">通知说明</div>
+                  <div className="stpm-create-val"><textarea className="filterbar-control task-textarea" defaultValue={action.task ? `请${task.owner}负责协调${task.dept}反馈本项材料，上传附件并填写反馈说明。` : "请各实施单位负责人按材料清单上传附件并填写反馈说明，逾期将自动纳入阶段风险提醒。"} /></div>
+                </div>
+              </Section>
+              <Section title="分发对象确认">
+                <div className="task-config-table-wrap">
+                  <table className="task-config-table">
+                    <thead><tr><th>选择</th><th>实施单位</th><th>负责人</th><th>工作任务</th><th>通知方式</th></tr></thead>
+                    <tbody>
+                      {dispatchTasks.map((item) => (
+                        <tr key={item.id}>
+                          <td><input type="checkbox" defaultChecked /></td>
+                          <td>{item.dept}</td>
+                          <td><input className="filterbar-control" defaultValue={item.owner} /></td>
+                          <td>{item.task}</td>
+                          <td><label className="task-inline-check"><input type="checkbox" defaultChecked /> 待办</label><label className="task-inline-check"><input type="checkbox" defaultChecked /> 短信</label></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Section>
+            </>
+          ) : null}
+
+          {action.type === "detail" ? (
+            <>
+              <Section title="任务信息">
+                <div className="stpm-create-item stpm-create-item-wide"><div className="stpm-create-key">工作任务</div><div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" value={task.task} readOnly /></div></div>
+                <div className="stpm-create-item"><div className="stpm-create-key">实施单位</div><div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" value={task.dept} readOnly /></div></div>
+                <div className="stpm-create-item"><div className="stpm-create-key">负责人</div><div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" value={task.owner} readOnly /></div></div>
+                <div className="stpm-create-item"><div className="stpm-create-key">分发状态</div><div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" value={task.dispatchStatus} readOnly /></div></div>
+                <div className="stpm-create-item"><div className="stpm-create-key">反馈状态</div><div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" value={task.status} readOnly /></div></div>
+                <div className="stpm-create-item"><div className="stpm-create-key">截止日期</div><div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" value={task.due} readOnly /></div></div>
+              </Section>
+              <Section title="反馈材料">
+                <div className="task-file-list">
+                  <div><strong>反馈说明</strong><span>{task.feedback}</span></div>
+                  <div><strong>附件情况</strong><span>{task.attachments.length ? `已上传 ${task.attachments.length} 个附件，可在表格“已反馈附件”列下载。` : "暂无附件"}</span></div>
+                  <div><strong>审核意见</strong><span>{task.status === "待补充" ? `材料不完整，需补充：${task.missing || "相关缺项材料"}。` : "材料已接收，待阶段负责人确认。"}</span></div>
+                </div>
+              </Section>
+              <Section title="处理记录">
+                <div className="task-flow">
+                  <div><b>发起</b><span>{config.ownerDept} 于 2026-03-08 09:20 分发任务</span></div>
+                  <div><b>接收</b><span>{task.owner}（{task.dept}）于 2026-03-08 10:05 接收待办</span></div>
+                  <div><b>反馈</b><span>{task.feedback}</span></div>
+                </div>
+              </Section>
+            </>
+          ) : null}
+
+          {action.type === "remind" ? (
+            <Section title="催办信息">
+              <div className="stpm-create-item"><div className="stpm-create-key">催办对象</div><div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" value={task.dept} readOnly /></div></div>
+              <div className="stpm-create-item"><div className="stpm-create-key">负责人</div><div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" value={task.owner} readOnly /></div></div>
+              <div className="stpm-create-item"><div className="stpm-create-key">任务状态</div><div className="stpm-create-val"><input className="filterbar-control stpm-integrated-control" value={task.status} readOnly /></div></div>
+              <div className="stpm-create-item stpm-create-item-wide"><div className="stpm-create-key">催办内容</div><div className="stpm-create-val"><textarea className="filterbar-control task-textarea" defaultValue={`请尽快反馈“${task.task}”相关材料，如已反馈请补充说明或附件。`} /></div></div>
+              <div className="stpm-create-item stpm-create-item-wide"><div className="stpm-create-key">发送方式</div><div className="stpm-create-val task-check-row"><label><input type="checkbox" defaultChecked /> 系统待办</label><label><input type="checkbox" defaultChecked /> 短信提醒</label><label><input type="checkbox" /> 邮件</label></div></div>
+            </Section>
+          ) : null}
+
+        </div>
+        <div className="modal-ft">
+          <button type="button" className="btn" onClick={onClose}>取消</button>
+          <button type="button" className="btn btn-primary" onClick={onClose}>{action.type === "detail" ? "确认" : action.type === "dispatch" ? "确认分发" : "保存"}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Page() {
   const [open, setOpen] = React.useState(false);
+  const [taskAction, setTaskAction] = React.useState(null);
   const [projectClass, setProjectClass] = React.useState("1");
   const [stage, setStage] = React.useState("可研阶段");
   const [kyArticle7, setKyArticle7] = React.useState("是");
@@ -231,6 +523,14 @@ export default function Page() {
                   </button>
                 ))}
               </div>
+
+              <TaskDispatchPanel
+                config={stageTaskConfigs[stage]}
+                onTemplate={() => setTaskAction({ type: "template" })}
+                onDispatch={(task) => setTaskAction({ type: "dispatch", task })}
+                onView={(task) => setTaskAction({ type: "detail", task })}
+                onRemind={(task) => setTaskAction({ type: "remind", task })}
+              />
 
               {stage === "可研阶段" ? (
                 <>
@@ -542,6 +842,7 @@ export default function Page() {
               <button type="button" className="btn" onClick={() => setOpen(false)}>关闭</button>
               <button type="button" className="btn btn-primary">保存</button>
             </div>
+            <TaskActionModal action={taskAction} config={stageTaskConfigs[stage]} stage={stage} onClose={() => setTaskAction(null)} />
           </div>
         </div>
       ) : null}
