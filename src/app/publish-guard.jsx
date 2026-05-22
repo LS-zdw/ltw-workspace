@@ -1,5 +1,7 @@
 const rawAllowedRoutes =
   typeof window !== "undefined" ? window.__PUBLISH_ALLOWED_ROUTES__ : undefined;
+const rawShowTopbar =
+  typeof window !== "undefined" ? window.__PUBLISH_SHOW_TOPBAR__ : undefined;
 
 const allowedRouteSet =
   Array.isArray(rawAllowedRoutes) && rawAllowedRoutes.length > 0
@@ -8,6 +10,10 @@ const allowedRouteSet =
 
 export function isPublishRestricted() {
   return !!allowedRouteSet;
+}
+
+export function shouldShowPublishedTopbar() {
+  return rawShowTopbar !== false;
 }
 
 export function isRouteAllowed(pathname) {

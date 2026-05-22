@@ -2,7 +2,7 @@ import React from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import Card from "../components/ui/Card.jsx";
 import routes from "../app/routes.local.jsx";
-import { isPublishRestricted, isRouteAllowed } from "../app/publish-guard.jsx";
+import { isPublishRestricted, isRouteAllowed, shouldShowPublishedTopbar } from "../app/publish-guard.jsx";
 
 function isKbRoute(route) {
   const p = String(route.path || "");
@@ -56,6 +56,16 @@ function isPrototypeCardRoute(route) {
 function isEduDevRoute(route) {
   const p = String(route.path || "");
   return [
+    "/edu/trainer/hse-training-plan-management",
+    "/edu/trainer/training-record-management-enterprise-updated",
+    "/edu/trainer/certificate-management-enterprise-updated",
+    "/edu/trainer/trainer-resource-management-enterprise-updated",
+    "/edu/trainer/enterprise-training-statistics-updated",
+    "/edu/trainer/hq-training-statistics-updated",
+    "/edu/trainer/training-record-management-hq-updated",
+    "/edu/trainer/hq-training-plan-distribution",
+    "/edu/trainer/hq-training-report-fill",
+    "/edu/trainer/hq-training-approval",
     "/edu/trainer/team-safety-activity-management",
     "/edu/trainer/trainer-resource-management",
     "/edu/trainer/trainer-resource-management-hq",
@@ -85,6 +95,12 @@ function isHseKnowledgeSharingRoute(route) {
 function isEduDevEnterpriseRoute(route) {
   const p = String(route.path || "");
   return [
+    "/edu/trainer/hse-training-plan-management",
+    "/edu/trainer/training-record-management-enterprise-updated",
+    "/edu/trainer/certificate-management-enterprise-updated",
+    "/edu/trainer/trainer-resource-management-enterprise-updated",
+    "/edu/trainer/enterprise-training-statistics-updated",
+    "/edu/trainer/leader-hse-performance-assessment-enterprise-updated",
     "/edu/trainer/team-safety-activity-management",
     "/edu/trainer/trainer-resource-management",
     "/edu/trainer/training-demand-report-enterprise",
@@ -102,6 +118,13 @@ function isEduDevEnterpriseRoute(route) {
 function isEduDevHeadquartersRoute(route) {
   const p = String(route.path || "");
   return [
+    "/edu/trainer/hq-training-plan-distribution",
+    "/edu/trainer/hq-training-statistics-updated",
+    "/edu/trainer/training-record-management-hq-updated",
+    "/edu/trainer/certificate-management-hq-updated",
+    "/edu/trainer/trainer-resource-management-hq-updated",
+    "/edu/trainer/hq-training-report-fill",
+    "/edu/trainer/hq-training-approval",
     "/edu/trainer/trainer-resource-management-hq",
     "/edu/trainer/training-demand-report-hq",
     "/edu/trainer/training-demand-management-hq",
@@ -168,6 +191,7 @@ function sortSanDevRoutes(items = []) {
 
 function navLabel(title = "") {
   return String(title)
+    .replace(/^教育培训（更新）-/, "")
     .replace(/^教育培训-/, "")
     .replace(/^安全三同时-/, "")
     .replace(/^安全培训知识库-/, "")
@@ -237,7 +261,10 @@ function normalizeEduDevDateInputs(rootEl) {
 }
 
 const NAV_CUSTOMIZE_STORAGE_KEY = "proto_workbench_nav_customize_v1";
-const DEFAULT_MAJOR_ORDER = ["常用入口", "三同时管理", "教育培训", "其他页面"];
+const EDU_UPDATE_MAJOR_KEY = "教育培训（更新）";
+const EDU_UPDATE_LEGACY_MAJOR_KEY = "教育培训（修改）";
+const EDU_UPDATE_MINOR_ORDER = ["总部端", "企业端"];
+const DEFAULT_MAJOR_ORDER = ["常用入口", "三同时管理", "教育培训", EDU_UPDATE_MAJOR_KEY, "其他页面"];
 const PINNED_HOME_MAJOR_KEY = "常用入口";
 const ROUTE_META_ELEMENT_KEY = "__elementPath";
 const DEFAULT_TEXT_COLOR = "#1f2a44";
@@ -265,6 +292,46 @@ function normalizeNavCustomizeState(raw) {
   Object.keys(legacyMinorLabels).forEach((sectionKey) => {
     if (!minorMeta[sectionKey] || typeof minorMeta[sectionKey] !== "object") minorMeta[sectionKey] = {};
     if (!minorMeta[sectionKey].label) minorMeta[sectionKey].label = legacyMinorLabels[sectionKey];
+  });
+  if (majorMeta[EDU_UPDATE_LEGACY_MAJOR_KEY] && !majorMeta[EDU_UPDATE_MAJOR_KEY]) {
+    majorMeta[EDU_UPDATE_MAJOR_KEY] = majorMeta[EDU_UPDATE_LEGACY_MAJOR_KEY];
+  }
+  delete majorMeta[EDU_UPDATE_LEGACY_MAJOR_KEY];
+  Object.values(state.routeMeta && typeof state.routeMeta === "object" ? state.routeMeta : {}).forEach((meta) => {
+    if (meta && typeof meta === "object" && meta.major === EDU_UPDATE_LEGACY_MAJOR_KEY) {
+      meta.major = EDU_UPDATE_MAJOR_KEY;
+    }
+  });
+  Object.keys(minorMeta).forEach((sectionKey) => {
+    if (!sectionKey.startsWith(`${EDU_UPDATE_LEGACY_MAJOR_KEY}::`)) return;
+    const nextKey = `${EDU_UPDATE_MAJOR_KEY}::${sectionKey.slice(`${EDU_UPDATE_LEGACY_MAJOR_KEY}::`.length)}`;
+    if (!minorMeta[nextKey]) minorMeta[nextKey] = minorMeta[sectionKey];
+    delete minorMeta[sectionKey];
+  });
+  if (Array.isArray(minorOrder[EDU_UPDATE_LEGACY_MAJOR_KEY]) && !Array.isArray(minorOrder[EDU_UPDATE_MAJOR_KEY])) {
+    minorOrder[EDU_UPDATE_MAJOR_KEY] = minorOrder[EDU_UPDATE_LEGACY_MAJOR_KEY];
+  }
+  delete minorOrder[EDU_UPDATE_LEGACY_MAJOR_KEY];
+  Object.keys(routeOrder).forEach((sectionKey) => {
+    if (!sectionKey.startsWith(`${EDU_UPDATE_LEGACY_MAJOR_KEY}::`)) return;
+    const nextKey = `${EDU_UPDATE_MAJOR_KEY}::${sectionKey.slice(`${EDU_UPDATE_LEGACY_MAJOR_KEY}::`.length)}`;
+    if (!routeOrder[nextKey]) routeOrder[nextKey] = routeOrder[sectionKey];
+    delete routeOrder[sectionKey];
+  });
+  majorOrder.splice(0, majorOrder.length, ...majorOrder.filter((key) => key !== EDU_UPDATE_LEGACY_MAJOR_KEY));
+  if (!majorMeta[EDU_UPDATE_MAJOR_KEY] || typeof majorMeta[EDU_UPDATE_MAJOR_KEY] !== "object") {
+    majorMeta[EDU_UPDATE_MAJOR_KEY] = {};
+  }
+  if (!majorMeta[EDU_UPDATE_MAJOR_KEY].label) majorMeta[EDU_UPDATE_MAJOR_KEY].label = EDU_UPDATE_MAJOR_KEY;
+  const updateMinorOrder = Array.isArray(minorOrder[EDU_UPDATE_MAJOR_KEY]) ? minorOrder[EDU_UPDATE_MAJOR_KEY] : [];
+  minorOrder[EDU_UPDATE_MAJOR_KEY] = [
+    ...EDU_UPDATE_MINOR_ORDER,
+    ...updateMinorOrder.filter((key) => !EDU_UPDATE_MINOR_ORDER.includes(key))
+  ];
+  EDU_UPDATE_MINOR_ORDER.forEach((minorKey) => {
+    const sectionKey = sectionMinorLabelKey(EDU_UPDATE_MAJOR_KEY, minorKey);
+    if (!minorMeta[sectionKey] || typeof minorMeta[sectionKey] !== "object") minorMeta[sectionKey] = {};
+    if (!minorMeta[sectionKey].label) minorMeta[sectionKey].label = minorKey;
   });
   return {
     ...state,
@@ -336,6 +403,48 @@ function getDefaultNavPlacement(route) {
   const p = String(route?.path || "");
   if (p === "/tools/publish-center" || p === "/tools/template-library" || p === "/tools/dialog") {
     return { major: "常用入口", minor: "常用入口" };
+  }
+  if (p === "/edu/trainer/training-plan-management-enterprise-modified") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "企业端" };
+  }
+  if (p === "/edu/trainer/hse-training-plan-management") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "企业端" };
+  }
+  if (p === "/edu/trainer/training-record-management-enterprise-updated") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "企业端" };
+  }
+  if (p === "/edu/trainer/certificate-management-enterprise-updated") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "企业端" };
+  }
+  if (p === "/edu/trainer/trainer-resource-management-enterprise-updated") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "企业端" };
+  }
+  if (p === "/edu/trainer/enterprise-training-statistics-updated") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "企业端" };
+  }
+  if (p === "/edu/trainer/hq-training-statistics-updated") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "总部端" };
+  }
+  if (p === "/edu/trainer/leader-hse-performance-assessment-enterprise-updated") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "企业端" };
+  }
+  if (p === "/edu/trainer/training-record-management-hq-updated") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "总部端" };
+  }
+  if (p === "/edu/trainer/certificate-management-hq-updated") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "总部端" };
+  }
+  if (p === "/edu/trainer/trainer-resource-management-hq-updated") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "总部端" };
+  }
+  if (p === "/edu/trainer/hq-training-plan-distribution") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "总部端" };
+  }
+  if (p === "/edu/trainer/hq-training-report-fill") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "总部端" };
+  }
+  if (p === "/edu/trainer/hq-training-approval") {
+    return { major: EDU_UPDATE_MAJOR_KEY, minor: "总部端" };
   }
   if (p.startsWith("/san-tongshi/")) {
     if (isSanDevRoute(route)) return { major: "三同时管理", minor: "三同时管理" };
@@ -447,6 +556,7 @@ export default function AppLayout({ children }) {
   const showHomeTab = !publishRestricted || homeAllowed;
   const navClickable =
     typeof window !== "undefined" ? window.__PUBLISH_NAV_CLICKABLE__ !== false : true;
+  const showPublishedTopbar = shouldShowPublishedTopbar();
   const [showQuickNav, setShowQuickNav] = React.useState(false);
   const [navCustomize, setNavCustomize] = React.useState(readNavCustomizeState);
   const [isNavEditMode, setIsNavEditMode] = React.useState(false);
@@ -1543,7 +1653,7 @@ export default function AppLayout({ children }) {
   return (
     <div className="page">
       <div className="wrap">
-        {!isHseKspStandalonePage ? (
+        {!isHseKspStandalonePage && showPublishedTopbar ? (
           <div className="topbar">
             <div />
             <div />

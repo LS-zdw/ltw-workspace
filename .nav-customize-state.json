@@ -153,11 +153,18 @@
       "major": "其他页面",
       "minor": "数据迁移",
       "__elementPath": "./modules/edu/trainer/pages/training-record-migration-query.jsx"
+    },
+    "/edu/trainer/training-plan-management-enterprise-modified": {
+      "hidden": true,
+      "__elementPath": "./modules/edu/trainer/pages/training-plan-management-enterprise-modified.jsx"
     }
   },
   "majorMeta": {
     "教育培训": {},
-    "其他页面": {}
+    "其他页面": {},
+    "教育培训（更新）": {
+      "label": "教育培训（更新）"
+    }
   },
   "minorMeta": {
     "教育培训::安全培训知识库": {},
@@ -176,6 +183,12 @@
     },
     "教育培训::新系统页面（1）": {
       "label": "AI赋能"
+    },
+    "教育培训（更新）::总部端": {
+      "label": "总部端"
+    },
+    "教育培训（更新）::企业端": {
+      "label": "企业端"
     }
   },
   "majorOrder": [
@@ -189,7 +202,11 @@
       "其他三同时页面",
       "数据迁移"
     ],
-    "三同时管理": []
+    "三同时管理": [],
+    "教育培训（更新）": [
+      "总部端",
+      "企业端"
+    ]
   },
   "routeOrder": {
     "教育培训::安全培训知识库": [
@@ -203,5 +220,5 @@
     ],
     "其他页面::其他三同时页面": []
   },
-  "updatedAt": 1776844475397
+  "updatedAt": 1778720679412
 }

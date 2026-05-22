@@ -1,13 +1,14 @@
 {
-  "outputBase": "/data/pcitc/一体化/教育培训/edu-ep-1",
-  "folderName": "数据迁移页面（安全三同时、教育培训）",
+  "outputBase": "/data/pcitc/一体化/教育培训/edu-ep-1/新建文件夹",
+  "folderName": "教育培训更新企业培训计划和记录",
   "publishMode": "slim",
-  "updatedAt": "2026-04-21T01:34:51.412Z",
+  "updatedAt": "2026-05-20T09:32:56.601Z",
   "lastSuccessMessage": "发布成功",
   "lastSuccessAt": 1772375219486,
-  "lastPublishId": "1776735288364-dyoj9d",
+  "lastPublishId": "1779269566989-vb172c",
   "lastPublishStatus": "success",
-  "lastPublishAt": 1776735291412,
-  "navClickable": false,
-  "includeHome": false
+  "lastPublishAt": 1779269576601,
+  "navClickable": true,
+  "includeHome": false,
+  "showTopbar": true
 }

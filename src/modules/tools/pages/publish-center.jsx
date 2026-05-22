@@ -7,7 +7,10 @@ const LAST_OUTPUT_BASE_KEY = "publish_center_last_output_base";
 const FLASH_NOTICE_KEY = "publish_center_flash_notice";
 const PENDING_PUBLISH_ID_KEY = "publish_center_pending_publish_id";
 const NAV_CUSTOMIZE_STORAGE_KEY = "proto_workbench_nav_customize_v1";
-const DEFAULT_MAJOR_ORDER = ["常用入口", "三同时管理", "教育培训", "其他页面"];
+const EDU_UPDATE_MAJOR_KEY = "教育培训（更新）";
+const EDU_UPDATE_LEGACY_MAJOR_KEY = "教育培训（修改）";
+const EDU_UPDATE_MINOR_ORDER = ["总部端", "企业端"];
+const DEFAULT_MAJOR_ORDER = ["常用入口", "三同时管理", "教育培训", EDU_UPDATE_MAJOR_KEY, "其他页面"];
 const PINNED_HOME_MAJOR_KEY = "常用入口";
 const ROUTE_META_ELEMENT_KEY = "__elementPath";
 
@@ -32,14 +35,62 @@ function saveLastOutputBase(value) {
 
 function normalizeNavCustomizeState(raw) {
   const state = raw && typeof raw === "object" ? raw : {};
+  const routeMeta = state.routeMeta && typeof state.routeMeta === "object" ? state.routeMeta : {};
+  const majorMeta = state.majorMeta && typeof state.majorMeta === "object" ? state.majorMeta : {};
+  const minorMeta = state.minorMeta && typeof state.minorMeta === "object" ? state.minorMeta : {};
+  const majorOrder = Array.isArray(state.majorOrder) ? state.majorOrder : [];
+  const minorOrder = state.minorOrder && typeof state.minorOrder === "object" ? state.minorOrder : {};
+  const routeOrder = state.routeOrder && typeof state.routeOrder === "object" ? state.routeOrder : {};
+
+  if (majorMeta[EDU_UPDATE_LEGACY_MAJOR_KEY] && !majorMeta[EDU_UPDATE_MAJOR_KEY]) {
+    majorMeta[EDU_UPDATE_MAJOR_KEY] = majorMeta[EDU_UPDATE_LEGACY_MAJOR_KEY];
+  }
+  delete majorMeta[EDU_UPDATE_LEGACY_MAJOR_KEY];
+  Object.values(routeMeta).forEach((meta) => {
+    if (meta && typeof meta === "object" && meta.major === EDU_UPDATE_LEGACY_MAJOR_KEY) {
+      meta.major = EDU_UPDATE_MAJOR_KEY;
+    }
+  });
+  Object.keys(minorMeta).forEach((sectionKey) => {
+    if (!sectionKey.startsWith(`${EDU_UPDATE_LEGACY_MAJOR_KEY}::`)) return;
+    const nextKey = `${EDU_UPDATE_MAJOR_KEY}::${sectionKey.slice(`${EDU_UPDATE_LEGACY_MAJOR_KEY}::`.length)}`;
+    if (!minorMeta[nextKey]) minorMeta[nextKey] = minorMeta[sectionKey];
+    delete minorMeta[sectionKey];
+  });
+  if (Array.isArray(minorOrder[EDU_UPDATE_LEGACY_MAJOR_KEY]) && !Array.isArray(minorOrder[EDU_UPDATE_MAJOR_KEY])) {
+    minorOrder[EDU_UPDATE_MAJOR_KEY] = minorOrder[EDU_UPDATE_LEGACY_MAJOR_KEY];
+  }
+  delete minorOrder[EDU_UPDATE_LEGACY_MAJOR_KEY];
+  Object.keys(routeOrder).forEach((sectionKey) => {
+    if (!sectionKey.startsWith(`${EDU_UPDATE_LEGACY_MAJOR_KEY}::`)) return;
+    const nextKey = `${EDU_UPDATE_MAJOR_KEY}::${sectionKey.slice(`${EDU_UPDATE_LEGACY_MAJOR_KEY}::`.length)}`;
+    if (!routeOrder[nextKey]) routeOrder[nextKey] = routeOrder[sectionKey];
+    delete routeOrder[sectionKey];
+  });
+  majorOrder.splice(0, majorOrder.length, ...majorOrder.filter((key) => key !== EDU_UPDATE_LEGACY_MAJOR_KEY));
+  if (!majorMeta[EDU_UPDATE_MAJOR_KEY] || typeof majorMeta[EDU_UPDATE_MAJOR_KEY] !== "object") {
+    majorMeta[EDU_UPDATE_MAJOR_KEY] = {};
+  }
+  if (!majorMeta[EDU_UPDATE_MAJOR_KEY].label) majorMeta[EDU_UPDATE_MAJOR_KEY].label = EDU_UPDATE_MAJOR_KEY;
+  const updateMinorOrder = Array.isArray(minorOrder[EDU_UPDATE_MAJOR_KEY]) ? minorOrder[EDU_UPDATE_MAJOR_KEY] : [];
+  minorOrder[EDU_UPDATE_MAJOR_KEY] = [
+    ...EDU_UPDATE_MINOR_ORDER,
+    ...updateMinorOrder.filter((key) => !EDU_UPDATE_MINOR_ORDER.includes(key))
+  ];
+  EDU_UPDATE_MINOR_ORDER.forEach((minorKey) => {
+    const sectionKey = sectionMinorLabelKey(EDU_UPDATE_MAJOR_KEY, minorKey);
+    if (!minorMeta[sectionKey] || typeof minorMeta[sectionKey] !== "object") minorMeta[sectionKey] = {};
+    if (!minorMeta[sectionKey].label) minorMeta[sectionKey].label = minorKey;
+  });
+
   return {
     ...state,
-    routeMeta: state.routeMeta && typeof state.routeMeta === "object" ? state.routeMeta : {},
-    majorMeta: state.majorMeta && typeof state.majorMeta === "object" ? state.majorMeta : {},
-    minorMeta: state.minorMeta && typeof state.minorMeta === "object" ? state.minorMeta : {},
-    majorOrder: Array.isArray(state.majorOrder) ? state.majorOrder : [],
-    minorOrder: state.minorOrder && typeof state.minorOrder === "object" ? state.minorOrder : {},
-    routeOrder: state.routeOrder && typeof state.routeOrder === "object" ? state.routeOrder : {}
+    routeMeta,
+    majorMeta,
+    minorMeta,
+    majorOrder,
+    minorOrder,
+    routeOrder
   };
 }
 
@@ -84,6 +135,7 @@ export default function PublishCenterPage() {
   const [publishMode, setPublishMode] = React.useState("compat");
   const [navClickable, setNavClickable] = React.useState(true);
   const [includeHome, setIncludeHome] = React.useState(false);
+  const [showTopbar, setShowTopbar] = React.useState(true);
   const [running, setRunning] = React.useState(false);
   const [logs, setLogs] = React.useState("");
   const [message, setMessage] = React.useState("");
@@ -217,6 +269,13 @@ export default function PublishCenterPage() {
   const isEduDevEnterpriseRoute = React.useCallback((route) => {
     const p = String(route?.path || "");
     return [
+      "/edu/trainer/hse-training-plan-management",
+      "/edu/trainer/training-record-management-enterprise-updated",
+      "/edu/trainer/certificate-management-enterprise-updated",
+      "/edu/trainer/trainer-resource-management-enterprise-updated",
+      "/edu/trainer/enterprise-training-statistics-updated",
+      "/edu/trainer/hq-training-statistics-updated",
+      "/edu/trainer/leader-hse-performance-assessment-enterprise-updated",
       "/edu/trainer/team-safety-activity-management",
       "/edu/trainer/trainer-resource-management",
       "/edu/trainer/training-demand-report-enterprise",
@@ -234,6 +293,13 @@ export default function PublishCenterPage() {
   const isEduDevHeadquartersRoute = React.useCallback((route) => {
     const p = String(route?.path || "");
     return [
+      "/edu/trainer/hq-training-plan-distribution",
+      "/edu/trainer/hq-training-statistics-updated",
+      "/edu/trainer/training-record-management-hq-updated",
+      "/edu/trainer/certificate-management-hq-updated",
+      "/edu/trainer/trainer-resource-management-hq-updated",
+      "/edu/trainer/hq-training-report-fill",
+      "/edu/trainer/hq-training-approval",
       "/edu/trainer/trainer-resource-management-hq",
       "/edu/trainer/training-demand-report-hq",
       "/edu/trainer/training-demand-management-hq",
@@ -270,6 +336,48 @@ export default function PublishCenterPage() {
         if (p === "/tools/publish-center" || p === "/tools/template-library" || p === "/tools/dialog") {
           majorKey = "常用入口";
           minorKey = "常用入口";
+        } else if (p === "/edu/trainer/training-plan-management-enterprise-modified") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "企业端";
+        } else if (p === "/edu/trainer/hse-training-plan-management") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "企业端";
+        } else if (p === "/edu/trainer/training-record-management-enterprise-updated") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "企业端";
+        } else if (p === "/edu/trainer/certificate-management-enterprise-updated") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "企业端";
+        } else if (p === "/edu/trainer/trainer-resource-management-enterprise-updated") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "企业端";
+        } else if (p === "/edu/trainer/enterprise-training-statistics-updated") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "企业端";
+        } else if (p === "/edu/trainer/hq-training-statistics-updated") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "总部端";
+        } else if (p === "/edu/trainer/leader-hse-performance-assessment-enterprise-updated") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "企业端";
+        } else if (p === "/edu/trainer/training-record-management-hq-updated") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "总部端";
+        } else if (p === "/edu/trainer/certificate-management-hq-updated") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "总部端";
+        } else if (p === "/edu/trainer/trainer-resource-management-hq-updated") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "总部端";
+        } else if (p === "/edu/trainer/hq-training-plan-distribution") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "总部端";
+        } else if (p === "/edu/trainer/hq-training-report-fill") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "总部端";
+        } else if (p === "/edu/trainer/hq-training-approval") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "总部端";
         } else if (p.startsWith("/san-tongshi/")) {
           majorKey = "三同时管理";
           if (isSanDevRoute(route)) minorKey = "三同时管理";
@@ -360,6 +468,8 @@ export default function PublishCenterPage() {
           typeof state.navClickable === "boolean" ? state.navClickable : true;
         const lastIncludeHome =
           typeof state.includeHome === "boolean" ? state.includeHome : false;
+        const lastShowTopbar =
+          typeof state.showTopbar === "boolean" ? state.showTopbar : true;
         if (lastOutputBase) {
           setOutputBase(lastOutputBase);
           setBrowsePath(lastOutputBase);
@@ -373,6 +483,7 @@ export default function PublishCenterPage() {
         }
         setNavClickable(lastNavClickable);
         setIncludeHome(lastIncludeHome);
+        setShowTopbar(lastShowTopbar);
       } catch {
         // ignore
       }
@@ -652,6 +763,7 @@ export default function PublishCenterPage() {
           publishMode,
           navClickable,
           includeHome,
+          showTopbar,
           selectedPaths: Array.from(selected)
         })
       });
@@ -780,6 +892,14 @@ export default function PublishCenterPage() {
                     onChange={(e) => setIncludeHome(e.target.checked)}
                   />
                   发布产物包含首页入口
+                </label>
+                <label style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, marginLeft: 14 }}>
+                  <input
+                    type="checkbox"
+                    checked={showTopbar}
+                    onChange={(e) => setShowTopbar(e.target.checked)}
+                  />
+                  发布后显示顶部蓝色中石化横幅
                 </label>
               </div>
             </div>

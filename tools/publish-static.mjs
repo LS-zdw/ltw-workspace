@@ -19,6 +19,7 @@ const SHOULD_CLEAN = process.env.PUBLISH_CLEAN === "true";
 const PUBLISH_MODE = (process.env.PUBLISH_MODE || "slim").toLowerCase();
 const PUBLISH_NAV_CLICKABLE = String(process.env.PUBLISH_NAV_CLICKABLE || "true").toLowerCase() !== "false";
 const PUBLISH_INCLUDE_HOME = String(process.env.PUBLISH_INCLUDE_HOME || "false").toLowerCase() === "true";
+const PUBLISH_SHOW_TOPBAR = String(process.env.PUBLISH_SHOW_TOPBAR || "true").toLowerCase() !== "false";
 const INDEX_TEMPLATE_FILE = String(
   process.env.PUBLISH_INDEX_TEMPLATE_FILE || DEFAULT_INDEX_TEMPLATE_FILE
 ).trim();
@@ -160,6 +161,14 @@ function writePublishNavClickableFlag(publishDir, navClickable) {
     publishDir,
     "publish-nav-clickable",
     `window.__PUBLISH_NAV_CLICKABLE__=${navClickable ? "true" : "false"};`
+  );
+}
+
+function writePublishShowTopbarFlag(publishDir, showTopbar) {
+  writePublishScriptToAppEntries(
+    publishDir,
+    "publish-show-topbar",
+    `window.__PUBLISH_SHOW_TOPBAR__=${showTopbar ? "true" : "false"};`
   );
 }
 
@@ -436,6 +445,7 @@ function main() {
   }
   writePublishRouteWhitelist(PUBLISH_DIR, allowedRoutePaths);
   writePublishNavClickableFlag(PUBLISH_DIR, PUBLISH_NAV_CLICKABLE);
+  writePublishShowTopbarFlag(PUBLISH_DIR, PUBLISH_SHOW_TOPBAR);
 
   if (PUBLISH_MODE === "slim") {
     // When template mode is enabled, app-index.html may still depend on assets chunks.

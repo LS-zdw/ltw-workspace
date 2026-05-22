@@ -72,6 +72,104 @@ const localRoutes = [
     elementPath: "./modules/edu/trainer/pages/training-plan-management-enterprise.jsx"
   },
   {
+    path: "/edu/trainer/training-plan-management-enterprise-modified",
+    title: "教育培训（更新）-培训计划管理-企业端",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/training-plan-management-enterprise-modified.jsx"
+  },
+  {
+    path: "/edu/trainer/hse-training-plan-management",
+    title: "教育培训（更新）-HSE培训计划管理-企业端",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/hse-training-plan-management.jsx"
+  },
+  {
+    path: "/edu/trainer/training-record-management-enterprise-updated",
+    title: "教育培训（更新）-培训记录管理-企业端",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/training-record-management-enterprise-updated.jsx"
+  },
+  {
+    path: "/edu/trainer/certificate-management-enterprise-updated",
+    title: "教育培训（更新）-证书管理-企业端",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/certificate-management-enterprise-updated.jsx"
+  },
+  {
+    path: "/edu/trainer/certificate-management-hq-updated",
+    title: "教育培训（更新）-证书管理-总部端",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/certificate-management-hq-updated.jsx"
+  },
+  {
+    path: "/edu/trainer/trainer-resource-management-enterprise-updated",
+    title: "教育培训（更新）-培训师资管理-企业端",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/trainer-resource-management-enterprise-updated.jsx"
+  },
+  {
+    path: "/edu/trainer/enterprise-training-statistics-updated",
+    title: "教育培训（更新）-教育培训统计分析-企业端",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/enterprise-training-statistics-updated.jsx"
+  },
+  {
+    path: "/edu/trainer/hq-training-statistics-updated",
+    title: "教育培训（更新）-教育培训统计分析-总部端",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/hq-training-statistics-updated.jsx"
+  },
+  {
+    path: "/edu/trainer/leader-hse-performance-assessment-enterprise-updated",
+    title: "领导干部HSE履职能力评估情况",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/leader-hse-performance-assessment-enterprise-updated.jsx"
+  },
+  {
+    path: "/edu/trainer/training-record-management-hq-updated",
+    title: "教育培训（更新）-培训记录管理-总部端",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/training-record-management-hq-updated.jsx"
+  },
+  {
+    path: "/edu/trainer/trainer-resource-management-hq-updated",
+    title: "教育培训（更新）-培训师资管理-总部端",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/trainer-resource-management-hq-updated.jsx"
+  },
+  {
+    path: "/edu/trainer/hq-training-plan-distribution",
+    title: "培训计划征集",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/hq-training-plan-distribution.jsx"
+  },
+  {
+    path: "/edu/trainer/hq-training-report-fill",
+    title: "总部上报填报",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/hq-training-report-fill.jsx"
+  },
+  {
+    path: "/edu/trainer/hq-training-approval",
+    title: "总部审批",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/hq-training-approval.jsx"
+  },
+  {
     path: "/edu/trainer/training-demand-report-hq",
     title: "教育培训-培训需求上报-总部端",
     module: "edu/trainer",

@@ -199,6 +199,7 @@ function publishApiPlugin() {
           const publishMode = String(body.publishMode || "slim").trim().toLowerCase();
           const navClickable = typeof body.navClickable === "boolean" ? body.navClickable : true;
           const includeHome = typeof body.includeHome === "boolean" ? body.includeHome : false;
+          const showTopbar = typeof body.showTopbar === "boolean" ? body.showTopbar : true;
           const publishId = String(body.publishId || "").trim();
           const selectedPaths = Array.isArray(body.selectedPaths) ? body.selectedPaths.map((v) => String(v)) : [];
 
@@ -227,6 +228,7 @@ function publishApiPlugin() {
             PUBLISH_MODE: publishMode,
             PUBLISH_NAV_CLICKABLE: navClickable ? "true" : "false",
             PUBLISH_INCLUDE_HOME: includeHome ? "true" : "false",
+            PUBLISH_SHOW_TOPBAR: showTopbar ? "true" : "false",
             PUBLISH_ROUTE_PATHS_JSON: JSON.stringify(selectedPaths)
           });
           logs.push(`$ node tools/publish-static.mjs\n${publishRes.stdout}${publishRes.stderr}`);
@@ -241,6 +243,7 @@ function publishApiPlugin() {
             publishMode,
             navClickable,
             includeHome,
+            showTopbar,
             lastPublishId: publishId || "",
             lastPublishStatus: "success",
             lastPublishAt: Date.now(),
