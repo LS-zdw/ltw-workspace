@@ -21,6 +21,7 @@ const recordRows = [
     passCount: "46",
     passRate: "95.8%",
     certFlag: "是",
+    status: "草稿",
     recorder: "肖鹏",
     recordTime: "2026-03-07 17:12:51"
   },
@@ -41,6 +42,7 @@ const recordRows = [
     passCount: "34",
     passRate: "94.4%",
     certFlag: "是",
+    status: "已提交",
     recorder: "王敏",
     recordTime: "2026-02-11 16:20:09"
   },
@@ -61,6 +63,7 @@ const recordRows = [
     passCount: "27",
     passRate: "100%",
     certFlag: "否",
+    status: "草稿",
     recorder: "高杨",
     recordTime: "2026-02-06 18:03:16"
   },
@@ -81,6 +84,7 @@ const recordRows = [
     passCount: "28",
     passRate: "93.3%",
     certFlag: "否",
+    status: "已提交",
     recorder: "李卓",
     recordTime: "2026-02-28 19:31:44"
   },
@@ -101,6 +105,7 @@ const recordRows = [
     passCount: "49",
     passRate: "94.2%",
     certFlag: "否",
+    status: "草稿",
     recorder: "周凯",
     recordTime: "2026-02-04 15:09:38"
   },
@@ -121,6 +126,7 @@ const recordRows = [
     passCount: "43",
     passRate: "95.6%",
     certFlag: "是",
+    status: "已提交",
     recorder: "陈涛",
     recordTime: "2026-03-21 16:55:07"
   },
@@ -141,6 +147,7 @@ const recordRows = [
     passCount: "38",
     passRate: "95.0%",
     certFlag: "是",
+    status: "已提交",
     recorder: "肖鹏",
     recordTime: "2026-03-04 18:12:33"
   },
@@ -161,6 +168,7 @@ const recordRows = [
     passCount: "25",
     passRate: "96.2%",
     certFlag: "否",
+    status: "草稿",
     recorder: "王敏",
     recordTime: "2026-03-02 14:06:52"
   },
@@ -181,6 +189,7 @@ const recordRows = [
     passCount: "31",
     passRate: "96.9%",
     certFlag: "否",
+    status: "已提交",
     recorder: "李卓",
     recordTime: "2026-03-19 17:40:26"
   },
@@ -201,15 +210,24 @@ const recordRows = [
     passCount: "51",
     passRate: "94.4%",
     certFlag: "否",
+    status: "草稿",
     recorder: "高杨",
     recordTime: "2026-03-26 16:01:05"
   }
 ];
 
 const participantRows = [
-  { id: 1, enterprise: enterpriseName, unit: "生产运行部", name: "张明", post: "班组长", personType: "新员工", score: "89", pass: "是" },
-  { id: 2, enterprise: enterpriseName, unit: "安全环保部", name: "刘敏", post: "安全员", personType: "派遣", score: "82", pass: "是" },
-  { id: 3, enterprise: enterpriseName, unit: "设备管理部", name: "陈超", post: "设备工程师", personType: "外包", score: "91", pass: "是" }
+  { id: 1, enterprise: enterpriseName, unit: "生产运行部", name: "张明", post: "班组长", personType: "新员工", score: "89", pass: "合格" },
+  { id: 2, enterprise: enterpriseName, unit: "安全环保部", name: "刘敏", post: "安全员", personType: "派遣", score: "", pass: "合格" },
+  { id: 3, enterprise: enterpriseName, unit: "设备管理部", name: "陈超", post: "设备工程师", personType: "外包", score: "91", pass: "不合格" }
+];
+
+const personSelectRows = [
+  { id: 1, enterprise: enterpriseName, unit: "生产运行部", name: "张明", post: "班组长", personType: "新员工" },
+  { id: 2, enterprise: enterpriseName, unit: "安全环保部", name: "刘敏", post: "安全员", personType: "派遣" },
+  { id: 3, enterprise: enterpriseName, unit: "设备管理部", name: "陈超", post: "设备工程师", personType: "外包" },
+  { id: 4, enterprise: enterpriseName, unit: "工程管理部", name: "王凯", post: "作业许可审批人", personType: "正式员工" },
+  { id: 5, enterprise: enterpriseName, unit: "消防保卫部", name: "赵宁", post: "应急队员", personType: "正式员工" }
 ];
 
 const certificateTypes = [
@@ -243,6 +261,14 @@ function Field({ label, required = false, children, wide = false }) {
 
 function RecordForm({ row, readOnly = false }) {
   const [personModalOpen, setPersonModalOpen] = React.useState(false);
+  const [participants, setParticipants] = React.useState(participantRows);
+  const traineeCount = participants.length;
+  const passCount = participants.filter((item) => item.pass === "合格").length;
+  const passRate = traineeCount ? `${((passCount / traineeCount) * 100).toFixed(1)}%` : "0%";
+
+  const updateParticipant = (id, field, value) => {
+    setParticipants((prev) => prev.map((item) => (item.id === id ? { ...item, [field]: value } : item)));
+  };
 
   return (
     <>
@@ -294,9 +320,15 @@ function RecordForm({ row, readOnly = false }) {
 
       <div className="cert-section">
         <div className="cert-section-title">培训人员名单</div>
+        <div className="record-person-summary">
+          <span>参训人数：{traineeCount}</span>
+          <span>合格人数：{passCount}</span>
+          <span>合格率：{passRate}</span>
+        </div>
+        {!readOnly ? <div className="record-plan-tip">选择人员后，请补充成绩；是否合格必须填写。</div> : null}
         {!readOnly ? (
           <div className="record-toolbar">
-            <button type="button" className="btn btn-primary" onClick={() => setPersonModalOpen(true)}>新增</button>
+            <button type="button" className="btn btn-primary" onClick={() => setPersonModalOpen(true)}>选择人员</button>
             <button type="button" className="btn">编辑</button>
             <button type="button" className="btn btn-danger">删除</button>
             <button type="button" className="btn">导入</button>
@@ -308,13 +340,45 @@ function RecordForm({ row, readOnly = false }) {
           <table className="proto-table">
             <thead>
               <tr>
-                <th className="table-checkbox"><input type="checkbox" readOnly /></th><th>序号</th><th>企业</th><th>所在单位</th><th>姓名</th><th>岗位</th><th>人员类型</th><th>成绩</th><th>是否合格</th>
+                <th className="table-checkbox"><input type="checkbox" readOnly /></th><th>序号</th><th>企业</th><th>所在单位</th><th>姓名</th><th>岗位</th><th>人员类型</th><th>成绩</th><th>是否合格<span className="required-mark">*</span></th>
               </tr>
             </thead>
             <tbody>
-              {participantRows.map((r) => (
+              {participants.map((r) => (
                 <tr key={r.id}>
-                  <td className="table-checkbox"><input type="checkbox" readOnly /></td><td>{r.id}</td><td>{r.enterprise}</td><td>{r.unit}</td><td>{r.name}</td><td>{r.post}</td><td>{r.personType}</td><td>{r.score}</td><td>{r.pass}</td>
+                  <td className="table-checkbox"><input type="checkbox" readOnly /></td>
+                  <td>{r.id}</td>
+                  <td>{r.enterprise}</td>
+                  <td>{r.unit}</td>
+                  <td>{r.name}</td>
+                  <td>{r.post}</td>
+                  <td>{r.personType}</td>
+                  <td>
+                    {readOnly ? (
+                      r.score || "-"
+                    ) : (
+                      <input
+                        className="filterbar-control"
+                        value={r.score}
+                        placeholder="请输入成绩"
+                        onChange={(e) => updateParticipant(r.id, "score", e.target.value)}
+                      />
+                    )}
+                  </td>
+                  <td>
+                    {readOnly ? (
+                      r.pass
+                    ) : (
+                      <select
+                        className="filterbar-control"
+                        value={r.pass}
+                        onChange={(e) => updateParticipant(r.id, "pass", e.target.value)}
+                      >
+                        <option value="合格">合格</option>
+                        <option value="不合格">不合格</option>
+                      </select>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -322,41 +386,49 @@ function RecordForm({ row, readOnly = false }) {
         </div>
       </div>
 
+      <div className="cert-section">
+        <div className="cert-section-title">登记信息</div>
+        <div className="cert-form-grid">
+          <Field label="登记人"><input className="cert-field-control" defaultValue={row.recorder || "当前用户"} readOnly /></Field>
+          <Field label="登记部门"><input className="cert-field-control" defaultValue={row.hostDept || "当前部门"} readOnly /></Field>
+          <Field label="登记日期"><input className="cert-field-control" defaultValue={String(row.recordTime || "2026-05-18").slice(0, 10)} readOnly /></Field>
+        </div>
+      </div>
+
       {personModalOpen ? (
         <div className="modal-mask" onClick={() => setPersonModalOpen(false)}>
           <div className="modal cert-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-hd">
-              <div className="modal-title">培训人员新增</div>
+              <div className="modal-title">选择培训人员</div>
               <button type="button" className="modal-close" onClick={() => setPersonModalOpen(false)}>x</button>
             </div>
             <div className="modal-bd cert-bd">
               <div className="cert-section">
-                <div className="cert-section-title">人员信息</div>
+                <div className="cert-section-title">人员筛选</div>
                 <div className="cert-form-grid">
-                  <Field label="企业" required><input className="cert-field-control" defaultValue={enterpriseName} readOnly /></Field>
-                  <Field label="所在单位" required><input className="cert-field-control" placeholder="请选择所在单位" /></Field>
-                  <Field label="姓名" required><input className="cert-field-control" placeholder="请选择或输入姓名" /></Field>
-                  <Field label="岗位"><input className="cert-field-control" placeholder="请输入岗位" /></Field>
-                  <Field label="人员类型" required>
-                    <select className="cert-field-control" defaultValue="新员工">
-                      <option>新员工</option>
-                      <option>派遣</option>
-                      <option>外包</option>
-                    </select>
-                  </Field>
-                  <Field label="成绩"><input className="cert-field-control" placeholder="请输入成绩" /></Field>
-                  <Field label="是否合格" required>
-                    <select className="cert-field-control" defaultValue="是">
-                      <option>是</option>
-                      <option>否</option>
-                    </select>
-                  </Field>
+                  <Field label="企业"><input className="cert-field-control" defaultValue={enterpriseName} readOnly /></Field>
+                  <Field label="所在单位"><input className="cert-field-control" placeholder="请输入所在单位" /></Field>
+                  <Field label="姓名"><input className="cert-field-control" placeholder="请输入姓名" /></Field>
+                </div>
+                <div className="table-wrap">
+                  <table className="proto-table">
+                    <thead>
+                      <tr><th className="table-checkbox"><input type="checkbox" readOnly /></th><th>序号</th><th>企业</th><th>所在单位</th><th>姓名</th><th>岗位</th><th>人员类型</th></tr>
+                    </thead>
+                    <tbody>
+                      {personSelectRows.map((person) => (
+                        <tr key={person.id}>
+                          <td className="table-checkbox"><input type="checkbox" readOnly /></td><td>{person.id}</td><td>{person.enterprise}</td><td>{person.unit}</td><td>{person.name}</td><td>{person.post}</td><td>{person.personType}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
             <div className="modal-ft">
               <button type="button" className="btn" onClick={() => setPersonModalOpen(false)}>取消</button>
-              <button type="button" className="btn btn-primary" onClick={() => setPersonModalOpen(false)}>保存</button>
+              <button type="button" className="btn btn-primary" onClick={() => setPersonModalOpen(false)}>确认选择</button>
             </div>
           </div>
         </div>
@@ -374,8 +446,6 @@ export default function Page() {
   };
 
   const currentRow = recordRows[0];
-  const isRecordFormModal = activeModal === "add-record" || activeModal === "edit-record";
-  const isAddRecordModal = activeModal === "add-record";
 
   return (
     <div className="stack trm-enterprise">
@@ -387,6 +457,8 @@ export default function Page() {
             <div className="filterbar-item"><div className="filterbar-label">实际培训日期</div><div className="filterbar-input"><div className="filterbar-range"><input className="filterbar-control" defaultValue="2026-02-01" placeholder="开始日期" /><span className="filterbar-range-sep">-</span><input className="filterbar-control" defaultValue="2026-03-31" placeholder="结束日期" /></div></div></div>
             <div className="filterbar-item"><div className="filterbar-label">是否取证</div><div className="filterbar-input"><select className="filterbar-control" defaultValue="请选择是否取证"><option>请选择是否取证</option><option>是</option><option>否</option></select></div></div>
             <div className="filterbar-item"><div className="filterbar-label">证书类型</div><div className="filterbar-input"><select className="filterbar-control" defaultValue="请选择证书类型"><option>请选择证书类型</option>{certificateTypes.map((item) => <option key={item}>{item}</option>)}</select></div></div>
+            <div className="filterbar-item"><div className="filterbar-label">状态</div><div className="filterbar-input"><select className="filterbar-control" defaultValue="请选择状态"><option>请选择状态</option><option>草稿</option><option>已提交</option></select></div></div>
+            <div className="filterbar-item"><div className="filterbar-label">登记人</div><div className="filterbar-input"><input className="filterbar-control" placeholder="请输入登记人" /></div></div>
             <div className="filterbar-item"><div className="filterbar-label">登记部门</div><div className="filterbar-input"><select className="filterbar-control" defaultValue="请选择登记部门"><option>请选择登记部门</option><option>安全环保部</option><option>工程管理部</option><option>人力资源部</option><option>生产运行部</option></select></div></div>
             <div className="filterbar-item"><div className="filterbar-label">登记日期</div><div className="filterbar-input"><div className="filterbar-range"><input className="filterbar-control" placeholder="开始日期" /><span className="filterbar-range-sep">-</span><input className="filterbar-control" placeholder="结束日期" /></div></div></div>
             <div className="filterbar-query-actions">
@@ -410,7 +482,7 @@ export default function Page() {
               <thead>
                 <tr>
                   <th className="table-checkbox"><input type="checkbox" readOnly /></th>
-                  <th>序号</th><th>项目代码</th><th>项目名称</th><th>期次</th><th>计划天数</th><th>实际天数</th><th>实际培训日期</th><th>培训内容</th><th>参训人数</th><th>合格人数</th><th>合格率</th><th>是否取证</th><th>证书类型</th><th>登记部门</th><th>登记人</th><th>登记日期</th><th>操作</th>
+                  <th>序号</th><th>项目代码</th><th>项目名称</th><th>期次</th><th>计划天数</th><th>实际天数</th><th>实际培训日期</th><th>培训内容</th><th>参训人数</th><th>合格人数</th><th>合格率</th><th>是否取证</th><th>证书类型</th><th>状态</th><th>登记人</th><th>登记部门</th><th>登记日期</th><th>操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -430,13 +502,21 @@ export default function Page() {
                     <td>{row.passRate}</td>
                     <td>{row.certFlag}</td>
                     <td>{row.certFlag === "是" ? "培训合格证" : "无"}</td>
-                    <td>{row.hostDept}</td>
+                    <td><span className={`hq-plan-status ${row.status === "已提交" ? "done" : "draft"}`}>{row.status}</span></td>
                     <td>{row.recorder}</td>
+                    <td>{row.hostDept}</td>
                     <td>{String(row.recordTime || "").slice(0, 10)}</td>
                     <td>
                       <div className="table-op-inline">
-                        <button type="button" className="table-link-btn" onClick={() => openFirstRowOnly(row.id, "edit-record")}>编辑</button>
-                        <button type="button" className="table-link-btn danger">删除</button>
+                        {row.status === "已提交" ? (
+                          <button type="button" className="table-link-btn" onClick={() => openFirstRowOnly(row.id, "record-detail")}>查看</button>
+                        ) : (
+                          <>
+                            <button type="button" className="table-link-btn" onClick={() => openFirstRowOnly(row.id, "add-record")}>编辑</button>
+                            <button type="button" className="table-link-btn">提交</button>
+                            <button type="button" className="table-link-btn danger">删除</button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -447,16 +527,12 @@ export default function Page() {
         </div>
       </Card>
 
-      {isRecordFormModal ? (
+      {activeModal === "add-record" ? (
         <div className="modal-mask" onClick={() => setActiveModal("")}> 
           <div className="modal modal-xl cert-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-hd"><div className="modal-title">{isAddRecordModal ? "培训记录新增" : "培训记录编辑"}</div><button type="button" className="modal-close" onClick={() => setActiveModal("")}>x</button></div>
+            <div className="modal-hd"><div className="modal-title">培训记录登记</div><button type="button" className="modal-close" onClick={() => setActiveModal("")}>x</button></div>
             <div className="modal-bd cert-bd"><RecordForm row={currentRow} /></div>
-            <div className="modal-ft">
-              <button type="button" className="btn" onClick={() => setActiveModal("")}>取消</button>
-              <button type="button" className="btn btn-primary" onClick={() => setActiveModal("")}>保存</button>
-              {isAddRecordModal ? <button type="button" className="btn btn-primary" onClick={() => setActiveModal("")}>提交</button> : null}
-            </div>
+            <div className="modal-ft"><button type="button" className="btn" onClick={() => setActiveModal("")}>取消</button><button type="button" className="btn btn-primary" onClick={() => setActiveModal("")}>保存</button><button type="button" className="btn btn-primary" onClick={() => setActiveModal("")}>提交</button></div>
           </div>
         </div>
       ) : null}

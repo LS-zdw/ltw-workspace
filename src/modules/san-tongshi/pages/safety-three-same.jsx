@@ -172,6 +172,20 @@ function Field({ label, required = false, value = "", placeholder = "请输入�
   );
 }
 
+function UploadControl({ extraText = "" }) {
+  return (
+    <div className="filterbar-control stpm-integrated-control stpm-upload-control">
+      <span className="stpm-upload-placeholder">将文件拖到此处或</span>
+      <span className="stpm-upload-actions">
+        <button type="button" className="stpm-upload-link-btn">本地上传</button>
+        <span className="stpm-upload-divider">|</span>
+        <button type="button" className="stpm-upload-link-btn">云盘上传</button>
+      </span>
+      {extraText ? <span className="stpm-upload-extra">（{extraText}）</span> : null}
+    </div>
+  );
+}
+
 function UploadField({ label, required = false, wide = false, extraText = "", keyWrap = false, hintText = "" }) {
   return (
     <div className={`stpm-create-item${wide ? " stpm-create-item-wide" : ""}`}>
@@ -180,15 +194,7 @@ function UploadField({ label, required = false, wide = false, extraText = "", ke
         {label}
       </div>
       <div className="stpm-create-val">
-        <div className="filterbar-control stpm-integrated-control stpm-upload-control">
-          <span className="stpm-upload-placeholder">将文件拖到此处或</span>
-          <span className="stpm-upload-actions">
-            <button type="button" className="stpm-upload-link-btn">本地上传</button>
-            <span className="stpm-upload-divider">|</span>
-            <button type="button" className="stpm-upload-link-btn">云盘上传</button>
-          </span>
-          {extraText ? <span className="stpm-upload-extra">（{extraText}）</span> : null}
-        </div>
+        <UploadControl extraText={extraText} />
         {hintText ? (
           <div style={{ color: "#6b7280", fontSize: 12, textAlign: "center", marginTop: 4 }}>
             （{hintText}）
@@ -197,6 +203,385 @@ function UploadField({ label, required = false, wide = false, extraText = "", ke
       </div>
     </div>
   );
+}
+
+function RepeatableFieldGroup({
+  label,
+  required = false,
+  items = [],
+  onAdd,
+  renderItem,
+  hintText = "",
+  wide = true,
+  keyWrap = false,
+  columns = 1
+}) {
+  return (
+    <div
+      className={`stpm-create-item${wide ? " stpm-create-item-wide" : ""}`}
+      style={{ alignItems: "start", gridTemplateColumns: "1fr" }}
+    >
+      <div
+        className="stpm-create-key"
+        style={{
+          ...(keyWrap ? { whiteSpace: "normal", lineHeight: 1.4 } : undefined),
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 8
+        }}
+      >
+        <span>
+          {required ? <span className="required-mark">*</span> : null}
+          {label}
+        </span>
+        <button
+          type="button"
+          onClick={onAdd}
+          aria-label={`新增${label}`}
+          title={`新增${label}`}
+          style={{
+            width: 22,
+            height: 22,
+            borderRadius: "50%",
+            border: "1px solid #c7d2e4",
+            background: "#fff",
+            color: "#2563eb",
+            fontSize: 16,
+            lineHeight: "20px",
+            padding: 0,
+            cursor: "pointer",
+            flex: "0 0 auto"
+          }}
+        >
+          +
+        </button>
+      </div>
+      <div className="stpm-create-val">
+        <div
+          style={{
+            width: "100%",
+            border: "1px solid #d9e0ea",
+            borderRadius: 8,
+            background: "#fff",
+            padding: 10
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gap: 10,
+              gridTemplateColumns: columns > 1 ? `repeat(${columns}, minmax(0, 1fr))` : "1fr"
+            }}
+          >
+            {items.map((item, index) => (
+              <div
+                key={item.id || `${label}-${index}`}
+                style={{
+                  paddingTop: index === 0 ? 0 : 8,
+                  borderTop: index < columns ? "none" : "1px solid #e5e7eb",
+                  paddingLeft: 0,
+                  minWidth: 0
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
+                  {items.length > 1 ? (
+                    <div
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        color: "#64748b",
+                        fontSize: 12
+                      }}
+                    >
+                      第{index + 1}组
+                    </div>
+                  ) : <span />}
+                  {typeof item.onRemove === "function" ? (
+                    <button
+                      type="button"
+                      onClick={item.onRemove}
+                      aria-label={`删除${label}第${index + 1}组`}
+                      title="删除这一组"
+                      style={{
+                        border: "none",
+                        background: "transparent",
+                        color: "#94a3b8",
+                        fontSize: 14,
+                        lineHeight: 1,
+                        cursor: "pointer",
+                        padding: 2,
+                        flex: "0 0 auto"
+                      }}
+                    >
+                      ×
+                    </button>
+                  ) : null}
+                </div>
+                {renderItem(item, index)}
+              </div>
+            ))}
+          </div>
+        </div>
+        {hintText ? <div style={{ color: "#6b7280", fontSize: 12, marginTop: 6 }}>（{hintText}）</div> : null}
+      </div>
+    </div>
+  );
+}
+
+function DesignUnitGroup({ label, required = false, items = [], onAdd, onRemove, onAssignmentChange }) {
+  return (
+    <div
+      className="stpm-create-item stpm-create-item-wide"
+      style={{ alignItems: "start", gridTemplateColumns: "1fr" }}
+    >
+      <div
+        className="stpm-create-key"
+        style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}
+      >
+        <span>
+          {required ? <span className="required-mark">*</span> : null}
+          {label}
+        </span>
+        <button
+          type="button"
+          onClick={onAdd}
+          aria-label={`新增${label}`}
+          title={`新增${label}`}
+          style={{
+            width: 22,
+            height: 22,
+            borderRadius: "50%",
+            border: "1px solid #c7d2e4",
+            background: "#fff",
+            color: "#2563eb",
+            fontSize: 16,
+            lineHeight: "20px",
+            padding: 0,
+            cursor: "pointer",
+            flex: "0 0 auto"
+          }}
+        >
+          +
+        </button>
+      </div>
+      <div className="stpm-create-val">
+        <div
+          style={{
+            width: "100%",
+            border: "1px solid #d9e0ea",
+            borderRadius: 8,
+            background: "#fff",
+            padding: 10
+          }}
+        >
+          <div style={{ display: "grid", gap: 10 }}>
+            {items.map((item, index) => (
+              <div
+                key={item.id || `design-unit-${index}`}
+                style={{
+                  minWidth: 0,
+                  paddingTop: index === 0 ? 0 : 8,
+                  borderTop: index === 0 ? "none" : "1px solid #e5e7eb"
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
+                  <div style={{ color: "#64748b", fontSize: 12 }}>第{index + 1}组</div>
+                  {items.length > 1 ? (
+                    <button
+                      type="button"
+                      onClick={() => onRemove(item.id)}
+                      aria-label={`删除${label}第${index + 1}组`}
+                      title="删除这一组"
+                      style={{
+                        border: "none",
+                        background: "transparent",
+                        color: "#94a3b8",
+                        fontSize: 14,
+                        lineHeight: 1,
+                        cursor: "pointer",
+                        padding: 2
+                      }}
+                    >
+                      ×
+                    </button>
+                  ) : <span />}
+                </div>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                    gap: 6,
+                    border: "1px solid #e5e7eb",
+                    borderRadius: 6,
+                    overflow: "hidden",
+                    background: "#fff"
+                  }}
+                >
+                  <div style={{ minWidth: 0 }}>
+                    <input className="filterbar-control stpm-integrated-control" value={item.value} readOnly />
+                  </div>
+                  <div style={{ minWidth: 0 }}>
+                    <input
+                      className="filterbar-control"
+                      value={item.assignment || ""}
+                      placeholder="请输入设计分工"
+                      onChange={(event) => onAssignmentChange?.(item.id, event.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RepeatablePairGroup({
+  label,
+  required = false,
+  items = [],
+  onAdd,
+  onRemove,
+  headers = [],
+  renderRow
+}) {
+  const columnCount = Math.max(headers.length, 1);
+  return (
+    <div
+      className="stpm-create-item stpm-create-item-wide"
+      style={{ alignItems: "start", gridTemplateColumns: "1fr" }}
+    >
+      <div
+        className="stpm-create-key"
+        style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}
+      >
+        <span>
+          {required ? <span className="required-mark">*</span> : null}
+          {label}
+        </span>
+        <button
+          type="button"
+          onClick={onAdd}
+          aria-label={`新增${label}`}
+          title={`新增${label}`}
+          style={{
+            width: 22,
+            height: 22,
+            borderRadius: "50%",
+            border: "1px solid #c7d2e4",
+            background: "#fff",
+            color: "#2563eb",
+            fontSize: 16,
+            lineHeight: "20px",
+            padding: 0,
+            cursor: "pointer",
+            flex: "0 0 auto"
+          }}
+        >
+          +
+        </button>
+      </div>
+      <div className="stpm-create-val">
+        <div
+          style={{
+            width: "100%",
+            border: "1px solid #d9e0ea",
+            borderRadius: 8,
+            background: "#fff",
+            padding: 10
+          }}
+        >
+          {headers.length ? (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: `80px repeat(${columnCount}, minmax(0, 1fr)) 24px`,
+                gap: 10,
+                alignItems: "center",
+                marginBottom: 8,
+                color: "#64748b",
+                fontSize: 12
+              }}
+            >
+              <div />
+              {headers.map((header) => (
+                <div key={header}>{header}</div>
+              ))}
+              <div />
+            </div>
+          ) : null}
+          <div style={{ display: "grid", gap: 8 }}>
+            {items.map((item, index) => (
+              <div
+                key={item.id || `${label}-${index}`}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: `80px repeat(${columnCount}, minmax(0, 1fr)) 24px`,
+                  gap: 10,
+                  alignItems: "start",
+                  paddingTop: index === 0 ? 0 : 8,
+                  borderTop: index === 0 ? "none" : "1px solid #e5e7eb"
+                }}
+              >
+                <div style={{ color: "#64748b", fontSize: 12, lineHeight: "32px" }}>第{index + 1}组</div>
+                {renderRow(item, index)}
+                <div style={{ display: "flex", justifyContent: "center", paddingTop: 6 }}>
+                  {items.length > 1 ? (
+                    <button
+                      type="button"
+                      onClick={() => onRemove(item.id)}
+                      aria-label={`删除${label}第${index + 1}组`}
+                      title="删除这一组"
+                      style={{
+                        border: "none",
+                        background: "transparent",
+                        color: "#94a3b8",
+                        fontSize: 14,
+                        lineHeight: 1,
+                        cursor: "pointer",
+                        padding: 2
+                      }}
+                    >
+                      ×
+                    </button>
+                  ) : null}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RepeatableSubField({ label, value = "请选择时间" }) {
+  return (
+    <div style={{ display: "grid", gap: 6, width: "100%" }}>
+      <div style={{ color: "#475569", fontSize: 12, lineHeight: 1.4 }}>{label}</div>
+      <input className="filterbar-control stpm-integrated-control" value={value} readOnly />
+    </div>
+  );
+}
+
+function RepeatableSubUpload({ label, extraText = "" }) {
+  return (
+    <div style={{ display: "grid", gap: 6, width: "100%" }}>
+      <div style={{ color: "#475569", fontSize: 12, lineHeight: 1.4 }}>{label}</div>
+      <UploadControl extraText={extraText} />
+    </div>
+  );
+}
+
+function CompactFieldInput({ value = "请选择时间" }) {
+  return <input className="filterbar-control stpm-integrated-control" value={value} readOnly />;
+}
+
+function CompactUploadInput({ extraText = "" }) {
+  return <UploadControl extraText={extraText} />;
 }
 
 function YesNo({ label, required = false, value = "否", disabled = false, onChange, name, wide = false }) {
@@ -380,6 +765,12 @@ export default function Page() {
   const [ky23GovApprove, setKy23GovApprove] = React.useState("否");
   const [basicArticle7, setBasicArticle7] = React.useState("否");
   const [basicGovApprove, setBasicGovApprove] = React.useState("是");
+  const [basicDesignUnits, setBasicDesignUnits] = React.useState([{ id: "basic-design-unit-1", value: "SEI", assignment: "" }]);
+  const [basicDesignUnitsAlt, setBasicDesignUnitsAlt] = React.useState([{ id: "basic-design-unit-alt-1", value: "SEI", assignment: "" }]);
+  const [basicDesignBriefs, setBasicDesignBriefs] = React.useState([{ id: "basic-design-brief-1" }]);
+  const [basicGovApprovalGroups, setBasicGovApprovalGroups] = React.useState([{ id: "basic-gov-approval-1" }]);
+  const [basicSilHazopGroups, setBasicSilHazopGroups] = React.useState([{ id: "basic-sil-hazop-1" }]);
+  const [basicSilHazopOptionalGroups, setBasicSilHazopOptionalGroups] = React.useState([{ id: "basic-sil-hazop-opt-1" }]);
   const [basic23Article7, setBasic23Article7] = React.useState("否");
   const [basic23GovApprove, setBasic23GovApprove] = React.useState("否");
   const [trialGovApprove, setTrialGovApprove] = React.useState("是");
@@ -574,9 +965,6 @@ export default function Page() {
                       ) : null}
                       <UploadField label="其他附件" />
                       <UploadField label="审查专家组签名表" required />
-                      <UploadField label="专家组评审意见表" required />
-                      <UploadField label="安全预评价报告修改说明" />
-                      <UploadField label="安全评价报告终稿" />
                       <YesNo
                         label="是否政府审批"
                         required
@@ -588,11 +976,14 @@ export default function Page() {
                       {ky23GovApprove === "是" ? (
                         <>
                           <Field label="批复时间" required value="请选择时间" />
-                          <UploadField label="批复（备案）文件" required />
+                          <UploadField label="安全条件审查批复文件" required />
                         </>
                       ) : (
                         <UploadField label="原因" required wide extraText="需要企业盖章" />
                       )}
+                      <UploadField label="专家组评审意见以及个人修改意见" required />
+                      <UploadField label="专家组评审意见修改说明" />
+                      <UploadField label="安全评价报告终稿" />
                     </Section>
                   ) : (
                     <>
@@ -635,34 +1026,50 @@ export default function Page() {
                         {kyGovApprove === "是" ? (
                           <>
                             <Field label="政府批复时间" required value="请选择时间" />
-                            <UploadField label="政府批复（备案）文件" required />
+                            <UploadField label="安全条件审查批复文件" required />
                             <Field label="政府批复文号" required value="请输入政府批复文号" />
+                            <YesNo
+                              label="工艺是否国内首次使用"
+                              required
+                              value={kyDomesticFirst}
+                              onChange={setKyDomesticFirst}
+                              name="ky-domestic-first"
+                              wide
+                            />
+                            {kyDomesticFirst === "是" ? (
+                              <UploadField
+                                label="安全可靠性论证意见"
+                                required
+                                wide
+                                hintText="省级人民政府有关部门组织的安全可靠性论证"
+                              />
+                            ) : null}
                             <UploadField label="安全评价报告终稿" required />
                             <UploadField label="其他附件" />
                           </>
                         ) : (
                           <>
                             <UploadField label="原因" required wide extraText="需要企业盖章" />
+                            <YesNo
+                              label="工艺是否国内首次使用"
+                              required
+                              value={kyDomesticFirst}
+                              onChange={setKyDomesticFirst}
+                              name="ky-domestic-first"
+                              wide
+                            />
+                            {kyDomesticFirst === "是" ? (
+                              <UploadField
+                                label="安全可靠性论证意见"
+                                required
+                                wide
+                                hintText="省级人民政府有关部门组织的安全可靠性论证"
+                              />
+                            ) : null}
                             <UploadField label="安全评价报告终稿" required />
                             <UploadField label="其他附件" />
                           </>
                         )}
-                        <YesNo
-                          label="工艺是否国内首次使用"
-                          required
-                          value={kyDomesticFirst}
-                          onChange={setKyDomesticFirst}
-                          name="ky-domestic-first"
-                          wide
-                        />
-                        {kyDomesticFirst === "是" ? (
-                          <UploadField
-                            label="安全可靠性论证意见"
-                            required
-                            wide
-                            hintText="省级人民政府有关部门组织的安全可靠性论证"
-                          />
-                        ) : null}
                       </Section>
                       <Section title="专项论证信息">
                         <Field label="专项论证名称" value="请输入内容" />
@@ -736,7 +1143,32 @@ export default function Page() {
                           name="basic-article7"
                           wide
                         />
-                        <Field label="设计单位" required value="SEI" />
+                        <DesignUnitGroup
+                          label="设计单位"
+                          required
+                          items={basicArticle7 === "是" ? basicDesignUnits : basicDesignUnitsAlt}
+                          onAdd={() => {
+                            if (basicArticle7 === "是") {
+                              setBasicDesignUnits((items) => [...items, { id: `basic-design-unit-${items.length + 1}`, value: `设计单位${items.length + 1}`, assignment: "" }]);
+                            } else {
+                              setBasicDesignUnitsAlt((items) => [...items, { id: `basic-design-unit-alt-${items.length + 1}`, value: `设计单位${items.length + 1}`, assignment: "" }]);
+                            }
+                          }}
+                          onRemove={(id) => {
+                            if (basicArticle7 === "是") {
+                              setBasicDesignUnits((items) => items.filter((item) => item.id !== id));
+                            } else {
+                              setBasicDesignUnitsAlt((items) => items.filter((item) => item.id !== id));
+                            }
+                          }}
+                          onAssignmentChange={(id, value) => {
+                            if (basicArticle7 === "是") {
+                              setBasicDesignUnits((items) => items.map((item) => (item.id === id ? { ...item, assignment: value } : item)));
+                            } else {
+                              setBasicDesignUnitsAlt((items) => items.map((item) => (item.id === id ? { ...item, assignment: value } : item)));
+                            }
+                          }}
+                        />
                         <UploadField label={basicArticle7 === "是" ? "安全设施设计专篇" : "安全设施设计"} required />
                         <UploadField label="参加人员签名表" required />
                         <UploadField label="专家组评审意见及个人意见" required />
@@ -753,17 +1185,65 @@ export default function Page() {
                         />
                         {basicGovApprove === "是" ? (
                           <>
-                            <Field label="批复时间" required value="请选择时间" />
-                            <UploadField label="批复（备案）文件" required />
-                            <UploadField label="安全设施设计专篇" required />
-                            <UploadField label="SIL分析报告及审查意见" required />
-                            <UploadField label="HAZOP分析报告及审查意见" required />
+                            <RepeatablePairGroup
+                              label="安全设施设计专篇"
+                              required
+                              headers={["安全设施设计专篇"]}
+                              items={basicDesignBriefs}
+                              onAdd={() => setBasicDesignBriefs((items) => [...items, { id: `basic-design-brief-${items.length + 1}` }])}
+                              onRemove={(id) => setBasicDesignBriefs((items) => items.filter((item) => item.id !== id))}
+                              renderRow={() => <CompactUploadInput />}
+                            />
+                            <RepeatablePairGroup
+                              label="批复时间 / 安全设施设计批复文件"
+                              required
+                              headers={["批复时间", "安全设施设计批复文件"]}
+                              items={basicGovApprovalGroups}
+                              onAdd={() => setBasicGovApprovalGroups((items) => [...items, { id: `basic-gov-approval-${items.length + 1}` }])}
+                              onRemove={(id) => setBasicGovApprovalGroups((items) => items.filter((item) => item.id !== id))}
+                              renderRow={() => (
+                                <>
+                                  <CompactFieldInput value="请选择时间" />
+                                  <CompactUploadInput />
+                                </>
+                              )}
+                            />
+                            <RepeatablePairGroup
+                              label="SIL分析报告及审查意见 / HAZOP分析报告及审查意见"
+                              required
+                              headers={["SIL分析报告及审查意见", "HAZOP分析报告及审查意见"]}
+                              items={basicSilHazopGroups}
+                              onAdd={() => setBasicSilHazopGroups((items) => [...items, { id: `basic-sil-hazop-${items.length + 1}` }])}
+                              onRemove={(id) => setBasicSilHazopGroups((items) => items.filter((item) => item.id !== id))}
+                              renderRow={() => (
+                                <>
+                                  <CompactUploadInput />
+                                  <CompactUploadInput />
+                                </>
+                              )}
+                            />
                           </>
                         ) : (
                           <>
                             <UploadField label="专家意见" required />
                             <UploadField label="安全设施设计" required />
                             <UploadField label="原因" required />
+                            {basicArticle7 === "否" ? (
+                              <RepeatablePairGroup
+                                label="SIL分析报告及审查意见 / HAZOP分析报告及审查意见"
+                                headers={["SIL分析报告及审查意见", "HAZOP分析报告及审查意见"]}
+                                items={basicSilHazopOptionalGroups}
+                                onAdd={() => setBasicSilHazopOptionalGroups((items) => [...items, { id: `basic-sil-hazop-opt-${items.length + 1}` }])}
+                                onRemove={(id) => setBasicSilHazopOptionalGroups((items) => items.filter((item) => item.id !== id))}
+                                renderRow={() => (
+                                  <>
+                                    <CompactUploadInput />
+                                    <CompactUploadInput />
+                                  </>
+                                )}
+                                hintText="第七条规定项目选择“否”时为非必填"
+                              />
+                            ) : null}
                           </>
                         )}
                       </Section>
@@ -784,9 +1264,9 @@ export default function Page() {
                       wide
                     />
                     <Field label="试生产开始时间" required value="请选择时间" />
-                    <Field label="审查组织单位" required value="请输入审查单位" />
                     {trialGovApprove === "是" ? (
                       <>
+                        <Field label="审查组织单位" required value="请输入审查单位" />
                         <Field label="试生产结束时间" required value="请选择时间" />
                         <UploadField label="试生产备案文件" />
                       </>

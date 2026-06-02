@@ -76,11 +76,11 @@ const cards = [
   },
   {
     id: "stat",
-    title: "企业教育培训情况统计",
-    metric: "综合指标",
-    count: "98",
-    desc: "关键岗位持证率: 97% | 档案更新率: 99%",
-    items: ["培训覆盖率: 88%", "新员工三级教育完成率: 100%"]
+    title: "日周月统计分析",
+    metric: "日监控 / 周汇报 / 月总结",
+    count: "3",
+    desc: "集团总部视角教育培训动态分析看板",
+    items: ["日动态监控", "周总结汇报", "月汇报分析"]
   }
 ];
 
@@ -94,7 +94,7 @@ const moduleNames = {
   "team-ai": "进入班组安全活动AI应用",
   online: "进入线上培训与考试",
   cert: "进入证书管理",
-  stat: "进入企业教育培训情况统计"
+  stat: "进入日周月统计分析"
 };
 
 const moduleRoutes = {
@@ -102,7 +102,7 @@ const moduleRoutes = {
   "one-file": "/edu/trainer/training-one-person-one-file-enterprise",
   team: "/edu/trainer/team-safety-activity-management",
   "team-ai": "/edu/trainer/team-safety-activity-ai-meeting",
-  stat: "/edu/trainer/enterprise-training-statistics"
+  stat: "/edu/trainer/hq-training-statistics-dwm-updated"
 };
 
 export default function Page() {
@@ -142,44 +142,44 @@ export default function Page() {
                     </div>
                     <div className="edu-training-nav-stat-head-cards">
                       <div className="edu-training-nav-stat-score-wrap">
-                        <div className="edu-training-nav-stat-score">
-                          <div className="label">综合指标</div>
+                      <div className="edu-training-nav-stat-score">
+                          <div className="label">三态看板</div>
                           <div className="value">{card.count}</div>
-                          <div className="hint">来自企业教育培训情况统计</div>
+                          <div className="hint">来自日周月统计分析看板</div>
                         </div>
                         <div className="edu-training-nav-stat-mini">
-                          <div className="label">培训计划综合查询</div>
-                          <div className="value">33</div>
-                          <div className="hint">全部计划数</div>
+                          <div className="label">日动态</div>
+                          <div className="value">1</div>
+                          <div className="hint">当日培训动态监控</div>
                         </div>
                         <div className="edu-training-nav-stat-mini">
-                          <div className="label">培训记录综合查询</div>
-                          <div className="value">40</div>
-                          <div className="hint">全部记录数</div>
+                          <div className="label">周总结 / 月汇报</div>
+                          <div className="value">2</div>
+                          <div className="hint">周期汇总分析页面</div>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="edu-training-nav-stat-main">
                     <div className="stat-main-card">
-                      <div className="k">计划完成率</div>
-                      <div className="v">92%</div>
-                      <div className="s">年度培训计划执行</div>
+                      <div className="k">日动态</div>
+                      <div className="v">4</div>
+                      <div className="s">当日核心监控指标</div>
                     </div>
                     <div className="stat-main-card">
-                      <div className="k">培训覆盖率</div>
-                      <div className="v">88%</div>
-                      <div className="s">关键岗位覆盖</div>
+                      <div className="k">周总结</div>
+                      <div className="v">3</div>
+                      <div className="s">周维度分析模块</div>
                     </div>
                     <div className="stat-main-card">
-                      <div className="k">档案更新率</div>
-                      <div className="v">99%</div>
-                      <div className="s">档案维护及时率</div>
+                      <div className="k">月汇报</div>
+                      <div className="v">4</div>
+                      <div className="s">月维度分析模块</div>
                     </div>
                     <div className="stat-main-card">
-                      <div className="k">关键岗位持证率</div>
-                      <div className="v">97%</div>
-                      <div className="s">取证合规达标</div>
+                      <div className="k">适用角色</div>
+                      <div className="v">总部</div>
+                      <div className="s">集团总部教育培训管理</div>
                     </div>
                   </div>
                 </div>

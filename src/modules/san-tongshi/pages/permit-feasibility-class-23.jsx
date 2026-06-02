@@ -314,12 +314,36 @@ export default function Page() {
                 <div className="detail-form-key">审查专家组签名表</div>
                 <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
               </div>
+              {isVisible({"gov":"是"}) ? (
+              <>
               <div className="detail-form-item">
-                <div className="detail-form-key">专家组评审意见表</div>
+                <div className="detail-form-key">批复时间</div>
+                <div className="detail-form-val">{resolveDynamic("选择时间")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">安全条件审查批复文件</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
+              </div>
+              </>) : null}
+              {isVisible({"gov":"否"}) ? (
+              <div className="detail-form-item">
+                <div className="detail-form-key">原因</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
+              </div>) : null}
+              <div className="detail-form-item">
+                <div className="detail-form-key">专家组评审意见以及个人修改意见</div>
                 <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
               </div>
               <div className="detail-form-item">
-                <div className="detail-form-key">安全预评价报告修改说明</div>
+                <div className="detail-form-key">专家组评审意见修改说明</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">安全评价报告终稿</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">其他附件</div>
                 <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
               </div>
                 </div>
@@ -338,46 +362,6 @@ export default function Page() {
               </div>
               <div className="detail-form-item">
                 <div className="detail-form-key">安全生产条件和设施综合分析报告</div>
-                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
-              </div>
-                </div>
-                
-                <div className="detail-form-actions">
-                  <button type="button" className="btn btn-primary">保存</button><button type="button" className="btn btn-primary" onClick={() => openModal("confirm-submit", drillTarget)}>提交</button>
-                </div>
-              </div>) : null}{isVisible({"gov":"是"}) ? (
-              <div className="detail-section">
-                <div className="detail-section-title">政府审批信息</div>
-                <div className="detail-form-grid">
-                  
-              <div className="detail-form-item">
-                <div className="detail-form-key">安全评价报告终稿</div>
-                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
-              </div>
-              <div className="detail-form-item">
-                <div className="detail-form-key">批复时间</div>
-                <div className="detail-form-val">{resolveDynamic("选择时间")}</div>
-              </div>
-              <div className="detail-form-item">
-                <div className="detail-form-key">批复（备案）文件</div>
-                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
-              </div>
-              <div className="detail-form-item">
-                <div className="detail-form-key">其他附件</div>
-                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
-              </div>
-                </div>
-                
-                <div className="detail-form-actions">
-                  <button type="button" className="btn btn-primary">保存</button><button type="button" className="btn btn-primary" onClick={() => openModal("confirm-submit", drillTarget)}>提交</button>
-                </div>
-              </div>) : null}{isVisible({"gov":"否"}) ? (
-              <div className="detail-section">
-                <div className="detail-section-title">非政府审批字段</div>
-                <div className="detail-form-grid">
-                  
-              <div className="detail-form-item">
-                <div className="detail-form-key">原因</div>
                 <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
               </div>
                 </div>

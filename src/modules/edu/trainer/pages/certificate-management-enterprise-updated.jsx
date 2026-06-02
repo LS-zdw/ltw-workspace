@@ -41,6 +41,21 @@ export default function Page() {
   const navigate = useNavigate();
   const projectName = new URLSearchParams(window.location.search).get("project");
   const [activeModal, setActiveModal] = React.useState(null);
+  const [batchReviewRows, setBatchReviewRows] = React.useState([
+    {
+      id: 1,
+      name: "尤红玉",
+      org: "中科炼化/储运部",
+      certName: "防爆电气证",
+      certCode: "TZ-09761",
+      certType: "特种作业资格证（电工作业）",
+      certSubtype: "防爆电气作业",
+      oldValidDate: "2026-06-30",
+      oldAttachment: "有",
+      newAttachmentName: "",
+      isEditingAttachment: false
+    }
+  ]);
   const [drillTarget, setDrillTarget] = React.useState("");
   const [drillProject, setDrillProject] = React.useState(projectName || "");
   const [modalStates, setModalStates] = React.useState({});
@@ -125,6 +140,64 @@ export default function Page() {
   const renderAttachmentTrigger = (label = "点击上传") => (
     <button type="button" className="table-link-btn">{label}</button>
   );
+  const renderListAttachment = (value) => (
+    value === "有" ? <button type="button" className="table-link-btn">下载</button> : value
+  );
+  const startBatchAttachmentEdit = (row) => {
+    setBatchReviewRows((prev) => prev.map((item) => (
+      item.id === row.id
+        ? {
+            ...item,
+            isEditingAttachment: true,
+            newAttachmentName: item.newAttachmentName || `${item.certName}-换证附件.pdf`
+          }
+        : item
+    )));
+  };
+  const cancelBatchAttachmentEdit = (row) => {
+    setBatchReviewRows((prev) => prev.map((item) => (
+      item.id === row.id ? { ...item, isEditingAttachment: false } : item
+    )));
+  };
+  const updateBatchAttachmentDraft = (row, value) => {
+    setBatchReviewRows((prev) => prev.map((item) => (
+      item.id === row.id ? { ...item, newAttachmentName: value } : item
+    )));
+  };
+  const saveBatchAttachment = (row) => {
+    setBatchReviewRows((prev) => prev.map((item) => (
+      item.id === row.id
+        ? {
+            ...item,
+            newAttachmentName: (item.newAttachmentName || `${item.certName}-换证附件.pdf`).trim(),
+            isEditingAttachment: false
+          }
+        : item
+    )));
+  };
+  const renderBatchAttachmentCell = (row) => {
+    if (row.isEditingAttachment) {
+      return (
+        <div style={{ display: "grid", gap: 6, minWidth: 180 }}>
+          <input
+            className="cert-field-control"
+            value={row.newAttachmentName}
+            onChange={(e) => updateBatchAttachmentDraft(row, e.target.value)}
+            placeholder="请输入附件名称"
+          />
+          <div className="table-op-inline">
+            <button type="button" className="table-link-btn" onClick={() => saveBatchAttachment(row)}>保存</button>
+            <button type="button" className="table-link-btn" onClick={() => cancelBatchAttachmentEdit(row)}>取消</button>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <button type="button" className="table-link-btn" onClick={() => startBatchAttachmentEdit(row)}>
+        上传
+      </button>
+    );
+  };
 
   return (
     <div className="stack cert-enterprise-updated">
@@ -191,34 +264,34 @@ export default function Page() {
             <tbody>
               
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>1</td><td>张亮</td><td>中科炼化/炼油三部</td><td>运行班长</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>安全合格证</button></td><td>AQ-01872</td><td>国家/地方政府发证</td><td>主要负责人安全合格证</td><td>无</td><td>2023-08-15</td><td>2026-08-14</td><td>否</td><td>负责人复审</td><td>炼油三部</td><td>王敏</td><td>2023-08-16</td><td>有</td><td>{renderRowOps(true)}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>1</td><td>张亮</td><td>中科炼化/炼油三部</td><td>运行班长</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>安全合格证</button></td><td>AQ-01872</td><td>国家/地方政府发证</td><td>主要负责人安全合格证</td><td>无</td><td>2023-08-15</td><td>2026-08-14</td><td>否</td><td>负责人复审</td><td>炼油三部</td><td>王敏</td><td>2023-08-16</td><td>{renderListAttachment("有")}</td><td>{renderRowOps(true)}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>2</td><td>胡晓磊</td><td>中科炼化/公用工程部</td><td>设备工程师</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>高压电工证</button></td><td>TZ-11345</td><td>国家/地方政府发证</td><td>特种作业资格证（电工作业）</td><td>高压电工作业</td><td>2024-03-20</td><td>2027-03-19</td><td>否</td><td>电气取证</td><td>公用工程部</td><td>李倩</td><td>2024-03-21</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>2</td><td>胡晓磊</td><td>中科炼化/公用工程部</td><td>设备工程师</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>高压电工证</button></td><td>TZ-11345</td><td>国家/地方政府发证</td><td>特种作业资格证（电工作业）</td><td>高压电工作业</td><td>2024-03-20</td><td>2027-03-19</td><td>否</td><td>电气取证</td><td>公用工程部</td><td>李倩</td><td>2024-03-21</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>3</td><td>尤红玉</td><td>中科炼化/储运部</td><td>仪表工程师</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>防爆电气证</button></td><td>TZ-09761</td><td>国家/地方政府发证</td><td>特种作业资格证（电工作业）</td><td>防爆电气作业</td><td>2023-07-01</td><td className="cell-warn">2026-06-30</td><td>否</td><td>防爆专项</td><td>储运部</td><td>周超</td><td>2023-07-02</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>3</td><td>尤红玉</td><td>中科炼化/储运部</td><td>仪表工程师</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>防爆电气证</button></td><td>TZ-09761</td><td>国家/地方政府发证</td><td>特种作业资格证（电工作业）</td><td>防爆电气作业</td><td>2023-07-01</td><td className="cell-warn">2026-06-30</td><td>否</td><td>防爆专项</td><td>储运部</td><td>周超</td><td>2023-07-02</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>4</td><td>高杨</td><td>中科炼化/工程管理一班</td><td>电气技师</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>高压电工证</button></td><td>TZ-05438</td><td>国家/地方政府发证</td><td>特种作业资格证（电工作业）</td><td>高压电工作业</td><td>2021-04-12</td><td className="cell-danger">2024-04-11</td><td className="cell-danger">是</td><td>电气复审</td><td>工程管理一班</td><td>肖鹏</td><td>2024-04-15</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>4</td><td>高杨</td><td>中科炼化/工程管理一班</td><td>电气技师</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>高压电工证</button></td><td>TZ-05438</td><td>国家/地方政府发证</td><td>特种作业资格证（电工作业）</td><td>高压电工作业</td><td>2021-04-12</td><td className="cell-danger">2024-04-11</td><td className="cell-danger">是</td><td>电气复审</td><td>工程管理一班</td><td>肖鹏</td><td>2024-04-15</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>5</td><td>梁海江</td><td>中科炼化/安全环保部</td><td>安环主管</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>注安资格证</button></td><td>ZA-00658</td><td>国家/地方政府发证</td><td>注册安全工程师</td><td>注册安全工程师（中级)</td><td>2019-11-18</td><td>2029-11-17</td><td>否</td><td>安环提升</td><td>安全环保部</td><td>郑宁</td><td>2024-12-03</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>5</td><td>梁海江</td><td>中科炼化/安全环保部</td><td>安环主管</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>注安资格证</button></td><td>ZA-00658</td><td>国家/地方政府发证</td><td>注册安全工程师</td><td>注册安全工程师（中级)</td><td>2019-11-18</td><td>2029-11-17</td><td>否</td><td>安环提升</td><td>安全环保部</td><td>郑宁</td><td>2024-12-03</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>6</td><td>方月蒙</td><td>中科炼化/化工二部</td><td>化工操作工</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>危化作业证</button></td><td>WH-08119</td><td>国家/地方政府发证</td><td>特种作业资格证（危险化学品安全作业）</td><td>加氢工艺作业</td><td>2022-09-05</td><td>2025-09-04</td><td className="cell-danger">是</td><td>化工提升</td><td>化工二部</td><td>陈雪</td><td>2025-09-10</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>6</td><td>方月蒙</td><td>中科炼化/化工二部</td><td>化工操作工</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>危化作业证</button></td><td>WH-08119</td><td>国家/地方政府发证</td><td>特种作业资格证（危险化学品安全作业）</td><td>加氢工艺作业</td><td>2022-09-05</td><td>2025-09-04</td><td className="cell-danger">是</td><td>化工提升</td><td>化工二部</td><td>陈雪</td><td>2025-09-10</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>7</td><td>陈羽</td><td>中科炼化/储运部</td><td>储运班长</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>监护人证</button></td><td>JH-0231</td><td>企业内部发证</td><td>作业票监护人资格</td><td>无</td><td>2025-05-01</td><td>2027-04-30</td><td>否</td><td>作业票培训</td><td>储运部</td><td>周超</td><td>2025-05-02</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>7</td><td>陈羽</td><td>中科炼化/储运部</td><td>储运班长</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>监护人证</button></td><td>JH-0231</td><td>企业内部发证</td><td>作业票监护人资格</td><td>无</td><td>2025-05-01</td><td>2027-04-30</td><td>否</td><td>作业票培训</td><td>储运部</td><td>周超</td><td>2025-05-02</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>8</td><td>王志鹏</td><td>中科炼化/工程管理一班</td><td>作业监护人</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>受限监护证</button></td><td>SX-0112</td><td>企业内部发证</td><td>作业票监护人资格</td><td>无</td><td>2024-01-10</td><td>2026-01-09</td><td className="cell-warn">否</td><td>作业票培训</td><td>工程管理一班</td><td>肖鹏</td><td>2024-01-11</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>8</td><td>王志鹏</td><td>中科炼化/工程管理一班</td><td>作业监护人</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>受限监护证</button></td><td>SX-0112</td><td>企业内部发证</td><td>作业票监护人资格</td><td>无</td><td>2024-01-10</td><td>2026-01-09</td><td className="cell-warn">否</td><td>作业票培训</td><td>工程管理一班</td><td>肖鹏</td><td>2024-01-11</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>9</td><td>刘洋</td><td>中科炼化/炼油三部</td><td>班组长</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>压力焊证</button></td><td>TZ-04672</td><td>国家/地方政府发证</td><td>特种作业资格证（焊接与热切割作业）</td><td>压力焊作业</td><td>2020-11-06</td><td className="cell-danger">2023-11-05</td><td className="cell-danger">是</td><td>焊接复审</td><td>炼油三部</td><td>王敏</td><td>2023-11-10</td><td>无</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>9</td><td>刘洋</td><td>中科炼化/炼油三部</td><td>班组长</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>压力焊证</button></td><td>TZ-04672</td><td>国家/地方政府发证</td><td>特种作业资格证（焊接与热切割作业）</td><td>压力焊作业</td><td>2020-11-06</td><td className="cell-danger">2023-11-05</td><td className="cell-danger">是</td><td>焊接复审</td><td>炼油三部</td><td>王敏</td><td>2023-11-10</td><td>{renderListAttachment("无")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>10</td><td>赵丽</td><td>中科炼化/人力资源部</td><td>培训管理员</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>内训师证</button></td><td>PX-077</td><td>集团公司发证</td><td>HSE关键岗位资格</td><td>无</td><td>2025-04-18</td><td>2028-04-17</td><td>否</td><td>培训师提升</td><td>人力资源部</td><td>赵丽</td><td>2025-04-19</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>10</td><td>赵丽</td><td>中科炼化/人力资源部</td><td>培训管理员</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>内训师证</button></td><td>PX-077</td><td>集团公司发证</td><td>HSE关键岗位资格</td><td>无</td><td>2025-04-18</td><td>2028-04-17</td><td>否</td><td>培训师提升</td><td>人力资源部</td><td>赵丽</td><td>2025-04-19</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
             </tbody>
           </table>
@@ -505,11 +578,11 @@ export default function Page() {
                   <table className="proto-table">
                     <thead>
                       <tr>
-                        <th>序号</th><th>登记种类</th><th>发证/复审/注册/换证日期</th><th>登记人</th><th>登记部门/单位</th><th>登记日期</th><th>证书附件</th>
+                        <th>序号</th><th>登记类型</th><th>登记人</th><th>登记部门</th><th>登记日期</th><th>证书附件</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr><td>1</td><td>续证</td><td>2026年02月26日</td><td>肖鹏</td><td>公用工程部</td><td>2026年02月26日</td><td><div className="table-op-inline"><button type="button" className="table-link-btn">预览</button><button type="button" className="table-link-btn">下载</button></div></td></tr><tr><td>2</td><td>复审</td><td>2026年02月26日</td><td>肖鹏</td><td>公用工程部</td><td>2026年02月26日</td><td><div className="table-op-inline"><button type="button" className="table-link-btn">预览</button><button type="button" className="table-link-btn">下载</button></div></td></tr>
+                      <tr><td>1</td><td>发证</td><td>肖鹏</td><td>公用工程部</td><td>2026年02月26日</td><td><div className="table-op-inline"><button type="button" className="table-link-btn">预览</button><button type="button" className="table-link-btn">下载</button></div></td></tr><tr><td>2</td><td>换证</td><td>肖鹏</td><td>公用工程部</td><td>2026年02月26日</td><td><div className="table-op-inline"><button type="button" className="table-link-btn">预览</button><button type="button" className="table-link-btn">下载</button></div></td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -534,7 +607,6 @@ export default function Page() {
                 <div className="cert-section-title cert-section-title-row">
                   <span>待换证证书</span>
                   <div className="table-op-inline">
-                    <button type="button" className="btn btn-primary">选择证书</button>
                     <button type="button" className="btn btn-danger">移除</button>
                   </div>
                 </div>
@@ -542,11 +614,25 @@ export default function Page() {
                   <table className="proto-table">
                     <thead>
                       <tr>
-                        <th className="table-checkbox"><input type="checkbox" readOnly /></th><th>序号</th><th>姓名</th><th>组织机构</th><th>证书名称</th><th>证书编码</th><th>证书种类</th><th>证书小类</th><th>原证书有效期</th><th>证书附件</th>
+                        <th className="table-checkbox"><input type="checkbox" readOnly /></th><th>序号</th><th>姓名</th><th>组织机构</th><th>证书名称</th><th>证书编码</th><th>证书种类</th><th>证书小类</th><th>原证书有效期</th><th>原证书附件</th><th>新证附件</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr><td className="table-checkbox"><input type="checkbox" readOnly /></td><td>1</td><td>尤红玉</td><td>中科炼化/储运部</td><td>防爆电气证</td><td>TZ-09761</td><td>特种作业资格证（电工作业）</td><td>防爆电气作业</td><td>2026-06-30</td><td>有</td></tr>
+                      {batchReviewRows.map((row, index) => (
+                        <tr key={row.id}>
+                          <td className="table-checkbox"><input type="checkbox" readOnly /></td>
+                          <td>{index + 1}</td>
+                          <td>{row.name}</td>
+                          <td>{row.org}</td>
+                          <td>{row.certName}</td>
+                          <td>{row.certCode}</td>
+                          <td>{row.certType}</td>
+                          <td>{row.certSubtype}</td>
+                          <td>{row.oldValidDate}</td>
+                          <td>{row.oldAttachment}</td>
+                          <td>{renderBatchAttachmentCell(row)}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -555,10 +641,6 @@ export default function Page() {
               <div className="cert-section">
                 <div className="cert-section-title">换证登记</div>
                 <div className="cert-form-grid" style={{ gridTemplateColumns: "220px 1fr 220px 1fr 220px 1fr" }}>
-                  <div className="cert-field-item" style={{ gridColumn: "span 2" }}>
-                    <div className="cert-field-label"><span className="required-mark">*</span>新证初领日期:</div>
-                    <div className="cert-field-value"><input className="cert-field-control" defaultValue="2026-03-09" /></div>
-                  </div>
                   <div className="cert-field-item" style={{ gridColumn: "span 2" }}>
                     <div className="cert-field-label"><span className="required-mark">*</span>新证有效期:</div>
                     <div className="cert-field-value"><input className="cert-field-control" defaultValue="2029-03-08" /></div>

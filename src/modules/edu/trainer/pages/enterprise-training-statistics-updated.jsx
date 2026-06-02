@@ -41,16 +41,18 @@ function HqGroupedBarChart({ categories = [], series = [], yMax = 100 }) {
   );
 }
 
-function HqPlanCompletionChart({ items = [] }) {
-  const yTicks = [20, 16, 12, 8, 4, 0];
-  const yMax = yTicks[0];
+function HqPlanCompletionChart({ items = [], title = "培训计划完成情况" }) {
+  const maxValue = Math.max(...items.flatMap((item) => [Number(item.total || 0), Number(item.done || 0)]), 0);
+  const yMax = Math.max(8, Math.ceil(maxValue / 4) * 4);
+  const yStep = yMax / 4;
+  const yTicks = [yMax, yMax - yStep, yMax - yStep * 2, yMax - yStep * 3, 0];
   const doneTotal = items.reduce((sum, item) => sum + Number(item.done || 0), 0);
   const totalCount = items.reduce((sum, item) => sum + Number(item.total || 0), 0);
 
   return (
     <div className="hq-top-dept-chart">
       <div className="hq-top-dept-title">
-        各部门培训完成情况（<span className="hq-top-dept-title-done">{doneTotal}</span>/<span className="hq-top-dept-title-total">{totalCount}</span>）
+        {title}（<span className="hq-top-dept-title-done">{doneTotal}</span>/<span className="hq-top-dept-title-total">{totalCount}</span>）
       </div>
       <div className="hq-top-dept-legend">
         <span className="hq-top-dept-legend-item"><i className="hq-top-dept-dot total"></i>项目总数</span>
@@ -108,6 +110,9 @@ function HqDrillModal({ open, config, onClose }) {
   const filters = config.filters || [];
   const columns = config.columns || [];
   const rows = config.rows || [];
+  const toolbar = config.toolbar || null;
+  const note = config.note || "";
+  const total = config.total || 400;
   return (
     <div className="modal-mask" onClick={onClose}>
       <div className="modal modal-xl hq-drill-modal" onClick={(e) => e.stopPropagation()}>
@@ -116,6 +121,8 @@ function HqDrillModal({ open, config, onClose }) {
           <button type="button" className="modal-close" onClick={onClose}>×</button>
         </div>
         <div className="modal-bd">
+          {toolbar ? <div className="hq-drill-toolbar">{toolbar}</div> : null}
+          {note ? <div className="hq-drill-note">{note}</div> : null}
           {filters.length > 0 && (
             <div className="filterbar">
               <div className="filterbar-row">
@@ -152,7 +159,7 @@ function HqDrillModal({ open, config, onClose }) {
             </table>
           </div>
           <div className="hq-drill-pager">
-            <span>共 400 条</span>
+            <span>共 {total} 条</span>
             <button type="button" className="hq-pg-btn">&lt;</button>
             <button type="button" className="hq-pg-btn active">1</button>
             <button type="button" className="hq-pg-btn">2</button>
@@ -172,6 +179,10 @@ function HqDrillModal({ open, config, onClose }) {
 
 export default function Page() {
   const [drillModal, setDrillModal] = React.useState("");
+  const [planView, setPlanView] = React.useState("month");
+  const [planDrillView, setPlanDrillView] = React.useState("month");
+  const [planMonth, setPlanMonth] = React.useState("2026-05");
+  const [planYear, setPlanYear] = React.useState("2026");
   const metricItems = [
     { name: "培训计划完成率", raw: 100, weight: 40 },
     { name: "证书有效率", raw: 99, weight: 30 },
@@ -182,20 +193,97 @@ export default function Page() {
     metricItems.reduce((sum, item) => sum + (item.raw * item.weight) / 100, 0)
   ).toFixed(1);
 
-  const planDeptItems = [
-    { name: "公司安环部", total: 2, done: 1 },
-    { name: "运行一部", total: 3, done: 2 },
-    { name: "运行二部", total: 3, done: 2 },
-    { name: "运行三部", total: 3, done: 2 },
-    { name: "运行四部", total: 3, done: 2 },
-    { name: "运行五部", total: 3, done: 1 },
-    { name: "运行六部", total: 3, done: 2 }
+  const planMonthOptions = [
+    { value: "2026-03", label: "2026年03月" },
+    { value: "2026-04", label: "2026年04月" },
+    { value: "2026-05", label: "2026年05月" },
+    { value: "2026-06", label: "2026年06月" }
   ];
+
+  const planYearOptions = ["2026", "2025", "2024", "2023", "2022"];
+
+  const planMonthlyDeptMap = {
+    "2026-03": [
+      { name: "公司安环部", total: 2, done: 2, plannedPeople: 120, actualPeople: 118, passedPeople: 116 },
+      { name: "运行一部", total: 2, done: 2, plannedPeople: 96, actualPeople: 94, passedPeople: 92 },
+      { name: "运行二部", total: 1, done: 1, plannedPeople: 48, actualPeople: 48, passedPeople: 47 },
+      { name: "运行三部", total: 1, done: 0, plannedPeople: 36, actualPeople: 0, passedPeople: 0 },
+      { name: "储运部", total: 0, done: 0, plannedPeople: 0, actualPeople: 0, passedPeople: 0 },
+      { name: "设备管理部", total: 0, done: 0, plannedPeople: 0, actualPeople: 0, passedPeople: 0 }
+    ],
+    "2026-04": [
+      { name: "公司安环部", total: 1, done: 1, plannedPeople: 52, actualPeople: 50, passedPeople: 49 },
+      { name: "运行一部", total: 4, done: 4, plannedPeople: 360, actualPeople: 360, passedPeople: 360 },
+      { name: "运行二部", total: 1, done: 1, plannedPeople: 44, actualPeople: 42, passedPeople: 41 },
+      { name: "运行三部", total: 1, done: 1, plannedPeople: 38, actualPeople: 36, passedPeople: 35 },
+      { name: "储运部", total: 1, done: 0, plannedPeople: 30, actualPeople: 0, passedPeople: 0 },
+      { name: "设备管理部", total: 0, done: 0, plannedPeople: 0, actualPeople: 0, passedPeople: 0 }
+    ],
+    "2026-05": [
+      { name: "公司安环部", total: 2, done: 1, plannedPeople: 210, actualPeople: 206, passedPeople: 201 },
+      { name: "运行一部", total: 3, done: 2, plannedPeople: 180, actualPeople: 176, passedPeople: 171 },
+      { name: "运行二部", total: 3, done: 2, plannedPeople: 172, actualPeople: 168, passedPeople: 164 },
+      { name: "运行三部", total: 3, done: 2, plannedPeople: 160, actualPeople: 154, passedPeople: 151 },
+      { name: "运行五部", total: 3, done: 1, plannedPeople: 126, actualPeople: 120, passedPeople: 117 },
+      { name: "设备管理部", total: 2, done: 2, plannedPeople: 98, actualPeople: 96, passedPeople: 95 }
+    ],
+    "2026-06": [
+      { name: "公司安环部", total: 1, done: 1, plannedPeople: 56, actualPeople: 54, passedPeople: 53 },
+      { name: "运行一部", total: 2, done: 1, plannedPeople: 90, actualPeople: 45, passedPeople: 43 },
+      { name: "运行二部", total: 2, done: 2, plannedPeople: 88, actualPeople: 86, passedPeople: 84 },
+      { name: "运行三部", total: 1, done: 1, plannedPeople: 42, actualPeople: 41, passedPeople: 40 },
+      { name: "储运部", total: 1, done: 0, plannedPeople: 36, actualPeople: 0, passedPeople: 0 },
+      { name: "设备管理部", total: 1, done: 0, plannedPeople: 32, actualPeople: 0, passedPeople: 0 }
+    ]
+  };
+
+  const planYearlyDeptMap = {
+    "2026": [
+      { name: "公司安环部", total: 18, done: 15, plannedPeople: 1280, actualPeople: 1216, passedPeople: 1189 },
+      { name: "运行一部", total: 22, done: 20, plannedPeople: 1640, actualPeople: 1588, passedPeople: 1541 },
+      { name: "运行二部", total: 19, done: 17, plannedPeople: 1460, actualPeople: 1408, passedPeople: 1372 },
+      { name: "运行三部", total: 20, done: 18, plannedPeople: 1520, actualPeople: 1462, passedPeople: 1425 },
+      { name: "储运部", total: 16, done: 14, plannedPeople: 1080, actualPeople: 1030, passedPeople: 1004 },
+      { name: "设备管理部", total: 14, done: 12, plannedPeople: 980, actualPeople: 942, passedPeople: 921 }
+    ],
+    "2025": [
+      { name: "公司安环部", total: 17, done: 16, plannedPeople: 1220, actualPeople: 1186, passedPeople: 1154 },
+      { name: "运行一部", total: 21, done: 20, plannedPeople: 1580, actualPeople: 1538, passedPeople: 1498 },
+      { name: "运行二部", total: 18, done: 17, plannedPeople: 1400, actualPeople: 1364, passedPeople: 1326 },
+      { name: "运行三部", total: 19, done: 18, plannedPeople: 1480, actualPeople: 1440, passedPeople: 1407 },
+      { name: "储运部", total: 15, done: 14, plannedPeople: 1020, actualPeople: 986, passedPeople: 962 },
+      { name: "设备管理部", total: 13, done: 12, plannedPeople: 920, actualPeople: 888, passedPeople: 866 }
+    ],
+    "2024": [
+      { name: "公司安环部", total: 16, done: 15, plannedPeople: 1160, actualPeople: 1122, passedPeople: 1094 },
+      { name: "运行一部", total: 20, done: 18, plannedPeople: 1500, actualPeople: 1436, passedPeople: 1398 },
+      { name: "运行二部", total: 17, done: 16, plannedPeople: 1340, actualPeople: 1302, passedPeople: 1267 },
+      { name: "运行三部", total: 18, done: 17, plannedPeople: 1420, actualPeople: 1380, passedPeople: 1348 },
+      { name: "储运部", total: 14, done: 13, plannedPeople: 960, actualPeople: 928, passedPeople: 902 },
+      { name: "设备管理部", total: 12, done: 11, plannedPeople: 860, actualPeople: 826, passedPeople: 804 }
+    ],
+    "2023": [
+      { name: "公司安环部", total: 15, done: 14, plannedPeople: 1100, actualPeople: 1062, passedPeople: 1035 },
+      { name: "运行一部", total: 18, done: 17, plannedPeople: 1420, actualPeople: 1382, passedPeople: 1349 },
+      { name: "运行二部", total: 16, done: 15, plannedPeople: 1280, actualPeople: 1242, passedPeople: 1210 },
+      { name: "运行三部", total: 16, done: 15, plannedPeople: 1310, actualPeople: 1278, passedPeople: 1244 },
+      { name: "储运部", total: 13, done: 12, plannedPeople: 900, actualPeople: 868, passedPeople: 844 },
+      { name: "设备管理部", total: 11, done: 10, plannedPeople: 800, actualPeople: 772, passedPeople: 749 }
+    ],
+    "2022": [
+      { name: "公司安环部", total: 14, done: 13, plannedPeople: 1040, actualPeople: 1006, passedPeople: 979 },
+      { name: "运行一部", total: 17, done: 16, plannedPeople: 1360, actualPeople: 1324, passedPeople: 1290 },
+      { name: "运行二部", total: 15, done: 14, plannedPeople: 1220, actualPeople: 1184, passedPeople: 1152 },
+      { name: "运行三部", total: 15, done: 14, plannedPeople: 1240, actualPeople: 1206, passedPeople: 1171 },
+      { name: "储运部", total: 12, done: 11, plannedPeople: 840, actualPeople: 808, passedPeople: 785 },
+      { name: "设备管理部", total: 10, done: 9, plannedPeople: 760, actualPeople: 728, passedPeople: 706 }
+    ]
+  };
 
   const trainingRoleStats = [
     { name: "新员工", count: 2544, rate: "100%" },
-    { name: "基层安全员", count: 486, rate: "96%" },
-    { name: "安全总监", count: 121, rate: "98%" }
+    { name: "安全员", count: 486, rate: "96%" },
+    { name: "安全总监、科长", count: 121, rate: "98%" }
   ];
 
   const orgOptions = ["全部", "公司安环部", "人力资源部", "运行一部", "运行二部", "运行三部", "运行五部", "储运部", "设备管理部"];
@@ -204,6 +292,93 @@ export default function Page() {
     { label: "年度", type: "select", options: ["全部", "2026", "2025", "2024"], defaultValue: "2026", width: 110 },
     { label: "组织机构", type: "select", options: orgOptions, defaultValue: "全部", width: 150 }
   ];
+
+  const planChartItems = planView === "month"
+    ? (planMonthlyDeptMap[planMonth] || [])
+    : (planYearlyDeptMap[planYear] || []);
+  const selectedPlanMonthLabel = planMonthOptions.find((item) => item.value === planMonth)?.label || planMonth;
+  const planChartTitle = planView === "month"
+    ? `${selectedPlanMonthLabel}各部门培训完成情况`
+    : `${planYear}年各部门培训完成情况`;
+
+  const planDrillSourceItems = planDrillView === "month"
+    ? (planMonthlyDeptMap[planMonth] || [])
+    : (planYearlyDeptMap[planYear] || []);
+
+  const planDrillRows = planDrillSourceItems.map((item, index) => {
+    const rate = item.total > 0 ? `${Math.round((item.done / item.total) * 100)}%` : "0%";
+    return planDrillView === "month"
+      ? [
+          String(index + 1),
+          planYear,
+          selectedPlanMonthLabel.slice(-3),
+          item.name,
+          String(item.total),
+          String(item.done),
+          rate,
+          String(item.plannedPeople || 0),
+          String(item.actualPeople || 0),
+          String(item.passedPeople || 0)
+        ]
+      : [
+          String(index + 1),
+          planYear,
+          item.name,
+          String(item.total),
+          String(item.done),
+          rate,
+          String(item.plannedPeople || 0),
+          String(item.actualPeople || 0),
+          String(item.passedPeople || 0)
+        ];
+  });
+
+  const planDrillNote = planDrillView === "month"
+    ? "口径：按所选月份统计各部门。计划项目数取培训计划管理中计划时间落在该月的计划数；完成项目数取该月已产生培训记录的计划数；计划人数取计划培训人数汇总；实际参与人数、考试合格人数取培训记录汇总。"
+    : "口径：按所选年度统计各部门。计划项目数取培训计划管理中该年度计划数；完成项目数取该年度已产生培训记录的计划数；计划人数取计划培训人数汇总；实际参与人数、考试合格人数取培训记录汇总。";
+
+  const planDrillConfig = planDrillView === "month"
+    ? {
+        title: "培训计划完成情况明细",
+        toolbar: (
+          <div className="ets-switch-row">
+            <div className="ets-switch-label">统计维度</div>
+            <div className="ets-view-switch">
+              <button type="button" className={`hq-tab${planDrillView === "month" ? " active" : ""}`} onClick={() => setPlanDrillView("month")}>按月</button>
+              <button type="button" className={`hq-tab${planDrillView === "year" ? " active" : ""}`} onClick={() => setPlanDrillView("year")}>按年</button>
+            </div>
+          </div>
+        ),
+        filters: [
+          { label: "年度", type: "select", options: ["2026", "2025", "2024"], defaultValue: planYear, width: 110 },
+          { label: "月份", type: "select", options: planMonthOptions.map((item) => item.label), defaultValue: selectedPlanMonthLabel, width: 110 },
+          { label: "组织机构", type: "select", options: orgOptions, defaultValue: "全部", width: 150 }
+        ],
+        columns: ["序号", "年度", "月份", "组织机构", "计划项目数", "完成项目数", "完成率", "计划人数", "实际参与人数", "考试合格人数"],
+        rows: planDrillRows,
+        note: planDrillNote,
+        total: planDrillRows.length
+      }
+    : {
+        title: "培训计划完成情况明细",
+        toolbar: (
+          <div className="ets-switch-row">
+            <div className="ets-switch-label">统计维度</div>
+            <div className="ets-view-switch">
+              <button type="button" className={`hq-tab${planDrillView === "month" ? " active" : ""}`} onClick={() => setPlanDrillView("month")}>按月</button>
+              <button type="button" className={`hq-tab${planDrillView === "year" ? " active" : ""}`} onClick={() => setPlanDrillView("year")}>按年</button>
+            </div>
+          </div>
+        ),
+        filters: [
+          { label: "年度", type: "select", options: planYearOptions, defaultValue: planYear, width: 110 },
+          { label: "组织机构", type: "select", options: orgOptions, defaultValue: "全部", width: 150 }
+        ],
+        columns: ["序号", "年度", "组织机构", "计划项目数", "完成项目数", "完成率", "计划人数", "实际参与人数", "考试合格人数"],
+        rows: planDrillRows,
+        note: planDrillNote,
+        total: planDrillRows.length
+      };
 
   const drillConfigs = {
     metric: {
@@ -220,19 +395,7 @@ export default function Page() {
         ["5", "2022", "98%", "96%", "94%", "96%", "96.60"]
       ]
     },
-    plan: {
-      title: "企业培训计划完成情况",
-      filters: [
-        ...commonFilters,
-        { label: "培训对象", type: "select", options: ["全部", "新员工", "基层安全员", "安全总监", "HSE关键岗位人员"], defaultValue: "全部", width: 130 }
-      ],
-      columns: ["序号", "年度", "组织机构", "计划代码", "培训项目名称", "培训对象", "培训天数", "计划时间", "培训开始日期", "计划期数", "完成期次", "计划人数", "实际参与人数", "考试合格人数", "培训合格率"],
-      rows: [
-        ["1", "2026", "公司安环部", "QY202601001", "安全管理人员年度复训", "基层安全员", "3", "2026年03月", "2026年03月08日", "2", "2", "120", "118", "116", "98%"],
-        ["2", "2026", "运行一部", "QY202601002", "新员工三级安全教育", "新员工", "5", "2026年04月", "2026年04月12日", "4", "4", "360", "360", "360", "100%"],
-        ["3", "2026", "公司安环部", "QY202601003", "安全总监履职能力提升", "安全总监", "2", "2026年05月", "2026年05月06日", "1", "1", "18", "18", "17", "94%"]
-      ]
-    },
+    plan: planDrillConfig,
     cert: {
       title: "HSE关键岗位人员取证情况",
       filters: [
@@ -264,7 +427,7 @@ export default function Page() {
       title: "重点人员培训完成明细",
       filters: [
         ...commonFilters,
-        { label: "人员类别", type: "select", options: ["全部", "新员工", "基层安全员", "安全总监"], defaultValue: "全部", width: 120 },
+        { label: "人员类别", type: "select", options: ["全部", "新员工", "安全员", "安全总监、科长"], defaultValue: "全部", width: 120 },
         { label: "姓名", placeholder: "请输入姓名", width: 120 }
       ],
       columns: ["序号", "年度", "组织机构", "姓名", "人员类别", "培训项目", "培训开始日期", "学习状态", "考试状态", "是否完成"],
@@ -272,12 +435,12 @@ export default function Page() {
         ["1", "2026", "人力资源部", "赵晨曦", "新员工", "新员工三级安全教育", "2026年04月04日", "已完成", "合格", "是"],
         ["2", "2026", "运行一部", "李沐阳", "新员工", "班组级安全教育", "2026年04月12日", "已完成", "合格", "是"],
         ["3", "2026", "设备管理部", "孙嘉禾", "新员工", "岗位安全操作规程培训", "2026年04月18日", "已完成", "合格", "是"],
-        ["4", "2026", "运行一部", "王启航", "基层安全员", "基层安全员履职能力培训", "2026年03月10日", "已完成", "合格", "是"],
-        ["5", "2026", "运行三部", "刘佳宁", "基层安全员", "隐患排查与班组安全管理", "2026年03月18日", "已完成", "合格", "是"],
-        ["6", "2026", "储运部", "周明远", "基层安全员", "现场作业风险辨识", "2026年04月02日", "学习中", "待考核", "否"],
-        ["7", "2026", "公司安环部", "马志强", "安全总监", "安全总监履职能力提升", "2026年05月06日", "已完成", "合格", "是"],
-        ["8", "2026", "运行二部", "郑若楠", "安全总监", "重大风险管控专题培训", "2026年05月08日", "已完成", "合格", "是"],
-        ["9", "2026", "运行五部", "韩立峰", "安全总监", "承包商安全管理专题培训", "2026年05月13日", "学习中", "待考核", "否"]
+        ["4", "2026", "运行一部", "王启航", "安全员", "安全员履职能力培训", "2026年03月10日", "已完成", "合格", "是"],
+        ["5", "2026", "运行三部", "刘佳宁", "安全员", "隐患排查与班组安全管理", "2026年03月18日", "已完成", "合格", "是"],
+        ["6", "2026", "储运部", "周明远", "安全员", "现场作业风险辨识", "2026年04月02日", "学习中", "待考核", "否"],
+        ["7", "2026", "公司安环部", "马志强", "安全总监、科长", "安全总监、科长履职能力提升", "2026年05月06日", "已完成", "合格", "是"],
+        ["8", "2026", "运行二部", "郑若楠", "安全总监、科长", "重大风险管控专题培训", "2026年05月08日", "已完成", "合格", "是"],
+        ["9", "2026", "运行五部", "韩立峰", "安全总监、科长", "承包商安全管理专题培训", "2026年05月13日", "学习中", "待考核", "否"]
       ]
     },
     archive: {
@@ -348,8 +511,39 @@ export default function Page() {
               </div>
             </div>
             <div className="hq-panel hq-bar-panel hq-plan-completion-panel">
-              <div className="hq-panel-title"><span className="hq-title-dot"></span><button type="button" className="hq-linklike hq-drill-trigger" onClick={() => setDrillModal("plan")}>培训计划完成情况</button></div>
-              <HqPlanCompletionChart items={planDeptItems} />
+              <div className="hq-panel-title">
+                <span className="hq-title-dot"></span>
+                <button
+                  type="button"
+                  className="hq-linklike hq-drill-trigger"
+                  onClick={() => {
+                    setPlanDrillView(planView);
+                    setDrillModal("plan");
+                  }}
+                >
+                  培训计划完成情况
+                </button>
+                <div className="ets-view-picker">
+                  {planView === "month" ? (
+                    <select className="filterbar-control ets-period-select" value={planMonth} onChange={(e) => setPlanMonth(e.target.value)}>
+                      {planMonthOptions.map((item) => (
+                        <option key={item.value} value={item.value}>{item.label}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <select className="filterbar-control ets-period-select" value={planYear} onChange={(e) => setPlanYear(e.target.value)}>
+                      {planYearOptions.map((item) => (
+                        <option key={item} value={item}>{item}年</option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+                <div className="ets-view-switch">
+                  <button type="button" className={`hq-tab${planView === "month" ? " active" : ""}`} onClick={() => setPlanView("month")}>按月</button>
+                  <button type="button" className={`hq-tab${planView === "year" ? " active" : ""}`} onClick={() => setPlanView("year")}>按年</button>
+                </div>
+              </div>
+              <HqPlanCompletionChart items={planChartItems} title={planChartTitle} />
             </div>
           </section>
 

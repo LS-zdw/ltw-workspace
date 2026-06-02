@@ -378,15 +378,23 @@ export default function Page() {
                 <div className="detail-form-grid">
                   
               <div className="detail-form-item">
-                <div className="detail-form-key">安全评价报告终稿</div>
-                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
-              </div>
-              <div className="detail-form-item">
                 <div className="detail-form-key">政府批复时间</div>
                 <div className="detail-form-val">{resolveDynamic("选择时间")}</div>
               </div>
               <div className="detail-form-item">
-                <div className="detail-form-key">政府批复（备案）文件</div>
+                <div className="detail-form-key">安全条件审查批复文件</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">工艺是否国内首次使用</div>
+                <div className="detail-form-val">{resolveDynamic("是/否")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">安全可靠性论证意见</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传（省级有关部门论证）")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">安全评价报告终稿</div>
                 <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
               </div>
               <div className="detail-form-item">

@@ -23,6 +23,13 @@ const localRoutes = [
     elementPath: "./modules/tools/pages/template-library.jsx"
   },
   {
+    path: "/risk-hazard/cockpit",
+    title: "风险隐患-驾驶舱",
+    module: "risk-hazard",
+    moduleGroup: "risk-hazard",
+    elementPath: "./modules/risk-hazard/pages/risk-hazard-cockpit.jsx"
+  },
+  {
     path: "/three-same/tasks",
     title: "三同时任务列表",
     module: "san-tongshi",
@@ -128,6 +135,13 @@ const localRoutes = [
     elementPath: "./modules/edu/trainer/pages/hq-training-statistics-updated.jsx"
   },
   {
+    path: "/edu/trainer/hq-training-statistics-dwm-updated",
+    title: "教育培训（更新）-日周月统计分析-总部端",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/hq-training-statistics-dwm-updated.jsx"
+  },
+  {
     path: "/edu/trainer/leader-hse-performance-assessment-enterprise-updated",
     title: "领导干部HSE履职能力评估情况",
     module: "edu/trainer",
@@ -140,6 +154,13 @@ const localRoutes = [
     module: "edu/trainer",
     moduleGroup: "edu",
     elementPath: "./modules/edu/trainer/pages/training-record-management-hq-updated.jsx"
+  },
+  {
+    path: "/edu/trainer/hq-training-plan-tracking-updated",
+    title: "教育培训（更新）-培训计划执行跟踪-总部端",
+    module: "edu/trainer",
+    moduleGroup: "edu",
+    elementPath: "./modules/edu/trainer/pages/hq-training-plan-tracking-updated.jsx"
   },
   {
     path: "/edu/trainer/trainer-resource-management-hq-updated",
@@ -280,6 +301,13 @@ const localRoutes = [
     module: "san-tongshi",
     moduleGroup: "san-tongshi",
     elementPath: "./modules/san-tongshi/pages/three-same-dashboard.jsx"
+  },
+  {
+    path: "/san-tongshi/three-same-dwm-dashboard",
+    title: "三同时管理（4）-日周月分析",
+    module: "san-tongshi",
+    moduleGroup: "san-tongshi",
+    elementPath: "./modules/san-tongshi/pages/three-same-dwm-dashboard.jsx"
   },
   {
     path: "/san-tongshi/three-same-prototype-cards",

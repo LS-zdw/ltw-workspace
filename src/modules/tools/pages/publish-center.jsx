@@ -10,9 +10,16 @@ const NAV_CUSTOMIZE_STORAGE_KEY = "proto_workbench_nav_customize_v1";
 const EDU_UPDATE_MAJOR_KEY = "教育培训（更新）";
 const EDU_UPDATE_LEGACY_MAJOR_KEY = "教育培训（修改）";
 const EDU_UPDATE_MINOR_ORDER = ["总部端", "企业端"];
-const DEFAULT_MAJOR_ORDER = ["常用入口", "三同时管理", "教育培训", EDU_UPDATE_MAJOR_KEY, "其他页面"];
+const RISK_HAZARD_MAJOR_KEY = "风险隐患";
+const DEFAULT_MAJOR_ORDER = ["常用入口", RISK_HAZARD_MAJOR_KEY, "三同时管理", "教育培训", EDU_UPDATE_MAJOR_KEY, "其他页面"];
 const PINNED_HOME_MAJOR_KEY = "常用入口";
 const ROUTE_META_ELEMENT_KEY = "__elementPath";
+const EDU_UPDATE_HQ_STATS_PATH = "/edu/trainer/hq-training-statistics-updated";
+const EDU_UPDATE_HQ_STATS_TITLE = "教育培训（更新）-教育培训统计分析-总部端";
+const EDU_UPDATE_HQ_STATS_ELEMENT = "./modules/edu/trainer/pages/hq-training-statistics-updated.jsx";
+const EDU_UPDATE_HQ_DWM_PATH = "/edu/trainer/hq-training-statistics-dwm-updated";
+const EDU_UPDATE_HQ_DWM_TITLE = "教育培训（更新）-日周月统计分析-总部端";
+const EDU_UPDATE_HQ_DWM_ELEMENT = "./modules/edu/trainer/pages/hq-training-statistics-dwm-updated.jsx";
 
 function readLastOutputBase() {
   try {
@@ -82,6 +89,35 @@ function normalizeNavCustomizeState(raw) {
     if (!minorMeta[sectionKey] || typeof minorMeta[sectionKey] !== "object") minorMeta[sectionKey] = {};
     if (!minorMeta[sectionKey].label) minorMeta[sectionKey].label = minorKey;
   });
+  const forcedHqStatsMeta = routeMeta[EDU_UPDATE_HQ_STATS_PATH] && typeof routeMeta[EDU_UPDATE_HQ_STATS_PATH] === "object"
+    ? routeMeta[EDU_UPDATE_HQ_STATS_PATH]
+    : {};
+  routeMeta[EDU_UPDATE_HQ_STATS_PATH] = {
+    ...forcedHqStatsMeta,
+    major: EDU_UPDATE_MAJOR_KEY,
+    minor: "总部端",
+    title: EDU_UPDATE_HQ_STATS_TITLE,
+    hidden: false,
+    [ROUTE_META_ELEMENT_KEY]: EDU_UPDATE_HQ_STATS_ELEMENT
+  };
+  const forcedHqDwmMeta = routeMeta[EDU_UPDATE_HQ_DWM_PATH] && typeof routeMeta[EDU_UPDATE_HQ_DWM_PATH] === "object"
+    ? routeMeta[EDU_UPDATE_HQ_DWM_PATH]
+    : {};
+  routeMeta[EDU_UPDATE_HQ_DWM_PATH] = {
+    ...forcedHqDwmMeta,
+    major: EDU_UPDATE_MAJOR_KEY,
+    minor: "总部端",
+    title: EDU_UPDATE_HQ_DWM_TITLE,
+    hidden: false,
+    [ROUTE_META_ELEMENT_KEY]: EDU_UPDATE_HQ_DWM_ELEMENT
+  };
+  const hqUpdateSectionKey = sectionMinorLabelKey(EDU_UPDATE_MAJOR_KEY, "总部端");
+  const hqRouteOrder = Array.isArray(routeOrder[hqUpdateSectionKey]) ? routeOrder[hqUpdateSectionKey] : [];
+  routeOrder[hqUpdateSectionKey] = [
+    EDU_UPDATE_HQ_DWM_PATH,
+    EDU_UPDATE_HQ_STATS_PATH,
+    ...hqRouteOrder.filter((path) => path !== EDU_UPDATE_HQ_DWM_PATH && path !== EDU_UPDATE_HQ_STATS_PATH)
+  ];
 
   return {
     ...state,
@@ -275,6 +311,7 @@ export default function PublishCenterPage() {
       "/edu/trainer/trainer-resource-management-enterprise-updated",
       "/edu/trainer/enterprise-training-statistics-updated",
       "/edu/trainer/hq-training-statistics-updated",
+      "/edu/trainer/hq-training-statistics-dwm-updated",
       "/edu/trainer/leader-hse-performance-assessment-enterprise-updated",
       "/edu/trainer/team-safety-activity-management",
       "/edu/trainer/trainer-resource-management",
@@ -295,7 +332,9 @@ export default function PublishCenterPage() {
     return [
       "/edu/trainer/hq-training-plan-distribution",
       "/edu/trainer/hq-training-statistics-updated",
+      "/edu/trainer/hq-training-statistics-dwm-updated",
       "/edu/trainer/training-record-management-hq-updated",
+      "/edu/trainer/hq-training-plan-tracking-updated",
       "/edu/trainer/certificate-management-hq-updated",
       "/edu/trainer/trainer-resource-management-hq-updated",
       "/edu/trainer/hq-training-report-fill",
@@ -336,6 +375,9 @@ export default function PublishCenterPage() {
         if (p === "/tools/publish-center" || p === "/tools/template-library" || p === "/tools/dialog") {
           majorKey = "常用入口";
           minorKey = "常用入口";
+        } else if (p.startsWith("/risk-hazard/")) {
+          majorKey = RISK_HAZARD_MAJOR_KEY;
+          minorKey = "风险驾驶舱";
         } else if (p === "/edu/trainer/training-plan-management-enterprise-modified") {
           majorKey = EDU_UPDATE_MAJOR_KEY;
           minorKey = "企业端";
@@ -357,10 +399,16 @@ export default function PublishCenterPage() {
         } else if (p === "/edu/trainer/hq-training-statistics-updated") {
           majorKey = EDU_UPDATE_MAJOR_KEY;
           minorKey = "总部端";
+        } else if (p === "/edu/trainer/hq-training-statistics-dwm-updated") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "总部端";
         } else if (p === "/edu/trainer/leader-hse-performance-assessment-enterprise-updated") {
           majorKey = EDU_UPDATE_MAJOR_KEY;
           minorKey = "企业端";
         } else if (p === "/edu/trainer/training-record-management-hq-updated") {
+          majorKey = EDU_UPDATE_MAJOR_KEY;
+          minorKey = "总部端";
+        } else if (p === "/edu/trainer/hq-training-plan-tracking-updated") {
           majorKey = EDU_UPDATE_MAJOR_KEY;
           minorKey = "总部端";
         } else if (p === "/edu/trainer/certificate-management-hq-updated") {

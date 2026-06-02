@@ -40,12 +40,6 @@ const progressBars = [
   { label: "三类项目", value: 75 }
 ];
 
-const ringCards = [
-  { label: "暂缓会签项目", value: "189" },
-  { label: "未会签项目", value: "100" },
-  { label: "已会签项目", value: "266" }
-];
-
 const drillProjectRows = [
   { name: "镇海炼化芳烃装置扩能", type: "一类项目", stage: "可行性研究", dept: "设备管理部", org: "镇海炼化", date: "2025-12-15", status: "推进中" },
   { name: "燕山石化加氢装置改造", type: "二类项目", stage: "基础设计", dept: "生产运行部", org: "燕山石化", date: "2025-12-14", status: "已完成" },
@@ -57,24 +51,6 @@ const drillProjectRows = [
   { name: "燕山石化储罐区隐患治理", type: "三类项目", stage: "基础设计", dept: "安环部", org: "燕山石化", date: "2025-12-11", status: "推进中" },
   { name: "齐鲁石化污水站升级", type: "二类项目", stage: "竣工验收", dept: "环保管理部", org: "齐鲁石化", date: "2025-12-11", status: "待会签" },
   { name: "江苏石油加油站改造", type: "三类项目", stage: "试运行", dept: "零售管理部", org: "江苏石油", date: "2025-12-10", status: "推进中" }
-];
-
-const enterpriseList = [
-  "总部机关",
-  "资兴运营部（资兴公司）",
-  "宁波工程公司",
-  "镇海炼化",
-  "中石化江汉石油有限公司",
-  "胜利油田",
-  "中原油田",
-  "河南油田",
-  "江汉油田",
-  "江苏油田",
-  "华北石油局",
-  "华东石油局",
-  "西南石油局",
-  "西北油田分公司",
-  "勘探分公司"
 ];
 
 function StsbGroupedBarChart({ data = [], series = [], max = 1200, ticks = [1200, 900, 600, 300, 0] }) {
@@ -241,46 +217,13 @@ export default function Page() {
       filters: commonFilters,
       columns: ["序号", "项目类型", "项目数量", "项目名称", "所属企业", "当前阶段", "状态"],
       rows: progressBars.map((item, index) => [String(index + 1), item.label, `${item.value}个`, drillProjectRows[index]?.name || "-", drillProjectRows[index]?.org || "-", drillProjectRows[index]?.stage || "-", "待推进"])
-    },
-    countersign: {
-      title: "会签项目信息明细",
-      filters: [
-        ...commonFilters,
-        { label: "会签状态", type: "select", options: ["全部", "暂缓会签", "未会签", "已会签"], defaultValue: "全部", width: 110 }
-      ],
-      columns: ["序号", "会签状态", "项目数量", "项目名称", "所属企业", "当前阶段", "责任部门"],
-      rows: ringCards.map((item, index) => [String(index + 1), item.label, item.value, drillProjectRows[index]?.name || "-", drillProjectRows[index]?.org || "-", drillProjectRows[index]?.stage || "-", drillProjectRows[index]?.dept || "-"])
     }
   };
 
   return (
     <div className="stsb-wrap">
       <div className="stsb-main">
-        <aside className="stsb-sidebar">
-          <div className="stsb-side-title">中国石化集团公司</div>
-          <div className="stsb-side-items">
-            {enterpriseList.map((item, index) => (
-              <div key={item} className={`stsb-side-item ${index === 0 ? "active" : ""}`}>
-                <span className="stsb-dot" />
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-        </aside>
-
         <div className="stsb-content">
-          <div className="stsb-tabs">
-            <div className="stsb-tab active">安全</div>
-            <div className="stsb-tab">职业卫生</div>
-            <div className="stsb-tab">消防</div>
-          </div>
-
-          <div className="stsb-filters">
-            <div className="stsb-date-range">2025-12-16至2025-12-16</div>
-            <button type="button" className="stsb-btn stsb-btn-primary">查询</button>
-            <button type="button" className="stsb-btn">重置</button>
-          </div>
-
           <div className="stsb-kpi-row">
             <div className="stsb-kpi-card">
               <button type="button" className="stsb-title-link" onClick={() => setDrillModal("total")}>{kpiMain.title}</button>
@@ -366,20 +309,6 @@ export default function Page() {
                     <div className="stsb-progress-value">{item.value}个</div>
                   </div>
                 ))}
-              </div>
-            </div>
-            <div className="stsb-panel">
-              <button type="button" className="stsb-panel-title stsb-title-link" onClick={() => setDrillModal("countersign")}>会签项目信息统计</button>
-              <div className="stsb-panel-chart">
-                <div className="stsb-ring-total">总数量 555个</div>
-                <div className="stsb-ring-row">
-                  {ringCards.map((item) => (
-                    <div key={item.label} className="stsb-ring-card">
-                      <div className="stsb-ring">{item.value}</div>
-                      <div className="stsb-ring-label">{item.label}</div>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
           </div>

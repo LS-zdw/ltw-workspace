@@ -23,6 +23,20 @@ export default function Page() {
   const navigate = useNavigate();
   const projectName = new URLSearchParams(window.location.search).get("project");
   const [activeModal, setActiveModal] = React.useState(null);
+  const [batchReviewRows, setBatchReviewRows] = React.useState([
+    {
+      id: 1,
+      name: "王博",
+      org: "总部机关/体系室",
+      certName: "集团公司HSE审核员证",
+      certCode: "HQ-AUD-2023-026",
+      certType: "集团公司HSE审核员资格",
+      oldValidDate: "2026-06-30",
+      oldAttachment: "有",
+      newAttachmentName: "",
+      isEditingAttachment: false
+    }
+  ]);
   const [selectedEnterprise, setSelectedEnterprise] = React.useState("全部企业");
   const [drillTarget, setDrillTarget] = React.useState("");
   const [drillProject, setDrillProject] = React.useState(projectName || "");
@@ -84,6 +98,64 @@ export default function Page() {
   const renderAttachmentTrigger = (label = "点击上传") => (
     <button type="button" className="table-link-btn">{label}</button>
   );
+  const renderListAttachment = (value) => (
+    value === "有" ? <button type="button" className="table-link-btn">下载</button> : value
+  );
+  const startBatchAttachmentEdit = (row) => {
+    setBatchReviewRows((prev) => prev.map((item) => (
+      item.id === row.id
+        ? {
+            ...item,
+            isEditingAttachment: true,
+            newAttachmentName: item.newAttachmentName || `${item.certName}-换证附件.pdf`
+          }
+        : item
+    )));
+  };
+  const cancelBatchAttachmentEdit = (row) => {
+    setBatchReviewRows((prev) => prev.map((item) => (
+      item.id === row.id ? { ...item, isEditingAttachment: false } : item
+    )));
+  };
+  const updateBatchAttachmentDraft = (row, value) => {
+    setBatchReviewRows((prev) => prev.map((item) => (
+      item.id === row.id ? { ...item, newAttachmentName: value } : item
+    )));
+  };
+  const saveBatchAttachment = (row) => {
+    setBatchReviewRows((prev) => prev.map((item) => (
+      item.id === row.id
+        ? {
+            ...item,
+            newAttachmentName: (item.newAttachmentName || `${item.certName}-换证附件.pdf`).trim(),
+            isEditingAttachment: false
+          }
+        : item
+    )));
+  };
+  const renderBatchAttachmentCell = (row) => {
+    if (row.isEditingAttachment) {
+      return (
+        <div style={{ display: "grid", gap: 6, minWidth: 180 }}>
+          <input
+            className="cert-field-control"
+            value={row.newAttachmentName}
+            onChange={(e) => updateBatchAttachmentDraft(row, e.target.value)}
+            placeholder="请输入附件名称"
+          />
+          <div className="table-op-inline">
+            <button type="button" className="table-link-btn" onClick={() => saveBatchAttachment(row)}>保存</button>
+            <button type="button" className="table-link-btn" onClick={() => cancelBatchAttachmentEdit(row)}>取消</button>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <button type="button" className="table-link-btn" onClick={() => startBatchAttachmentEdit(row)}>
+        上传
+      </button>
+    );
+  };
 
   return (
     <div className="stack cert-enterprise-updated">
@@ -178,34 +250,34 @@ export default function Page() {
             <tbody>
               
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>1</td><td>张铭</td><td>总部机关/风险室</td><td>安全监管主管</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>主要负责人安全资格证</button></td><td>HQ-AQ-2024-001</td><td>主要负责人安全资格证</td><td>2024-01-15</td><td>2027-01-14</td><td>否</td><td>总部负责人复审</td><td>风险室</td><td>李倩</td><td>2024-01-16</td><td>有</td><td>{renderRowOps(true)}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>1</td><td>张铭</td><td>总部机关/风险室</td><td>安全监管主管</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>主要负责人安全资格证</button></td><td>HQ-AQ-2024-001</td><td>主要负责人安全资格证</td><td>2024-01-15</td><td>2027-01-14</td><td>否</td><td>总部负责人复审</td><td>风险室</td><td>李倩</td><td>2024-01-16</td><td>{renderListAttachment("有")}</td><td>{renderRowOps(true)}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>2</td><td>李倩</td><td>总部机关/综合管理室</td><td>培训管理专员</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>HSE关键岗位资格证</button></td><td>HQ-HSE-2024-018</td><td>HSE关键岗位资格</td><td>2024-03-20</td><td>2027-03-19</td><td>否</td><td>集团HSE关键岗位培训</td><td>综合管理室</td><td>王博</td><td>2024-03-21</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>2</td><td>李倩</td><td>总部机关/综合管理室</td><td>培训管理专员</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>HSE关键岗位资格证</button></td><td>HQ-HSE-2024-018</td><td>HSE关键岗位资格</td><td>2024-03-20</td><td>2027-03-19</td><td>否</td><td>集团HSE关键岗位培训</td><td>综合管理室</td><td>王博</td><td>2024-03-21</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>3</td><td>王博</td><td>总部机关/体系室</td><td>体系审核主管</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>集团公司HSE审核员证</button></td><td>HQ-AUD-2023-026</td><td>集团公司HSE审核员资格</td><td>2023-07-01</td><td className="cell-warn">2026-06-30</td><td>否</td><td>集团HSE审核员复训</td><td>体系室</td><td>赵宁</td><td>2023-07-02</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>3</td><td>王博</td><td>总部机关/体系室</td><td>体系审核主管</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>集团公司HSE审核员证</button></td><td>HQ-AUD-2023-026</td><td>集团公司HSE审核员资格</td><td>2023-07-01</td><td className="cell-warn">2026-06-30</td><td>否</td><td>集团HSE审核员复训</td><td>体系室</td><td>赵宁</td><td>2023-07-02</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>4</td><td>赵宁</td><td>总部机关/过程室</td><td>过程安全专家</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>注册安全工程师证</button></td><td>HQ-ZA-2021-054</td><td>注册安全工程师</td><td>2021-04-12</td><td className="cell-danger">2024-04-11</td><td className="cell-danger">是</td><td>注册安全工程师延续登记</td><td>过程室</td><td>肖然</td><td>2024-04-15</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>4</td><td>赵宁</td><td>总部机关/过程室</td><td>过程安全专家</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>注册安全工程师证</button></td><td>HQ-ZA-2021-054</td><td>注册安全工程师</td><td>2021-04-12</td><td className="cell-danger">2024-04-11</td><td className="cell-danger">是</td><td>注册安全工程师延续登记</td><td>过程室</td><td>肖然</td><td>2024-04-15</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>5</td><td>陈峰</td><td>总部机关/应急室</td><td>应急管理主管</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>安全管理人员资格证</button></td><td>HQ-AM-2022-089</td><td>安全管理人员资格证</td><td>2022-11-18</td><td>2028-11-17</td><td>否</td><td>安全管理人员能力提升</td><td>应急室</td><td>郑宁</td><td>2024-12-03</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>5</td><td>陈峰</td><td>总部机关/应急室</td><td>应急管理主管</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>安全管理人员资格证</button></td><td>HQ-AM-2022-089</td><td>安全管理人员资格证</td><td>2022-11-18</td><td>2028-11-17</td><td>否</td><td>安全管理人员能力提升</td><td>应急室</td><td>郑宁</td><td>2024-12-03</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>6</td><td>刘洋</td><td>总部机关/健康室</td><td>职业健康专员</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>消防设施操作员证</button></td><td>HQ-XF-2022-119</td><td>消防设施操作员</td><td>2022-09-05</td><td>2025-09-04</td><td className="cell-danger">是</td><td>消防设施操作员复审</td><td>健康室</td><td>陈雪</td><td>2025-09-10</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>6</td><td>刘洋</td><td>总部机关/健康室</td><td>职业健康专员</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>消防设施操作员证</button></td><td>HQ-XF-2022-119</td><td>消防设施操作员</td><td>2022-09-05</td><td>2025-09-04</td><td className="cell-danger">是</td><td>消防设施操作员复审</td><td>健康室</td><td>陈雪</td><td>2025-09-10</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>7</td><td>周凯</td><td>总部机关/督查室</td><td>安全督查主管</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>集团公司HSE审核员证</button></td><td>HQ-AUD-2025-031</td><td>集团公司HSE审核员资格</td><td>2025-05-01</td><td>2028-04-30</td><td>否</td><td>集团HSE审核员取证</td><td>督查室</td><td>周超</td><td>2025-05-02</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>7</td><td>周凯</td><td>总部机关/督查室</td><td>安全督查主管</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>集团公司HSE审核员证</button></td><td>HQ-AUD-2025-031</td><td>集团公司HSE审核员资格</td><td>2025-05-01</td><td>2028-04-30</td><td>否</td><td>集团HSE审核员取证</td><td>督查室</td><td>周超</td><td>2025-05-02</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>8</td><td>孙佳</td><td>总部机关/公共安全室</td><td>公共安全专员</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>HSE关键岗位资格证</button></td><td>HQ-HSE-2024-112</td><td>HSE关键岗位资格</td><td>2024-01-10</td><td>2027-01-09</td><td className="cell-warn">否</td><td>公共安全专项培训</td><td>公共安全室</td><td>肖然</td><td>2024-01-11</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>8</td><td>孙佳</td><td>总部机关/公共安全室</td><td>公共安全专员</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>HSE关键岗位资格证</button></td><td>HQ-HSE-2024-112</td><td>HSE关键岗位资格</td><td>2024-01-10</td><td>2027-01-09</td><td className="cell-warn">否</td><td>公共安全专项培训</td><td>公共安全室</td><td>肖然</td><td>2024-01-11</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>9</td><td>马骏</td><td>总部机关/风险室</td><td>安全分析岗</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>注册安全工程师证</button></td><td>HQ-ZA-2020-672</td><td>注册安全工程师</td><td>2020-11-06</td><td className="cell-danger">2023-11-05</td><td className="cell-danger">是</td><td>注册安全工程师复审</td><td>风险室</td><td>王敏</td><td>2023-11-10</td><td>无</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>9</td><td>马骏</td><td>总部机关/风险室</td><td>安全分析岗</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>注册安全工程师证</button></td><td>HQ-ZA-2020-672</td><td>注册安全工程师</td><td>2020-11-06</td><td className="cell-danger">2023-11-05</td><td className="cell-danger">是</td><td>注册安全工程师复审</td><td>风险室</td><td>王敏</td><td>2023-11-10</td><td>{renderListAttachment("无")}</td><td>{renderRowOps()}</td>
           </tr>
           <tr>
-            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>10</td><td>赵丽</td><td>总部机关/综合管理室</td><td>培训管理员</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>HSE关键岗位资格证</button></td><td>HQ-HSE-2025-077</td><td>HSE关键岗位资格</td><td>2025-04-18</td><td>2028-04-17</td><td>否</td><td>总部培训管理能力提升</td><td>综合管理室</td><td>赵丽</td><td>2025-04-19</td><td>有</td><td>{renderRowOps()}</td>
+            <td className="table-checkbox"><input type="checkbox"  readOnly /></td><td>10</td><td>赵丽</td><td>总部机关/综合管理室</td><td>培训管理员</td><td><button type="button" className="table-link-btn" onClick={() => openModal("cert-detail", "")}>HSE关键岗位资格证</button></td><td>HQ-HSE-2025-077</td><td>HSE关键岗位资格</td><td>2025-04-18</td><td>2028-04-17</td><td>否</td><td>总部培训管理能力提升</td><td>综合管理室</td><td>赵丽</td><td>2025-04-19</td><td>{renderListAttachment("有")}</td><td>{renderRowOps()}</td>
           </tr>
             </tbody>
               </table>
@@ -462,11 +534,11 @@ export default function Page() {
                   <table className="proto-table">
                     <thead>
                       <tr>
-                        <th>序号</th><th>登记种类</th><th>发证/复审/注册/换证日期</th><th>登记人</th><th>登记部门/单位</th><th>登记日期</th><th>证书附件</th>
+                        <th>序号</th><th>登记类型</th><th>登记人</th><th>登记部门</th><th>登记日期</th><th>证书附件</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr><td>1</td><td>取证</td><td>2024年01月15日</td><td>李倩</td><td>风险室</td><td>2024年01月16日</td><td><div className="table-op-inline"><button type="button" className="table-link-btn">预览</button><button type="button" className="table-link-btn">下载</button></div></td></tr><tr><td>2</td><td>复审</td><td>2026年02月26日</td><td>王博</td><td>综合管理室</td><td>2026年02月26日</td><td><div className="table-op-inline"><button type="button" className="table-link-btn">预览</button><button type="button" className="table-link-btn">下载</button></div></td></tr>
+                      <tr><td>1</td><td>发证</td><td>李倩</td><td>风险室</td><td>2024年01月16日</td><td><div className="table-op-inline"><button type="button" className="table-link-btn">预览</button><button type="button" className="table-link-btn">下载</button></div></td></tr><tr><td>2</td><td>换证</td><td>王博</td><td>综合管理室</td><td>2026年02月26日</td><td><div className="table-op-inline"><button type="button" className="table-link-btn">预览</button><button type="button" className="table-link-btn">下载</button></div></td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -491,7 +563,6 @@ export default function Page() {
                 <div className="cert-section-title cert-section-title-row">
                   <span>待换证证书</span>
                   <div className="table-op-inline">
-                    <button type="button" className="btn btn-primary">选择证书</button>
                     <button type="button" className="btn btn-danger">移除</button>
                   </div>
                 </div>
@@ -499,11 +570,24 @@ export default function Page() {
                   <table className="proto-table">
                     <thead>
                       <tr>
-                        <th className="table-checkbox"><input type="checkbox" readOnly /></th><th>序号</th><th>姓名</th><th>组织机构</th><th>证书名称</th><th>证书编码</th><th>证书种类</th><th>原证书有效期</th><th>证书附件</th>
+                        <th className="table-checkbox"><input type="checkbox" readOnly /></th><th>序号</th><th>姓名</th><th>组织机构</th><th>证书名称</th><th>证书编码</th><th>证书种类</th><th>原证书有效期</th><th>原证书附件</th><th>新证附件</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr><td className="table-checkbox"><input type="checkbox" readOnly /></td><td>1</td><td>王博</td><td>总部机关/体系室</td><td>集团公司HSE审核员证</td><td>HQ-AUD-2023-026</td><td>集团公司HSE审核员资格</td><td>2026-06-30</td><td>有</td></tr>
+                      {batchReviewRows.map((row, index) => (
+                        <tr key={row.id}>
+                          <td className="table-checkbox"><input type="checkbox" readOnly /></td>
+                          <td>{index + 1}</td>
+                          <td>{row.name}</td>
+                          <td>{row.org}</td>
+                          <td>{row.certName}</td>
+                          <td>{row.certCode}</td>
+                          <td>{row.certType}</td>
+                          <td>{row.oldValidDate}</td>
+                          <td>{row.oldAttachment}</td>
+                          <td>{renderBatchAttachmentCell(row)}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -512,10 +596,6 @@ export default function Page() {
               <div className="cert-section">
                 <div className="cert-section-title">换证登记</div>
                 <div className="cert-form-grid" style={{ gridTemplateColumns: "220px 1fr 220px 1fr 220px 1fr" }}>
-                  <div className="cert-field-item" style={{ gridColumn: "span 2" }}>
-                    <div className="cert-field-label"><span className="required-mark">*</span>新证初领日期:</div>
-                    <div className="cert-field-value"><input className="cert-field-control" defaultValue="2026-03-09" /></div>
-                  </div>
                   <div className="cert-field-item" style={{ gridColumn: "span 2" }}>
                     <div className="cert-field-label"><span className="required-mark">*</span>新证有效期:</div>
                     <div className="cert-field-value"><input className="cert-field-control" defaultValue="2029-03-08" /></div>

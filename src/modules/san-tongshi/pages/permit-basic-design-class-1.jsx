@@ -295,7 +295,11 @@ export default function Page() {
                 <div className="detail-form-grid">
                   
               <div className="detail-form-item">
-                <div className="detail-form-key">设计单位</div>
+                <div className="detail-form-key">设计单位（第1组）</div>
+                <div className="detail-form-val">{resolveDynamic("选择评价单位")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">设计单位（第2组）</div>
                 <div className="detail-form-val">{resolveDynamic("选择评价单位")}</div>
               </div>
               <div className="detail-form-item">
@@ -314,14 +318,6 @@ export default function Page() {
                 <div className="detail-form-key">专家组评审意见的修改说明</div>
                 <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
               </div>
-              <div className="detail-form-item">
-                <div className="detail-form-key">HAZOP分析报告及审查意见</div>
-                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
-              </div>
-              <div className="detail-form-item">
-                <div className="detail-form-key">SIL分析报告及审查意见</div>
-                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
-              </div>
                 </div>
                 
                 <div className="detail-form-actions">
@@ -333,7 +329,11 @@ export default function Page() {
                 <div className="detail-form-grid">
                   
               <div className="detail-form-item">
-                <div className="detail-form-key">设计单位</div>
+                <div className="detail-form-key">设计单位（第1组）</div>
+                <div className="detail-form-val">{resolveDynamic("选择评价单位")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">设计单位（第2组）</div>
                 <div className="detail-form-val">{resolveDynamic("选择评价单位")}</div>
               </div>
               <div className="detail-form-item">
@@ -355,15 +355,43 @@ export default function Page() {
                 <div className="detail-form-grid">
                   
               <div className="detail-form-item">
-                <div className="detail-form-key">批复时间</div>
-                <div className="detail-form-val">{resolveDynamic("选择时间")}</div>
-              </div>
-              <div className="detail-form-item">
-                <div className="detail-form-key">批复（备案）文件</div>
+                <div className="detail-form-key">安全设施设计专篇（第1组）</div>
                 <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
               </div>
               <div className="detail-form-item">
-                <div className="detail-form-key">安全设施设计专篇</div>
+                <div className="detail-form-key">安全设施设计专篇（第2组）</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">批复时间（第1组）</div>
+                <div className="detail-form-val">{resolveDynamic("选择时间")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">安全设施设计批复文件（第1组）</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">批复时间（第2组）</div>
+                <div className="detail-form-val">{resolveDynamic("选择时间")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">安全设施设计批复文件（第2组）</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">SIL分析报告及审查意见（第1组）</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">HAZOP分析报告及审查意见（第1组）</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">SIL分析报告及审查意见（第2组）</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">HAZOP分析报告及审查意见（第2组）</div>
                 <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
               </div>
               <div className="detail-form-item">
@@ -390,6 +418,14 @@ export default function Page() {
               </div>
               <div className="detail-form-item">
                 <div className="detail-form-key">原因</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">SIL分析报告及审查意见（第1组，非必填）</div>
+                <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
+              </div>
+              <div className="detail-form-item">
+                <div className="detail-form-key">HAZOP分析报告及审查意见（第1组，非必填）</div>
                 <div className="detail-form-val">{resolveDynamic("点击上传")}</div>
               </div>
                 </div>
